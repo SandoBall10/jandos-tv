@@ -66,6 +66,8 @@
     let numberBuffer = '';
     let streamLoadTimeoutTimer = null;
     let channelWatchdogTimer = null;
+    let blackScreenTimer = null;
+    let audioCheckTimer = null;
 
     // Reproductor HLS
     let hlsInstance = null;
@@ -146,42 +148,60 @@
     }
 
     function showOSD() {
-        if (!channels[currentChannelIndex]) return;
+        try {
+            if (!channels || !channels[currentChannelIndex]) return;
 
-        const currentChannel = channels[currentChannelIndex];
-        osdNumberEl.textContent = formatChannelNumber(currentChannelIndex);
+            const currentChannel = channels[currentChannelIndex];
+            if (osdNumberEl) {
+                osdNumberEl.textContent = formatChannelNumber(currentChannelIndex);
+            }
 
-        if (osdClockEl) {
-            osdClockEl.textContent = getPeruTime12H();
+            if (osdClockEl) {
+                osdClockEl.textContent = getPeruTime12H();
+            }
+
+            if (osdNameEl) {
+                if (currentChannel.urls && currentChannel.urls.length > 1 && currentStreamUrlIndex > 0) {
+                    osdNameEl.textContent = currentChannel.name + ' (Señal ' + (currentStreamUrlIndex + 1) + ' de ' + currentChannel.urls.length + ')';
+                } else {
+                    osdNameEl.textContent = currentChannel.name;
+                }
+            }
+
+            if (osdEl) {
+                osdEl.classList.add('visible');
+            }
+
+            if (osdTimer) {
+                clearTimeout(osdTimer);
+            }
+
+            osdTimer = setTimeout(function () {
+                if (osdEl) {
+                    osdEl.classList.remove('visible');
+                }
+            }, OSD_DURATION_MS);
+        } catch (err) {
+            console.warn('Jandos-TV: Error seguro en showOSD:', err);
         }
-
-        if (isYouTubeActive) {
-            osdNameEl.textContent = currentChannel.name + ' (YouTube Live Oficial)';
-        } else if (currentChannel.urls && currentChannel.urls.length > 1 && currentStreamUrlIndex > 0) {
-            osdNameEl.textContent = currentChannel.name + ' (Señal ' + (currentStreamUrlIndex + 1) + ' de ' + currentChannel.urls.length + ')';
-        } else {
-            osdNameEl.textContent = currentChannel.name;
-        }
-
-        osdEl.classList.add('visible');
-
-        if (osdTimer) {
-            clearTimeout(osdTimer);
-        }
-
-        osdTimer = setTimeout(function () {
-            osdEl.classList.remove('visible');
-        }, OSD_DURATION_MS);
     }
 
     function showStatus(message, subtext) {
-        statusTextEl.textContent = message || 'Sintonizando canal...';
-        statusSubtextEl.textContent = subtext || 'Por favor espere un momento';
-        statusOverlayEl.classList.add('visible');
+        try {
+            if (statusTextEl) statusTextEl.textContent = message || 'Sintonizando canal...';
+            if (statusSubtextEl) statusSubtextEl.textContent = subtext || 'Por favor espere un momento';
+            if (statusOverlayEl) statusOverlayEl.classList.add('visible');
+        } catch (e) {
+            console.warn('Jandos-TV: Error seguro en showStatus:', e);
+        }
     }
 
     function hideStatus() {
-        statusOverlayEl.classList.remove('visible');
+        try {
+            if (statusOverlayEl) statusOverlayEl.classList.remove('visible');
+        } catch (e) {
+            console.warn('Jandos-TV: Error seguro en hideStatus:', e);
+        }
     }
 
     // --------------------------------------------------------------------------
@@ -195,6 +215,14 @@
         if (channelWatchdogTimer) {
             clearTimeout(channelWatchdogTimer);
             channelWatchdogTimer = null;
+        }
+        if (blackScreenTimer) {
+            clearTimeout(blackScreenTimer);
+            blackScreenTimer = null;
+        }
+        if (audioCheckTimer) {
+            clearTimeout(audioCheckTimer);
+            audioCheckTimer = null;
         }
     }
 
@@ -218,12 +246,17 @@
         if (muteNoticeEl) muteNoticeEl.classList.remove('visible');
     }
 
-    function unmuteAudioIfNeeded() {
-        if (videoEl && videoEl.muted) {
+    function forceUnmuteAudio() {
+        if (videoEl) {
             videoEl.muted = false;
+            videoEl.volume = 1.0;
             hideMuteNotice();
-            console.log('Jandos-TV: Audio activado tras interacción');
+            console.log('Jandos-TV: Audio forzado activo (muted=false, volume=1.0)');
         }
+    }
+
+    function unmuteAudioIfNeeded() {
+        forceUnmuteAudio();
     }
 
     function startChannelWatchdog() {
@@ -270,6 +303,13 @@
         currentStreamUrlIndex = 0;
         resetPlayerState();
 
+        // Garantizar audio activado en cada cambio de canal
+        if (videoEl) {
+            videoEl.muted = false;
+            videoEl.volume = 1.0;
+        }
+        hideMuteNotice();
+
         const channel = channels[currentChannelIndex];
         console.log('Jandos-TV: Sintonizando canal ' + (currentChannelIndex + 1) + ': ' + channel.name);
 
@@ -279,13 +319,15 @@
             console.warn('Jandos-TV: No se pudo guardar en localStorage', e);
         }
 
-        showOSD();
-        showStatus('Sintonizando ' + channel.name, 'Conectando con la señal...');
-        updateGuideActiveChannel();
+        // Actualizaciones visuales protegidas para que jamás bloqueen el reproductor de video
+        try { showOSD(); } catch (e) { console.warn('Jandos-TV: Error en showOSD', e); }
+        try { showStatus('Sintonizando ' + channel.name, 'Conectando con la señal...'); } catch (e) { console.warn('Jandos-TV: Error en showStatus', e); }
+        try { updateGuideActiveChannel(); } catch (e) { console.warn('Jandos-TV: Error en updateGuideActiveChannel', e); }
 
         // Iniciar Watchdog de 15 segundos
         startChannelWatchdog();
 
+        // Cargar stream HLS de forma garantizada
         loadActiveStream();
     }
 
@@ -293,7 +335,7 @@
         resetPlayerState();
         const channel = channels[currentChannelIndex];
         if (!channel || !channel.urls || channel.urls.length === 0) {
-            handleStreamFailure('Sin URLs HLS disponibles');
+            tryNextStreamUrl('Sin URLs HLS disponibles');
             return;
         }
 
@@ -308,7 +350,7 @@
         if (streamLoadTimeoutTimer) clearTimeout(streamLoadTimeoutTimer);
         streamLoadTimeoutTimer = setTimeout(function () {
             console.warn('Jandos-TV: Timeout de 8s para la señal ' + (currentStreamUrlIndex + 1));
-            handleStreamFailure('Tiempo de espera agotado');
+            tryNextStreamUrl('Tiempo de espera agotado');
         }, STREAM_TIMEOUT_MS);
 
         loadStream(streamUrl);
@@ -316,6 +358,9 @@
 
     function attemptPlayVideo() {
         if (!videoEl) return;
+        videoEl.muted = false;
+        videoEl.volume = 1.0;
+
         const playPromise = videoEl.play();
         if (playPromise !== undefined) {
             playPromise.then(function () {
@@ -354,14 +399,75 @@
             hlsInstance.loadSource(streamUrl);
             hlsInstance.attachMedia(videoEl);
 
-            hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, function () {
+            hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, function (event, data) {
+                console.log('Jandos-TV: Manifiesto HLS analizado con éxito.');
+
+                // 1. Filtrar o seleccionar preferentemente niveles compatibles con AVC1 (H.264) y MP4A (AAC)
+                if (data && data.levels && data.levels.length > 0) {
+                    let compatibleLevelIndex = -1;
+                    for (let i = 0; i < data.levels.length; i++) {
+                        const lvl = data.levels[i];
+                        const vCodec = (lvl.videoCodec || '').toLowerCase();
+                        const aCodec = (lvl.audioCodec || '').toLowerCase();
+                        const rawCodecs = (lvl.attrs && lvl.attrs.CODECS ? lvl.attrs.CODECS : '').toLowerCase();
+
+                        const isHevc = vCodec.includes('hvc') || vCodec.includes('hev') || rawCodecs.includes('hvc') || rawCodecs.includes('hev');
+                        const isAc3 = aCodec.includes('ac-3') || aCodec.includes('ec-3') || rawCodecs.includes('ac-3') || rawCodecs.includes('ec-3');
+
+                        if (!isHevc && !isAc3) {
+                            if (vCodec.includes('avc') || rawCodecs.includes('avc') || (!vCodec && !rawCodecs)) {
+                                compatibleLevelIndex = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    if (compatibleLevelIndex !== -1 && hlsInstance.currentLevel !== compatibleLevelIndex) {
+                        console.log('Jandos-TV: Nivel HLS compatible seleccionado (H.264+AAC): nivel ' + compatibleLevelIndex);
+                        hlsInstance.currentLevel = compatibleLevelIndex;
+                    }
+                }
+
+                // 2. Si hls.audioTracks tiene pistas disponibles y ninguna está activa, forzar pista 0 o español
+                if (hlsInstance.audioTracks && hlsInstance.audioTracks.length > 0) {
+                    let targetTrack = 0;
+                    for (let t = 0; t < hlsInstance.audioTracks.length; t++) {
+                        const track = hlsInstance.audioTracks[t];
+                        const lang = (track.lang || track.name || '').toLowerCase();
+                        if (lang.includes('es') || lang.includes('spa')) {
+                            targetTrack = t;
+                            break;
+                        }
+                    }
+
+                    if (hlsInstance.audioTrack === -1 || hlsInstance.audioTrack === undefined) {
+                        console.log('Jandos-TV: Forzando activación de pista de audio HLS:', targetTrack);
+                        hlsInstance.audioTrack = targetTrack;
+                    }
+                }
+
                 attemptPlayVideo();
             });
 
             hlsInstance.on(window.Hls.Events.ERROR, function (event, data) {
+                const details = data && data.details ? data.details : '';
+                console.warn('Jandos-TV: Evento de error HLS:', data.type, details, 'Fatal:', data.fatal);
+
+                // Si ocurre incompatibilidad de códecs, saltar de inmediato al siguiente stream sin esperar timeout
+                if (
+                    details === 'bufferAddCodecError' ||
+                    details === 'manifestIncompatibleCodecsError' ||
+                    details === (window.Hls.ErrorDetails && window.Hls.ErrorDetails.BUFFER_ADD_CODEC_ERROR) ||
+                    details === (window.Hls.ErrorDetails && window.Hls.ErrorDetails.MANIFEST_INCOMPATIBLE_CODECS_ERROR)
+                ) {
+                    console.warn('Jandos-TV: Códec no soportado detectado por Hls.js (' + details + '). Descartando señal de inmediato.');
+                    tryNextStreamUrl('Códec incompatible (' + details + ')');
+                    return;
+                }
+
                 if (data.fatal) {
-                    console.warn('Jandos-TV: Error fatal en HLS', data.type, data.details);
-                    handleStreamFailure(data.details || 'Fallo de señal');
+                    console.warn('Jandos-TV: Error fatal en HLS:', details);
+                    tryNextStreamUrl(details || 'Fallo de señal');
                 }
             });
         } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
@@ -369,11 +475,11 @@
             attemptPlayVideo();
         } else {
             console.error('Jandos-TV: Formato no soportado');
-            handleStreamFailure('Formato no soportado');
+            tryNextStreamUrl('Formato no soportado');
         }
     }
 
-    function handleStreamFailure(reason) {
+    function tryNextStreamUrl(reason) {
         if (streamLoadTimeoutTimer) {
             clearTimeout(streamLoadTimeoutTimer);
             streamLoadTimeoutTimer = null;
@@ -385,7 +491,7 @@
         // 1. Probar siguiente señal HLS disponible para este canal
         if (channel.urls && channel.urls.length > 1 && currentStreamUrlIndex < channel.urls.length - 1) {
             currentStreamUrlIndex++;
-            console.log('Jandos-TV: Probando automáticamente señal ' + (currentStreamUrlIndex + 1) + ' para ' + channel.name);
+            console.log('Jandos-TV: Probando automáticamente señal ' + (currentStreamUrlIndex + 1) + ' para ' + channel.name + ' (motivo: ' + reason + ')');
             showStatus('Buscando señal alterna...', 'Probando señal ' + (currentStreamUrlIndex + 1) + ' de ' + channel.urls.length);
             showOSD();
             loadActiveStream();
@@ -393,8 +499,12 @@
         }
 
         // 2. Si todas las señales HLS fallaron, activar el salto automático al siguiente canal (Watchdog)
-        console.warn('Jandos-TV: Canal ' + channel.name + ' sin señales funcionales (' + reason + '). Saltando...');
+        console.warn('Jandos-TV: Canal ' + channel.name + ' sin señales funcionales (' + reason + '). Saltando al siguiente canal...');
         skipToNextChannel('Canal sin transmisión en este momento. Pasando al siguiente...');
+    }
+
+    function handleStreamFailure(reason) {
+        tryNextStreamUrl(reason);
     }
 
     function switchNextSignalManual() {
@@ -418,7 +528,55 @@
     // Eventos del elemento <video>
     videoEl.addEventListener('playing', function () {
         hideStatus();
-        clearStreamTimers(); // Cancela watchdog y timeouts al reproducir video con éxito
+        // Cancelar watchdog y timeouts de carga
+        if (streamLoadTimeoutTimer) {
+            clearTimeout(streamLoadTimeoutTimer);
+            streamLoadTimeoutTimer = null;
+        }
+        if (channelWatchdogTimer) {
+            clearTimeout(channelWatchdogTimer);
+            channelWatchdogTimer = null;
+        }
+
+        // 1. Validación estricta de Pantalla Negra (videoWidth === 0) tras 3.5 segundos de reproducción
+        if (blackScreenTimer) clearTimeout(blackScreenTimer);
+        blackScreenTimer = setTimeout(function () {
+            if (!videoEl.paused && !videoEl.ended) {
+                if (videoEl.videoWidth === 0 || videoEl.videoHeight === 0) {
+                    console.warn('Jandos-TV: Pantalla negra detectada (videoWidth === 0 tras 3.5s - códec H.265/MPEG-2 incompatible). Descartando señal...');
+                    tryNextStreamUrl('Pantalla negra sin video (videoWidth===0)');
+                }
+            }
+        }, 3500);
+
+        // 2. Validación estricta de Audio Mudo tras 4.0 segundos
+        if (audioCheckTimer) clearTimeout(audioCheckTimer);
+        audioCheckTimer = setTimeout(function () {
+            if (!videoEl.paused && !videoEl.ended) {
+                const channel = channels[currentChannelIndex];
+                if (channel && channel.urls && channel.urls.length > 1) {
+                    const hasMozAudio = videoEl.mozHasAudio !== undefined ? videoEl.mozHasAudio : true;
+                    const webkitBytes = videoEl.webkitAudioDecodedByteCount;
+                    const isWebkitMute = (webkitBytes !== undefined && webkitBytes === 0);
+                    const hasAudioTracks = !videoEl.audioTracks || (videoEl.audioTracks.length > 0);
+
+                    if (!hasMozAudio || isWebkitMute || !hasAudioTracks) {
+                        console.warn('Jandos-TV: Señal sin entrega de audio detectable tras 4s. Conmutando a señal alternativa...');
+                        tryNextStreamUrl('Señal sin audio detectable tras 4s');
+                    }
+                }
+            }
+        }, 4000);
+    });
+
+    // Validación continua en timeupdate por si la decodificación de video se congela o inicia en 0
+    videoEl.addEventListener('timeupdate', function () {
+        if (videoEl.currentTime > 3.5 && !videoEl.paused && !videoEl.ended) {
+            if (videoEl.videoWidth === 0 || videoEl.videoHeight === 0) {
+                console.warn('Jandos-TV: timeupdate confirmó videoWidth === 0 (>3.5s). Descartando señal...');
+                tryNextStreamUrl('Pantalla negra en timeupdate (videoWidth===0)');
+            }
+        }
     });
 
     videoEl.addEventListener('waiting', function () {
@@ -426,7 +584,7 @@
     });
 
     videoEl.addEventListener('error', function () {
-        handleStreamFailure('Error del elemento video');
+        tryNextStreamUrl('Error del elemento video');
     });
 
     // --------------------------------------------------------------------------
@@ -489,11 +647,14 @@
     }
 
     function updateGuideFocus() {
+        if (!guideListEl || !guideListEl.querySelectorAll) return;
         const items = guideListEl.querySelectorAll('.guide-item');
         items.forEach(function (item, idx) {
             if (idx === guideFocusedIndex) {
                 item.classList.add('focused');
-                item.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                if (item.scrollIntoView) {
+                    item.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
             } else {
                 item.classList.remove('focused');
             }
@@ -501,6 +662,7 @@
     }
 
     function updateGuideActiveChannel() {
+        if (!guideListEl || !guideListEl.querySelectorAll) return;
         const items = guideListEl.querySelectorAll('.guide-item');
         items.forEach(function (item, idx) {
             if (idx === currentChannelIndex) {

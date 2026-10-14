@@ -186,9 +186,9 @@ const BLOCK_2_DEPORTES = [
         category: 'DEPORTES',
         keywords: ['dsports', 'directv sports'],
         candidateUrls: [
-            'http://45.170.130.224:8000/play/a03d/index.m3u8',
+            'http://38.187.7.252:8000/play/a03d/index.m3u8',
             'http://168.196.127.137:6001/play/a03d/index.m3u8',
-            'http://187.102.208.209:8000/play/a0bq/index.m3u8'
+            'http://45.170.130.224:8000/play/a03d/index.m3u8'
         ]
     },
     {
@@ -198,8 +198,8 @@ const BLOCK_2_DEPORTES = [
         keywords: ['claro sports', 'clarosports'],
         candidateUrls: [
             'http://168.196.127.137:6001/play/a08r/index.m3u8',
-            'http://45.170.130.224:8000/play/a08r/index.m3u8',
-            'https://clarosports-live.akamaized.net/hls/live/2004245/clarosports1/master.m3u8'
+            'https://clarosports-live.akamaized.net/hls/live/2004245/clarosports1/master.m3u8',
+            'http://45.170.130.224:8000/play/a08r/index.m3u8'
         ]
     },
     {
@@ -208,8 +208,8 @@ const BLOCK_2_DEPORTES = [
         category: 'DEPORTES',
         keywords: ['tyc sports', 'tyc', 'tudn'],
         candidateUrls: [
-            'http://45.170.130.224:8000/play/a020/index.m3u8',
-            'https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8'
+            'https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8',
+            'http://45.170.130.224:8000/play/a020/index.m3u8'
         ]
     },
     {
@@ -218,8 +218,8 @@ const BLOCK_2_DEPORTES = [
         category: 'DEPORTES',
         keywords: ['ovacion', 'ovación', 'futbol peru', 'fútbol perú'],
         candidateUrls: [
-            'http://190.93.224.42/RPP/index.m3u8',
-            'http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8'
+            'http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8',
+            'http://190.93.224.42/RPP/index.m3u8'
         ]
     },
     {
@@ -251,17 +251,161 @@ function isCorsAllowed(res) {
 }
 
 /**
+ * Puntuación de calidad de origen y estabilidad CDN:
+ * Prioriza CDNs globales seguras con HTTPS (Akamai, CloudFront, Bitel, Amagi, etc.)
+ * sobre servidores HTTP de IPs crudas que suelen traer MPEG-2 / AC-3 o congelarse.
+ */
+function getCdnScore(url) {
+    if (!url || typeof url !== 'string') return 0;
+    const lower = url.toLowerCase();
+    let score = 0;
+
+    if (lower.includes('bitel.com.pe') || lower.includes('tv360')) score += 100;
+    else if (lower.includes('akamaized.net') || lower.includes('cloudfront.net')) score += 95;
+    else if (lower.includes('rudo.video') || lower.includes('amagi.tv') || lower.includes('boldmss.com')) score += 90;
+    else if (lower.includes('google.com') || lower.includes('dailymotion') || lower.includes('mux.com')) score += 85;
+    else if (lower.includes('servidoresdestream') || lower.includes('streamhispanatv') || lower.includes('ujjina')) score += 80;
+    else if (lower.includes('live') || lower.includes('cdn')) score += 70;
+
+    if (lower.startsWith('https://')) score += 40;
+
+    if (lower.match(/:\d{4,5}\/play\//)) score -= 50;
+    if (lower.match(/http:\/\/\d+\.\d+\.\d+\.\d+:\d+/)) score -= 30;
+
+    return score;
+}
+
+/**
+ * Analiza un búfer de datos TS (primeros 16 KB) buscando PAT y PMT.
+ * Determina con precisión matemática si el stream transporta códec de video H.264
+ * y códec de audio AAC, detectando y descartando códecs incompatibles (HEVC, MPEG-2, AC-3).
+ */
+function inspectTsCodecs(buf) {
+    if (!buf || buf.length < 188) {
+        return { isTs: false, hasH264: false, hasAac: false, hasHevc: false, hasMpeg2: false, hasAc3: false };
+    }
+
+    let syncOffset = -1;
+    for (let i = 0; i < 188 && i < buf.length; i++) {
+        if (buf[i] === 0x47 && (i + 188 >= buf.length || buf[i + 188] === 0x47)) {
+            syncOffset = i;
+            break;
+        }
+    }
+
+    if (syncOffset === -1) {
+        return { isTs: false, hasH264: false, hasAac: false, hasHevc: false, hasMpeg2: false, hasAc3: false };
+    }
+
+    let pmtPid = null;
+    let hasH264 = false;
+    let hasAac = false;
+    let hasHevc = false;
+    let hasMpeg2 = false;
+    let hasAc3 = false;
+
+    for (let offset = syncOffset; offset + 188 <= buf.length; offset += 188) {
+        const p = buf.subarray(offset, offset + 188);
+        const pusi = (p[1] & 0x40) !== 0;
+        const pid = ((p[1] & 0x1f) << 8) | p[2];
+        const afc = (p[3] & 0x30) >> 4;
+
+        let payloadStart = 4;
+        if (afc === 2) continue; // solo adaptación
+        if (afc === 3) {
+            const afl = p[4];
+            payloadStart = 5 + afl;
+        }
+        if (payloadStart >= 188) continue;
+
+        // PAT (PID 0)
+        if (pid === 0) {
+            let ptr = payloadStart;
+            if (pusi) ptr += 1 + p[ptr];
+            if (ptr + 8 < 188 && p[ptr] === 0x00) {
+                const sectionLength = ((p[ptr + 1] & 0x0f) << 8) | p[ptr + 2];
+                let pos = ptr + 8;
+                const end = ptr + 3 + sectionLength - 4;
+                while (pos + 4 <= end && pos + 4 <= 188) {
+                    const progNum = (p[pos] << 8) | p[pos + 1];
+                    const progPid = ((p[pos + 2] & 0x1f) << 8) | p[pos + 3];
+                    if (progNum !== 0) {
+                        pmtPid = progPid;
+                    }
+                    pos += 4;
+                }
+            }
+        } else if (pmtPid !== null && pid === pmtPid) {
+            // PMT (PID del canal)
+            let ptr = payloadStart;
+            if (pusi) ptr += 1 + p[ptr];
+            if (ptr + 12 < 188 && p[ptr] === 0x02) {
+                const sectionLength = ((p[ptr + 1] & 0x0f) << 8) | p[ptr + 2];
+                const progInfoLength = ((p[ptr + 10] & 0x0f) << 8) | p[ptr + 11];
+                let pos = ptr + 12 + progInfoLength;
+                const end = ptr + 3 + sectionLength - 4;
+                while (pos + 5 <= end && pos + 5 <= 188) {
+                    const stype = p[pos];
+                    const esInfoLen = ((p[pos + 3] & 0x0f) << 8) | p[pos + 4];
+
+                    if (stype === 0x1b) hasH264 = true;
+                    else if (stype === 0x24) hasHevc = true;
+                    else if (stype === 0x01 || stype === 0x02) hasMpeg2 = true;
+                    else if (stype === 0x0f || stype === 0x11) hasAac = true;
+                    else if (stype === 0x81 || stype === 0x87) hasAc3 = true;
+
+                    pos += 5 + esInfoLen;
+                }
+            }
+        }
+    }
+
+    return { isTs: true, hasH264, hasAac, hasHevc, hasMpeg2, hasAc3 };
+}
+
+/**
+ * Inspecciona las etiquetas #EXT-X-STREAM-INF y #EXT-X-MEDIA del manifiesto
+ * para detectar códecs incompatibles declarados.
+ */
+function checkManifestCodecs(manifestText) {
+    const lines = manifestText.split(/\r?\n/).map(l => l.trim());
+    let hasAvc1 = false;
+    let hasMp4a = false;
+    let hasHevc = false;
+    let hasAc3 = false;
+    let hasExplicitCodecs = false;
+
+    for (const l of lines) {
+        if (l.startsWith('#EXT-X-STREAM-INF') || l.startsWith('#EXT-X-MEDIA:TYPE=AUDIO')) {
+            const match = l.match(/CODECS="([^"]+)"/i);
+            if (match) {
+                hasExplicitCodecs = true;
+                const cStr = match[1].toLowerCase();
+                if (cStr.includes('avc1') || cStr.includes('h264')) hasAvc1 = true;
+                if (cStr.includes('mp4a') || cStr.includes('aac')) hasMp4a = true;
+                if (cStr.includes('hev1') || cStr.includes('hvc1')) hasHevc = true;
+                if (cStr.includes('ac-3') || cStr.includes('ec-3') || cStr.includes('ac3')) hasAc3 = true;
+            }
+        }
+    }
+
+    return { hasExplicitCodecs, hasAvc1, hasMp4a, hasHevc, hasAc3 };
+}
+
+/**
  * Verificación profunda de streaming HLS:
- * a) Descarga el .m3u8 principal con cabecera Origin.
- * b) Si es Master Playlist, resuelve la sub-playlist (Media Playlist) y la descarga.
- * c) Localiza el primer segmento de video (.ts, .m4s, .aac) y hace un GET con Range: bytes=0-1024
- *    comprobando que entregue datos (> 0 bytes) y que NO esté bloqueado por CORS.
+ * a) Descarga el .m3u8 principal con cabecera Origin (CORS check).
+ * b) Inspecciona el manifiesto y rechaza códecs incompatibles (HEVC / AC-3 sin avc1+mp4a).
+ * c) Si es Master Playlist, resuelve la sub-playlist (Media Playlist) compatible.
+ * d) Descarga los primeros 16 KB del primer segmento (.ts o .m4s).
+ * e) En streams TS, valida la presencia de video H.264 (0x1b) y audio AAC (0x0f/0x11),
+ *    descartando HEVC (0x24), MPEG-2 (0x02) y Dolby AC-3 (0x81/0x87).
  */
 async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
     if (!url || typeof url !== 'string' || !url.startsWith('http')) return false;
 
     try {
-        // a) Descargar Manifiesto Maestro
+        // a) Descargar Manifiesto Maestro con Origin
         const res1 = await fetch(url, {
             headers: {
                 'Origin': CORS_TEST_ORIGIN,
@@ -276,15 +420,27 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
         const text1 = await res1.text();
         if (!text1.includes('#EXTM3U')) return false;
 
+        // b) Rechazar si declara códecs incompatibles sin alternativa avc1 + mp4a
+        const mCodecs = checkManifestCodecs(text1);
+        if (mCodecs.hasExplicitCodecs) {
+            if ((mCodecs.hasHevc || mCodecs.hasAc3) && !(mCodecs.hasAvc1 && mCodecs.hasMp4a)) {
+                return false;
+            }
+        }
+
         let mediaPlaylistUrl = url;
         let mediaPlaylistText = text1;
 
-        // b) Si es un Master Playlist (#EXT-X-STREAM-INF), resolver Media Playlist
+        // c) Si es Master Playlist (#EXT-X-STREAM-INF), resolver sub-playlist compatible
         if (text1.includes('#EXT-X-STREAM-INF')) {
             const lines = text1.split(/\r?\n/).map(l => l.trim());
             let subPath = null;
             for (let i = 0; i < lines.length; i++) {
                 if (lines[i].startsWith('#EXT-X-STREAM-INF')) {
+                    const lLower = lines[i].toLowerCase();
+                    if (lLower.includes('hev') || lLower.includes('hvc') || lLower.includes('ac-3')) {
+                        continue; // Evitar variantes incompatibles
+                    }
                     for (let j = i + 1; j < lines.length; j++) {
                         const nextLine = lines[j];
                         if (nextLine && !nextLine.startsWith('#')) {
@@ -293,6 +449,22 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
                         }
                     }
                     if (subPath) break;
+                }
+            }
+
+            if (!subPath) {
+                // Fallback a primera variante si no había atributos de codec
+                for (let i = 0; i < lines.length; i++) {
+                    if (lines[i].startsWith('#EXT-X-STREAM-INF')) {
+                        for (let j = i + 1; j < lines.length; j++) {
+                            const nextLine = lines[j];
+                            if (nextLine && !nextLine.startsWith('#')) {
+                                subPath = nextLine;
+                                break;
+                            }
+                        }
+                        if (subPath) break;
+                    }
                 }
             }
 
@@ -314,7 +486,7 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
             if (!mediaPlaylistText.includes('#EXTM3U')) return false;
         }
 
-        // c) Localizar primer segmento de video (.ts, .m4s, .aac o después de #EXTINF)
+        // d) Localizar primer segmento de video (.ts, .m4s, .mp4, .aac o tras #EXTINF)
         const mediaLines = mediaPlaylistText.split(/\r?\n/).map(l => l.trim());
         let segmentPath = null;
 
@@ -333,7 +505,7 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
 
         if (!segmentPath) {
             for (const l of mediaLines) {
-                if (l && !l.startsWith('#') && (l.includes('.ts') || l.includes('.m4s') || l.includes('.aac') || l.includes('segment') || l.includes('frag'))) {
+                if (l && !l.startsWith('#') && (l.includes('.ts') || l.includes('.m4s') || l.includes('.mp4') || l.includes('.aac') || l.includes('segment') || l.includes('frag'))) {
                     segmentPath = l;
                     break;
                 }
@@ -344,12 +516,12 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
 
         const segmentUrl = segmentPath.startsWith('http') ? segmentPath : new URL(segmentPath, mediaPlaylistUrl).href;
 
-        // Comprobación de entrega de bytes de video reales y cabeceras CORS
+        // e) Descarga y verificación de primeros 16 KB del segmento de video
         const res3 = await fetch(segmentUrl, {
             headers: {
                 'Origin': CORS_TEST_ORIGIN,
                 'User-Agent': USER_AGENT,
-                'Range': 'bytes=0-1024'
+                'Range': 'bytes=0-16384'
             },
             signal: AbortSignal.timeout(timeoutMs)
         });
@@ -357,8 +529,20 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
         if (!res3.ok && res3.status !== 206) return false;
         if (!isCorsAllowed(res3)) return false;
 
-        const buf = await res3.arrayBuffer();
-        return buf.byteLength > 0;
+        const arrayBuf = await res3.arrayBuffer();
+        if (arrayBuf.byteLength === 0) return false;
+
+        const buf = Buffer.from(arrayBuf);
+        const tsInfo = inspectTsCodecs(buf);
+
+        // Si es un flujo TS, verificar que no tenga códecs incompatibles
+        if (tsInfo.isTs) {
+            if (tsInfo.hasHevc) return false; // Pantalla negra por HEVC H.265
+            if (tsInfo.hasMpeg2 && !tsInfo.hasH264) return false; // Pantalla negra por MPEG-2
+            if (tsInfo.hasAc3 && !tsInfo.hasAac) return false; // Audio Dolby no soportado sin AAC
+        }
+
+        return true;
     } catch (e) {
         return false;
     }
@@ -424,9 +608,17 @@ async function main() {
         process.stdout.write(`Probando ${ch.name}... `);
         const allCandidates = [...ch.candidateUrls, ...findExtraUrlsForKeywords(ch.keywords)];
         const uniqueCandidates = [...new Set(allCandidates)];
+        // Priorizar CDNs estables
+        uniqueCandidates.sort((a, b) => getCdnScore(b) - getCdnScore(a));
         const workingUrls = [];
 
         for (const u of uniqueCandidates) {
+            // Si ya existe una señal CDN estable verificada, descartar IPs crudas inestables :8000/play/
+            const hasCdn = workingUrls.some(w => getCdnScore(w) >= 70);
+            if (hasCdn && (u.includes(':8000/play/') || u.includes(':6001/play/'))) {
+                continue;
+            }
+
             const ok = await testHlsDeep(u);
             if (ok) {
                 workingUrls.push(u);
@@ -435,8 +627,9 @@ async function main() {
         }
 
         if (workingUrls.length === 0) {
-            // Respaldar con primera señal candidata conocida
-            workingUrls.push(ch.candidateUrls[0]);
+            // Respaldar con la candidata de mayor calidad CDN
+            const sortedFallback = [...ch.candidateUrls].sort((a, b) => getCdnScore(b) - getCdnScore(a));
+            workingUrls.push(sortedFallback[0]);
             console.log(`[FALLBACK ASIGNADO] (0 señales deep-ok)`);
         } else {
             console.log(`[OK] (${workingUrls.length} señales 100% activas)`);
@@ -457,9 +650,17 @@ async function main() {
         process.stdout.write(`Probando ${ch.name}... `);
         const allCandidates = [...ch.candidateUrls, ...findExtraUrlsForKeywords(ch.keywords)];
         const uniqueCandidates = [...new Set(allCandidates)];
+        // Priorizar CDNs estables
+        uniqueCandidates.sort((a, b) => getCdnScore(b) - getCdnScore(a));
         const workingUrls = [];
 
         for (const u of uniqueCandidates) {
+            // Si ya existe una señal CDN estable verificada, descartar IPs crudas inestables :8000/play/
+            const hasCdn = workingUrls.some(w => getCdnScore(w) >= 70);
+            if (hasCdn && (u.includes(':8000/play/') || u.includes(':6001/play/'))) {
+                continue;
+            }
+
             const ok = await testHlsDeep(u);
             if (ok) {
                 workingUrls.push(u);
@@ -468,7 +669,8 @@ async function main() {
         }
 
         if (workingUrls.length === 0) {
-            workingUrls.push(ch.candidateUrls[0]);
+            const sortedFallback = [...ch.candidateUrls].sort((a, b) => getCdnScore(b) - getCdnScore(a));
+            workingUrls.push(sortedFallback[0]);
             console.log(`[FALLBACK ASIGNADO]`);
         } else {
             console.log(`[OK] (${workingUrls.length} señales 100% activas)`);
@@ -497,6 +699,9 @@ async function main() {
     const verifiedBlock3 = [];
     const testedUrls = new Set();
 
+    // Ordenar canales recolectados para evaluar primero streams CDN de alta reputación
+    allRawChannels.sort((a, b) => getCdnScore(b.url) - getCdnScore(a.url));
+
     for (const raw of allRawChannels) {
         if (verifiedBlock3.length >= 25) break; // Limitar a 25 para un total óptimo de 45 canales rápidos y probados
 
@@ -510,7 +715,7 @@ async function main() {
                 const isRegional = regionalKeywords.some(kw => rawLower.includes(kw));
                 const category = isRegional ? 'REGIONALES' : 'CINE Y CULTURA';
 
-                console.log(`  [+ VERIFICADO] ${raw.name} (${category})`);
+                console.log(`  [+ VERIFICADO H.264+AAC] ${raw.name} (${category})`);
                 verifiedBlock3.push({
                     name: raw.name,
                     category: category,
