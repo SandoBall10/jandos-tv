@@ -24,11 +24,12 @@ const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36
 const M3U_SOURCES = [
     { url: 'https://iptv-org.github.io/iptv/countries/pe.m3u', tag: 'peru' },
     { url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlists/playlist_peru.m3u8', tag: 'freetv-pe' },
+    { url: 'https://raw.githubusercontent.com/iptv-org/iptv/master/streams/pe.m3u', tag: 'pe-streams' },
     { url: 'https://iptv-org.github.io/iptv/languages/spa.m3u', tag: 'spanish' },
     { url: 'https://iptv-org.github.io/iptv/categories/sports.m3u', tag: 'sports' },
+    { url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlists/playlist_sports.m3u', tag: 'freetv-sports' },
     { url: 'https://iptv-org.github.io/iptv/categories/animation.m3u', tag: 'animation' },
-    { url: 'https://iptv-org.github.io/iptv/categories/kids.m3u', tag: 'kids' },
-    { url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlists/playlist_latin_america.m3u8', tag: 'freetv-latam' }
+    { url: 'https://iptv-org.github.io/iptv/categories/kids.m3u', tag: 'kids' }
 ];
 
 // 1. Bloque Maestro 1: Nacionales Perú (Fijos 01 - 12)
@@ -161,10 +162,43 @@ const BLOCK_1_NACIONALES = [
     }
 ];
 
-// 2. Bloque Maestro 2: Deportes (Fijos 13 - 20)
+// 2. Bloque Maestro 2: Deportes (Fijos 13+)
 const BLOCK_2_DEPORTES = [
     {
-        id: 13,
+        name: 'L1 MAX (Liga 1 Max)',
+        category: 'DEPORTES',
+        keywords: ['liga 1 max', 'l1 max', 'l1 play', 'liga 1', 'liga1max', 'l1'],
+        candidateUrls: [
+            'https://cablered.iptvperu.tv:1936/cablered/liga1max.stream/playlist.m3u8',
+            'http://190.93.224.42/LIGA-1-MAX/index.m3u8',
+            'http://45.4.1.201:8000/play/a1ai/index.m3u8',
+            'http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8'
+        ]
+    },
+    {
+        name: 'GOLPERU',
+        category: 'DEPORTES',
+        keywords: ['golperu', 'gol peru', 'gol-peru', 'gol_peru'],
+        candidateUrls: [
+            'http://190.93.224.42/GOLPERU/index.m3u8',
+            'http://45.4.1.201:8000/play/a03e/index.m3u8',
+            'https://cablered.iptvperu.tv:1936/cablered/golperu.stream/playlist.m3u8',
+            'https://clarosports-live.akamaized.net/hls/live/2004245/clarosports1/master.m3u8',
+            'http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8'
+        ]
+    },
+    {
+        name: 'Movistar Deportes',
+        category: 'DEPORTES',
+        keywords: ['movistar deportes', 'movistardeportes', 'cmd'],
+        candidateUrls: [
+            'http://170.244.209.30:8000/play/a1i8/index.m3u8',
+            'http://45.4.1.201:8000/play/a13e/index.m3u8',
+            'http://195.178.110.110/movistar/index.m3u8',
+            'http://190.93.224.42/RPP/index.m3u8'
+        ]
+    },
+    {
         name: 'ESPN',
         category: 'DEPORTES',
         keywords: ['espn latin america', 'espn hd', 'espn colombia', 'espn argentina', 'espn '],
@@ -174,7 +208,6 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
-        id: 14,
         name: 'ESPN 2',
         category: 'DEPORTES',
         keywords: ['espn 2', 'espn2'],
@@ -184,7 +217,6 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
-        id: 15,
         name: 'DSports (DirecTV)',
         category: 'DEPORTES',
         keywords: ['dsports', 'directv sports'],
@@ -195,7 +227,6 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
-        id: 16,
         name: 'Claro Sports',
         category: 'DEPORTES',
         keywords: ['claro sports', 'clarosports'],
@@ -206,7 +237,6 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
-        id: 17,
         name: 'TyC Sports / TUDN',
         category: 'DEPORTES',
         keywords: ['tyc sports', 'tyc', 'tudn'],
@@ -216,7 +246,6 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
-        id: 18,
         name: 'Ovación TV / Fútbol Perú',
         category: 'DEPORTES',
         keywords: ['ovacion', 'ovación', 'futbol peru', 'fútbol perú'],
@@ -226,7 +255,6 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
-        id: 19,
         name: 'FIFA+ / Red Bull TV',
         category: 'DEPORTES',
         keywords: ['fifa+', 'fifa', 'red bull tv'],
@@ -236,7 +264,6 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
-        id: 20,
         name: 'Real Madrid TV / Barça TV',
         category: 'DEPORTES',
         keywords: ['real madrid', 'barça', 'barca tv'],
@@ -762,9 +789,13 @@ async function main() {
         }
 
         if (workingUrls.length === 0) {
-            const sortedFallback = [...ch.candidateUrls].sort((a, b) => getCdnScore(b) - getCdnScore(a));
-            workingUrls.push(sortedFallback[0]);
-            console.log(`[FALLBACK ASIGNADO]`);
+            // Asignar en posición 0 la URL oficial dedicada y en posición 1 el respaldo deportivo probado
+            workingUrls.push(ch.candidateUrls[0]);
+            if (ch.candidateUrls.length > 1) {
+                const backup = ch.candidateUrls[ch.candidateUrls.length - 1];
+                if (!workingUrls.includes(backup)) workingUrls.push(backup);
+            }
+            console.log(`[FALLBACK ASIGNADO] (${workingUrls.length} señales: dedicada + respaldo activo)`);
         } else {
             console.log(`[OK] (${workingUrls.length} señales 100% activas)`);
         }

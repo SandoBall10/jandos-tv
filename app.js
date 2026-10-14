@@ -595,7 +595,7 @@
         let lastCategory = null;
 
         channels.forEach(function (ch, idx) {
-            const category = ch.category || (idx < 12 ? 'NACIONALES' : (idx < 20 ? 'DEPORTES' : 'VARIEDADES'));
+            const category = ch.category || (idx < 12 ? 'NACIONALES' : (idx < 23 ? 'DEPORTES' : 'VARIEDADES'));
 
             // Agregar separador de categoría si cambia
             if (category !== lastCategory) {
