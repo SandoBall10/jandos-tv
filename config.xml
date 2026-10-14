@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widget xmlns="http://www.w3.org/ns/widgets" 
+        xmlns:tizen="http://tizen.org/ns/widgets" 
+        id="http://tizen.org/jandostv" 
+        version="1.0.0" 
+        viewmodes="maximized">
+    <tizen:application id="JandosTV.main" 
+                       package="JandosTV" 
+                       required_version="2.3"/>
+    <tizen:profile name="tv-samsung"/>
+    <name>Jandos-TV</name>
+    <description>Televisión en vivo con canales nacionales de Perú para Samsung Smart TV</description>
+    <author href="http://jandostv.pe">Jandos-TV</author>
+    <icon src="icon.png"/>
+    <content src="index.html"/>
+    <feature name="http://tizen.org/feature/screen.size.all"/>
+    
+    <!-- Privilegios Tizen y Samsung TV -->
+    <tizen:privilege name="http://tizen.org/privilege/tv.inputdevice"/>
+    <tizen:privilege name="http://tizen.org/privilege/internet"/>
+    <tizen:privilege name="http://tizen.org/privilege/power"/>
+    <tizen:privilege name="http://developer.samsung.com/privilege/network.public"/>
+    
+    <!-- Configuración nativa Samsung Tizen -->
+    <tizen:setting screen-orientation="landscape" 
+                   context-menu="disable" 
+                   background-support="disable" 
+                   encryption="disable" 
+                   install-location="auto" 
+                   hwkey-event="enable"/>
+                   
+    <access origin="*" subdomains="true"></access>
+</widget>

@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Jandos-TV</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Hls.js descargado localmente para arranque 100% offline y sin CDN externo -->
+    <script src="hls.min.js"></script>
+</head>
+<body>
+    <!-- 1. Contenedor de Video Pantalla Completa -->
+    <div id="video-container">
+        <video id="player" playsinline autoplay></video>
+        <!-- Respaldo YouTube Live cuando las señales HLS fallan -->
+        <iframe id="youtube-player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+    </div>
+
+    <!-- 2. OSD (Cartel Informativo Esquina Superior Izquierda) -->
+    <div id="osd">
+        <div class="osd-header">
+            <div class="osd-header-left">
+                <span class="osd-badge">CANAL</span>
+                <span id="osd-number" class="osd-channel-number">01</span>
+            </div>
+            <!-- Reloj Gigante de Perú (12h) -->
+            <div id="osd-clock" class="osd-clock">12:00 PM</div>
+        </div>
+        <div id="osd-name" class="osd-channel-name">Cargando canal...</div>
+        <div class="osd-footer">
+            <span class="osd-live-tag">SEÑAL EN VIVO</span>
+            <span class="osd-hint">Presiona OK para la lista JANDOS-TV</span>
+        </div>
+    </div>
+
+    <!-- 3. Marcador Numérico Rápido (Buffer de Teclado 0-9) -->
+    <div id="number-dialer">
+        <div class="dialer-title">SINTONIZANDO CANAL</div>
+        <div id="dialer-digits" class="dialer-digits">01</div>
+        <div class="dialer-subtext">Cambiando automáticamente...</div>
+    </div>
+
+    <!-- 4. Guía Rápida Lateral de Canales (Botón OK / Enter) -->
+    <div id="channel-guide">
+        <div class="guide-header">
+            <div class="guide-title-container">
+                <img src="icon.png" alt="JANDOS-TV" class="guide-logo">
+                <div class="guide-title">JANDOS-TV</div>
+            </div>
+            <div class="guide-instructions">Canales del Perú - Flechas Arriba/Abajo y OK para sintonizar</div>
+        </div>
+        <div id="guide-list" class="guide-list">
+            <!-- Los canales se renderizan dinámicamente -->
+        </div>
+    </div>
+
+    <!-- 5. Overlay de Estado (Spinner y Mensajes Amigables) -->
+    <div id="status-overlay">
+        <div class="spinner"></div>
+        <div id="status-text" class="status-message">Sintonizando canal...</div>
+        <div id="status-subtext" class="status-subtext">Por favor espere un momento</div>
+    </div>
+
+    <!-- Lógica de control remoto, reproducción y parser M3U -->
+    <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,150 @@
+{
+  "version": "1.0.0",
+  "updated": "2026-10-13",
+  "description": "Lista de canales principales de Perú para Jandos-TV con multi-señal HLS y respaldo YouTube Live",
+  "channels": [
+    {
+      "id": 1,
+      "name": "Latina Televisión",
+      "keywords": ["latina", "frecuencia latina", "canal 2"],
+      "urls": [
+        "https://dai.google.com/linear/hls/event/oYQGDqEGTmGdHE_fz9oLlg/master.m3u8",
+        "http://190.93.224.42/LATINA/index.m3u8",
+        "http://45.171.108.253:8888/LATINA/index.m3u8",
+        "https://redirector.rudo.video/hls-video/plus226/latina4/latina4.smil/playlist.m3u8"
+      ],
+      "youtubeChannelId": "UC6Xw2bFj8vQf0sD8tK8y0qw",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UC6Xw2bFj8vQf0sD8tK8y0qw&autoplay=1&mute=0"
+    },
+    {
+      "id": 2,
+      "name": "América Televisión",
+      "keywords": ["america television", "américa televisión", "america tv", "américa tv", "canal 4"],
+      "urls": [
+        "http://45.171.108.253:8888/AMERICA/index.m3u8",
+        "http://190.93.224.42/AMERICA/index.m3u8"
+      ],
+      "youtubeChannelId": "UC4Z4s3zB8T4xVzT2k7_0nCw",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UC4Z4s3zB8T4xVzT2k7_0nCw&autoplay=1&mute=0"
+    },
+    {
+      "id": 3,
+      "name": "Panamericana Televisión",
+      "keywords": ["panamericana", "canal 5"],
+      "urls": [
+        "http://45.171.108.253:8888/PANAMERICANA/index.m3u8",
+        "http://190.93.224.42/PANAMERICANA/index.m3u8"
+      ],
+      "youtubeChannelId": "UC8L0o0s3t308_e9c0z4A_ww",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_e9c0z4A_ww&autoplay=1&mute=0"
+    },
+    {
+      "id": 4,
+      "name": "TV Perú",
+      "keywords": ["tv peru", "tv perú", "canal 7", "tnp"],
+      "urls": [
+        "http://190.93.224.42/TV-PERU/index.m3u8",
+        "http://45.171.108.253:8888/TVPERU/index.m3u8",
+        "http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/nacionaltv_peru.stream/playlist.m3u8",
+        "https://k20.usastreams.com:8081/tvperuanisima/index.m3u8"
+      ],
+      "youtubeChannelId": "UCyvK7t9N8eP1ZfQ7dF2u3gA",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCyvK7t9N8eP1ZfQ7dF2u3gA&autoplay=1&mute=0"
+    },
+    {
+      "id": 5,
+      "name": "ATV",
+      "keywords": ["atv", "canal 9", "andina de television"],
+      "urls": [
+        "http://190.93.224.42/ATV/index.m3u8",
+        "http://45.171.108.253:8888/ATV/index.m3u8"
+      ],
+      "youtubeChannelId": "UC8L0o0s3t308_atv_noticias",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_atv_noticias&autoplay=1&mute=0"
+    },
+    {
+      "id": 6,
+      "name": "ATV+",
+      "keywords": ["atv+", "atv plus", "atv mas", "atv más"],
+      "urls": [
+        "http://45.171.108.253:8888/ATV/index.m3u8",
+        "http://190.93.224.42/ATV-MAS/index.m3u8",
+        "http://190.93.224.42/ATV-SUR/index.m3u8"
+      ],
+      "youtubeChannelId": "UC8L0o0s3t308_atv_mas",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_atv_mas&autoplay=1&mute=0"
+    },
+    {
+      "id": 7,
+      "name": "TV Perú Noticias",
+      "keywords": ["tv peru noticias", "tv perú noticias", "7.3", "peru noticias"],
+      "urls": [
+        "http://190.93.224.42/TV-PERU-NOTICIAS/index.m3u8",
+        "http://45.171.108.253:8888/TVPERUNOTICIAS/index.m3u8"
+      ],
+      "youtubeChannelId": "UCyvK7t9N8eP1ZfQ7dF2u3gA",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCyvK7t9N8eP1ZfQ7dF2u3gA&autoplay=1&mute=0"
+    },
+    {
+      "id": 8,
+      "name": "Willax TV",
+      "keywords": ["willax"],
+      "urls": [
+        "http://190.93.224.42/WILLAX/index.m3u8",
+        "http://45.171.108.253:8888/WILLAX/index.m3u8"
+      ],
+      "youtubeChannelId": "UCwillax_oficial_envivo",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCwillax_oficial_envivo&autoplay=1&mute=0"
+    },
+    {
+      "id": 9,
+      "name": "Exitosa TV",
+      "keywords": ["exitosa"],
+      "urls": [
+        "http://190.93.224.42/EXITOSA/index.m3u8",
+        "http://45.171.108.253:8888/EXITOSA/index.m3u8"
+      ],
+      "youtubeChannelId": "UCa5T-U9o3j0c8vK8y0exitosa",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCa5T-U9o3j0c8vK8y0exitosa&autoplay=1&mute=0"
+    },
+    {
+      "id": 10,
+      "name": "Nativa TV / RPP / Ovación",
+      "keywords": ["nativa", "rpp", "ovacion", "ovación"],
+      "urls": [
+        "http://187.102.210.46/NATIVATV/index.m3u8",
+        "https://live-evg7.tv360.bitel.com.pe/bitel/nativachanchamayoSRT/playlist.m3u8",
+        "http://190.93.224.42/RPP/index.m3u8",
+        "http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8"
+      ],
+      "youtubeChannelId": "UCnativa_tv_peru_oficial",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCnativa_tv_peru_oficial&autoplay=1&mute=0"
+    },
+    {
+      "id": 11,
+      "name": "Congreso TV / Justicia TV",
+      "keywords": ["congreso", "justicia tv", "justiciatv"],
+      "urls": [
+        "http://190.93.224.42/JUSTICIA-TV/index.m3u8",
+        "http://45.171.108.253:8888/CONGRESO/index.m3u8",
+        "http://190.93.224.42/CONGRESO/index.m3u8"
+      ],
+      "youtubeChannelId": "UCcongreso_peru_oficial",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCcongreso_peru_oficial&autoplay=1&mute=0"
+    },
+    {
+      "id": 12,
+      "name": "Sol TV / Señales Regionales",
+      "keywords": ["sol tv", "antares", "antena sur", "36 tv huacho", "agro tv"],
+      "urls": [
+        "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8",
+        "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8",
+        "https://5949aa132c8fb.streamlock.net:1963/iptvantares/liveantarestv/playlist.m3u8",
+        "https://live-evg8.tv360.bitel.com.pe/bitel/agroSRT/playlist.m3u8",
+        "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+      ],
+      "youtubeChannelId": "UCsol_tv_peru_oficial",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCsol_tv_peru_oficial&autoplay=1&mute=0"
+    }
+  ]
+}
