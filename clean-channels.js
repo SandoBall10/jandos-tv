@@ -38,11 +38,9 @@ const BLOCK_1_NACIONALES = [
         id: 1,
         name: 'Latina Televisión',
         category: 'NACIONALES',
-        keywords: ['latina', 'frecuencia latina', 'canal 2'],
+        keywords: ['latina televisión', 'latina television', 'latina.pe', 'frecuencia latina'],
         candidateUrls: [
-            'http://190.93.224.42/LATINA/index.m3u8',
-            'https://dai.google.com/linear/hls/event/oYQGDqEGTmGdHE_fz9oLlg/master.m3u8',
-            'https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8'
+            'http://190.93.224.42/LATINA/index.m3u8'
         ]
     },
     {
@@ -669,7 +667,10 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
 }
 
 // Descargar y parsear listas M3U
-async function fetchM3U(url) {
+// Descargar y parsear listas M3U
+async function fetchM3U(source) {
+    const url = typeof source === 'string' ? source : source.url;
+    const tag = typeof source === 'object' ? source.tag : '';
     try {
         console.log(`[M3U] Descargando ${url}...`);
         const res = await fetch(url, { signal: AbortSignal.timeout(12000) });
@@ -687,7 +688,7 @@ async function fetchM3U(url) {
                 currentName = commaIdx !== -1 ? trimmed.substring(commaIdx + 1).trim() : 'Canal';
             } else if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
                 if (currentName) {
-                    channels.push({ name: currentName, url: trimmed });
+                    channels.push({ name: currentName, url: trimmed, tag, sourceUrl: url });
                     currentName = null;
                 }
             }
@@ -704,17 +705,28 @@ async function main() {
     console.log('=== JANDOS-TV: INICIANDO CURACIÓN CON VERIFICACIÓN PROFUNDA HLS + CORS ===\n');
 
     // 1. Descargar listas M3U en paralelo
-    const m3uResults = await Promise.all(M3U_SOURCES.map(s => fetchM3U(s.url)));
+    const m3uResults = await Promise.all(M3U_SOURCES.map(s => fetchM3U(s)));
     const allRawChannels = m3uResults.flat();
     console.log(`Total canales en bruto recolectados: ${allRawChannels.length}`);
 
     // Helper para emparejar URLs adicionales encontradas en los M3U con un canal
-    function findExtraUrlsForKeywords(keywords) {
+    function findExtraUrlsForKeywords(keywords, channelName = '') {
         const found = [];
+        const isLatina = channelName.toLowerCase().includes('latina');
         for (const raw of allRawChannels) {
-            const rawName = raw.name.toLowerCase();
-            const matches = keywords.some(kw => rawName.includes(kw.toLowerCase()));
-            if (matches && !found.includes(raw.url)) {
+            const rawName = raw.name.toLowerCase().trim();
+            if (isLatina) {
+                // Regla estricta para Latina Televisión: Solo Perú (pe.m3u o playlist_peru.m3u8) y coincidencia exacta
+                const isPeruSource = (raw.tag === 'peru' || raw.tag === 'freetv-pe' || raw.tag === 'pe-streams' ||
+                    (raw.sourceUrl && (raw.sourceUrl.includes('pe.m3u') || raw.sourceUrl.includes('playlist_peru'))));
+                if (!isPeruSource) continue;
+                const isExactLatina = ['latina televisión', 'latina television', 'latina tv', 'latina.pe', 'frecuencia latina'].some(kw => rawName === kw || rawName === kw + ' hd');
+                if (!isExactLatina) continue;
+            } else {
+                const matches = keywords.some(kw => rawName.includes(kw.toLowerCase()));
+                if (!matches) continue;
+            }
+            if (!found.includes(raw.url)) {
                 found.push(raw.url);
             }
         }
@@ -726,7 +738,7 @@ async function main() {
     const finalNacionales = [];
     for (const ch of BLOCK_1_NACIONALES) {
         process.stdout.write(`Probando ${ch.name}... `);
-        const allCandidates = [...ch.candidateUrls, ...findExtraUrlsForKeywords(ch.keywords)];
+        const allCandidates = [...ch.candidateUrls, ...findExtraUrlsForKeywords(ch.keywords, ch.name)];
         const uniqueCandidates = [...new Set(allCandidates)];
         // Priorizar CDNs estables
         uniqueCandidates.sort((a, b) => getCdnScore(b) - getCdnScore(a));

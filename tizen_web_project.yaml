@@ -1,0 +1,57 @@
+# Project type [web_app, test_runner]
+project_type: web_app
+
+# Default profile, Tizen API version
+profile: tv-samsung
+api_version: "2.3"
+
+# Build type [Debug/ Release/ Test]
+build_type: Debug
+
+# Output name for application
+output_name: main
+
+# Output path for build
+output_path: ""
+
+# Enable size optimization of wgt for web workspace
+opt: false
+
+# Signing profile to be used for Tizen package signing
+# If value is empty: "", active signing profile will be used
+# Else If value is ".", default signing profile will be used
+signing_profile: ""
+
+# list of certs in web project (.trust-anchor)
+trust_anchor: []
+
+# list of files in web project (.html,.css etc) and resources
+files:
+  - app.js
+  - canales-remotos.json
+  - config.xml
+  - favicon.ico
+  - hls.min.js
+  - icon.png
+  - index.html
+  - styles.css
+
+# list of files to exclude based on the matched patterns
+excludes:
+  - ".git/*"
+  - ".git/**/*"
+  - ".tizen-rds/*"
+  - ".tizen-rds/**/*"
+  - "Build/*"
+  - "Debug/*"
+  - "Release/*"
+  - "Test/*"
+  - "clean-channels.js"
+  - "*.wgt"
+  - "*.p12"
+  - "*.md"
+  - "tizen_web_project.yaml"
+
+# project dependencies
+deps: []
+

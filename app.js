@@ -27,7 +27,7 @@
     // 2. Parrilla Base Curada (Cargada desde canales-remotos.json)
     // --------------------------------------------------------------------------
     let channels = [
-        { id: 1, name: 'Latina Televisión', category: 'NACIONALES', urls: ['http://190.93.224.42/LATINA/index.m3u8', 'https://dai.google.com/linear/hls/event/oYQGDqEGTmGdHE_fz9oLlg/master.m3u8'] },
+        { id: 1, name: 'Latina Televisión', category: 'NACIONALES', urls: ['http://190.93.224.42/LATINA/index.m3u8'] },
         { id: 2, name: 'América Televisión', category: 'NACIONALES', urls: ['https://live-bd1.tv360.bitel.com.pe/manifest/america/master_clean_source.m3u8'] },
         { id: 3, name: 'Panamericana TV', category: 'NACIONALES', urls: ['http://45.171.108.253:8888/PANAMERICANA/index.m3u8', 'http://190.93.224.42/PANAMERICANA/index.m3u8'] },
         { id: 4, name: 'TV Perú', category: 'NACIONALES', urls: ['http://190.93.224.42/TV-PERU/index.m3u8'] },
@@ -67,7 +67,6 @@
     let streamLoadTimeoutTimer = null;
     let channelWatchdogTimer = null;
     let blackScreenTimer = null;
-    let audioCheckTimer = null;
 
     // Reproductor HLS
     let hlsInstance = null;
@@ -220,10 +219,6 @@
             clearTimeout(blackScreenTimer);
             blackScreenTimer = null;
         }
-        if (audioCheckTimer) {
-            clearTimeout(audioCheckTimer);
-            audioCheckTimer = null;
-        }
     }
 
     function resetPlayerState() {
@@ -261,25 +256,21 @@
 
     function startChannelWatchdog() {
         if (channelWatchdogTimer) clearTimeout(channelWatchdogTimer);
-        // Watchdog de 15 segundos: si no hay frames de video reproducidos, saltar al siguiente canal
+        // Watchdog de 15 segundos: si no hay frames de video reproducidos tras 15s, mostrar mensaje sin cambiar de canal
         channelWatchdogTimer = setTimeout(function () {
-            console.warn('Jandos-TV Watchdog: 15 segundos sin reproducción. Pasando al siguiente canal.');
-            skipToNextChannel('Canal sin transmisión en este momento. Pasando al siguiente...');
+            console.warn('Jandos-TV Watchdog: 15 segundos sin reproducción en el canal actual.');
+            clearStreamTimers();
+            resetPlayerState();
+            showStatus('Señal no disponible temporalmente en este canal', 'Presione Arriba/Abajo para cambiar');
+            showOSD();
         }, CHANNEL_WATCHDOG_MS);
     }
 
     function skipToNextChannel(message) {
-        if (isSkipping) return;
-        isSkipping = true;
         clearStreamTimers();
-
-        showStatus(message || 'Canal sin transmisión. Pasando al siguiente...', 'Sintonizando canal disponible...');
+        resetPlayerState();
+        showStatus('Señal no disponible temporalmente en este canal', 'Presione Arriba/Abajo para cambiar');
         showOSD();
-
-        setTimeout(function () {
-            isSkipping = false;
-            playChannel(currentChannelIndex + 1);
-        }, 1600);
     }
 
     function playChannel(index) {
@@ -498,9 +489,12 @@
             return;
         }
 
-        // 2. Si todas las señales HLS fallaron, activar el salto automático al siguiente canal (Watchdog)
-        console.warn('Jandos-TV: Canal ' + channel.name + ' sin señales funcionales (' + reason + '). Saltando al siguiente canal...');
-        skipToNextChannel('Canal sin transmisión en este momento. Pasando al siguiente...');
+        // 2. Si todas las señales HLS fallaron, NO saltar de canal solo: quedarse en el canal con mensaje limpio
+        console.warn('Jandos-TV: Canal ' + channel.name + ' sin señales funcionales (' + reason + '). Manteniendo canal.');
+        clearStreamTimers();
+        resetPlayerState();
+        showStatus('Señal no disponible temporalmente en este canal', 'Presione Arriba/Abajo para cambiar');
+        showOSD();
     }
 
     function handleStreamFailure(reason) {
@@ -528,54 +522,15 @@
     // Eventos del elemento <video>
     videoEl.addEventListener('playing', function () {
         hideStatus();
-        // Cancelar watchdog y timeouts de carga
-        if (streamLoadTimeoutTimer) {
-            clearTimeout(streamLoadTimeoutTimer);
-            streamLoadTimeoutTimer = null;
-        }
-        if (channelWatchdogTimer) {
-            clearTimeout(channelWatchdogTimer);
-            channelWatchdogTimer = null;
-        }
-
-        // 1. Validación estricta de Pantalla Negra (videoWidth === 0) tras 3.5 segundos de reproducción
-        if (blackScreenTimer) clearTimeout(blackScreenTimer);
-        blackScreenTimer = setTimeout(function () {
-            if (!videoEl.paused && !videoEl.ended) {
-                if (videoEl.videoWidth === 0 || videoEl.videoHeight === 0) {
-                    console.warn('Jandos-TV: Pantalla negra detectada (videoWidth === 0 tras 3.5s - códec H.265/MPEG-2 incompatible). Descartando señal...');
-                    tryNextStreamUrl('Pantalla negra sin video (videoWidth===0)');
-                }
-            }
-        }, 3500);
-
-        // 2. Validación estricta de Audio Mudo tras 4.0 segundos
-        if (audioCheckTimer) clearTimeout(audioCheckTimer);
-        audioCheckTimer = setTimeout(function () {
-            if (!videoEl.paused && !videoEl.ended) {
-                const channel = channels[currentChannelIndex];
-                if (channel && channel.urls && channel.urls.length > 1) {
-                    const hasMozAudio = videoEl.mozHasAudio !== undefined ? videoEl.mozHasAudio : true;
-                    const webkitBytes = videoEl.webkitAudioDecodedByteCount;
-                    const isWebkitMute = (webkitBytes !== undefined && webkitBytes === 0);
-                    const hasAudioTracks = !videoEl.audioTracks || (videoEl.audioTracks.length > 0);
-
-                    if (!hasMozAudio || isWebkitMute || !hasAudioTracks) {
-                        console.warn('Jandos-TV: Señal sin entrega de audio detectable tras 4s. Conmutando a señal alternativa...');
-                        tryNextStreamUrl('Señal sin audio detectable tras 4s');
-                    }
-                }
-            }
-        }, 4000);
+        // Cancelar inmediatamente watchdog y timeouts una vez que hay reproducción activa
+        clearStreamTimers();
     });
 
-    // Validación continua en timeupdate por si la decodificación de video se congela o inicia en 0
+    // En timeupdate: apenas se verifique reproducción activa (readyState >= 2 o currentTime > 0), cancelar timers
     videoEl.addEventListener('timeupdate', function () {
-        if (videoEl.currentTime > 3.5 && !videoEl.paused && !videoEl.ended) {
-            if (videoEl.videoWidth === 0 || videoEl.videoHeight === 0) {
-                console.warn('Jandos-TV: timeupdate confirmó videoWidth === 0 (>3.5s). Descartando señal...');
-                tryNextStreamUrl('Pantalla negra en timeupdate (videoWidth===0)');
-            }
+        if ((videoEl.readyState >= 2 || videoEl.currentTime > 0) && !videoEl.paused) {
+            clearStreamTimers();
+            hideStatus();
         }
     });
 
