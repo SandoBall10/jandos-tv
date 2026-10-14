@@ -1,17 +1,17 @@
 {
-  "version": "1.0.0",
-  "updated": "2026-10-13",
-  "description": "Lista de canales principales de Perú para Jandos-TV con multi-señal HLS y respaldo YouTube Live",
+  "version": "1.2.0",
+  "updated": "2026-10-14",
+  "totalChannels": 55,
+  "description": "Parrilla curada y optimizada para Jandos-TV con bloques VIP: Nacionales (01-12), Deportes (13-20), Cine y Regionales.",
   "channels": [
     {
       "id": 1,
       "name": "Latina Televisión",
-      "keywords": ["latina", "frecuencia latina", "canal 2"],
+      "category": "NACIONALES",
       "urls": [
         "https://dai.google.com/linear/hls/event/oYQGDqEGTmGdHE_fz9oLlg/master.m3u8",
-        "http://190.93.224.42/LATINA/index.m3u8",
-        "http://45.171.108.253:8888/LATINA/index.m3u8",
-        "https://redirector.rudo.video/hls-video/plus226/latina4/latina4.smil/playlist.m3u8"
+        "https://redirector.rudo.video/hls-video/plus226/latina4/latina4.smil/playlist.m3u8",
+        "http://190.93.224.42/LATINA/index.m3u8"
       ],
       "youtubeChannelId": "UC6Xw2bFj8vQf0sD8tK8y0qw",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UC6Xw2bFj8vQf0sD8tK8y0qw&autoplay=1&mute=0"
@@ -19,21 +19,23 @@
     {
       "id": 2,
       "name": "América Televisión",
-      "keywords": ["america television", "américa televisión", "america tv", "américa tv", "canal 4"],
+      "category": "NACIONALES",
       "urls": [
-        "http://45.171.108.253:8888/AMERICA/index.m3u8",
-        "http://190.93.224.42/AMERICA/index.m3u8"
+        "https://prepublish.f.qaotic.net/a07/americahls-100056/playlist_720p.m3u8",
+        "https://stream.arcast.com.ar/canal4esquel/canal4esquel/playlist.m3u8",
+        "https://5cd577a3dd8ec.streamlock.net/CANAL4/smil:CANAL4.smil/playlist.m3u8"
       ],
       "youtubeChannelId": "UC4Z4s3zB8T4xVzT2k7_0nCw",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UC4Z4s3zB8T4xVzT2k7_0nCw&autoplay=1&mute=0"
     },
     {
       "id": 3,
-      "name": "Panamericana Televisión",
-      "keywords": ["panamericana", "canal 5"],
+      "name": "Panamericana TV",
+      "category": "NACIONALES",
       "urls": [
         "http://45.171.108.253:8888/PANAMERICANA/index.m3u8",
-        "http://190.93.224.42/PANAMERICANA/index.m3u8"
+        "http://190.93.224.42/PANAMERICANA/index.m3u8",
+        "http://45.5.118.152:8000/play/a03i/index.m3u8"
       ],
       "youtubeChannelId": "UC8L0o0s3t308_e9c0z4A_ww",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_e9c0z4A_ww&autoplay=1&mute=0"
@@ -41,10 +43,9 @@
     {
       "id": 4,
       "name": "TV Perú",
-      "keywords": ["tv peru", "tv perú", "canal 7", "tnp"],
+      "category": "NACIONALES",
       "urls": [
         "http://190.93.224.42/TV-PERU/index.m3u8",
-        "http://45.171.108.253:8888/TVPERU/index.m3u8",
         "http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/nacionaltv_peru.stream/playlist.m3u8",
         "https://k20.usastreams.com:8081/tvperuanisima/index.m3u8"
       ],
@@ -54,10 +55,11 @@
     {
       "id": 5,
       "name": "ATV",
-      "keywords": ["atv", "canal 9", "andina de television"],
+      "category": "NACIONALES",
       "urls": [
         "http://190.93.224.42/ATV/index.m3u8",
-        "http://45.171.108.253:8888/ATV/index.m3u8"
+        "http://45.171.108.253:8888/ATV/index.m3u8",
+        "http://190.93.224.42/ATV-SUR/index.m3u8"
       ],
       "youtubeChannelId": "UC8L0o0s3t308_atv_noticias",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_atv_noticias&autoplay=1&mute=0"
@@ -65,10 +67,9 @@
     {
       "id": 6,
       "name": "ATV+",
-      "keywords": ["atv+", "atv plus", "atv mas", "atv más"],
+      "category": "NACIONALES",
       "urls": [
         "http://45.171.108.253:8888/ATV/index.m3u8",
-        "http://190.93.224.42/ATV-MAS/index.m3u8",
         "http://190.93.224.42/ATV-SUR/index.m3u8"
       ],
       "youtubeChannelId": "UC8L0o0s3t308_atv_mas",
@@ -77,10 +78,9 @@
     {
       "id": 7,
       "name": "TV Perú Noticias",
-      "keywords": ["tv peru noticias", "tv perú noticias", "7.3", "peru noticias"],
+      "category": "NACIONALES",
       "urls": [
-        "http://190.93.224.42/TV-PERU-NOTICIAS/index.m3u8",
-        "http://45.171.108.253:8888/TVPERUNOTICIAS/index.m3u8"
+        "http://190.93.224.42/TV-PERU-NOTICIAS/index.m3u8"
       ],
       "youtubeChannelId": "UCyvK7t9N8eP1ZfQ7dF2u3gA",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCyvK7t9N8eP1ZfQ7dF2u3gA&autoplay=1&mute=0"
@@ -88,10 +88,9 @@
     {
       "id": 8,
       "name": "Willax TV",
-      "keywords": ["willax"],
+      "category": "NACIONALES",
       "urls": [
-        "http://190.93.224.42/WILLAX/index.m3u8",
-        "http://45.171.108.253:8888/WILLAX/index.m3u8"
+        "http://190.93.224.42/WILLAX/index.m3u8"
       ],
       "youtubeChannelId": "UCwillax_oficial_envivo",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCwillax_oficial_envivo&autoplay=1&mute=0"
@@ -99,52 +98,482 @@
     {
       "id": 9,
       "name": "Exitosa TV",
-      "keywords": ["exitosa"],
+      "category": "NACIONALES",
       "urls": [
-        "http://190.93.224.42/EXITOSA/index.m3u8",
-        "http://45.171.108.253:8888/EXITOSA/index.m3u8"
+        "http://190.93.224.42/EXITOSA/index.m3u8"
       ],
       "youtubeChannelId": "UCa5T-U9o3j0c8vK8y0exitosa",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCa5T-U9o3j0c8vK8y0exitosa&autoplay=1&mute=0"
     },
     {
       "id": 10,
-      "name": "Nativa TV / RPP / Ovación",
-      "keywords": ["nativa", "rpp", "ovacion", "ovación"],
+      "name": "Nativa TV",
+      "category": "NACIONALES",
       "urls": [
         "http://187.102.210.46/NATIVATV/index.m3u8",
-        "https://live-evg7.tv360.bitel.com.pe/bitel/nativachanchamayoSRT/playlist.m3u8",
-        "http://190.93.224.42/RPP/index.m3u8",
-        "http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8"
+        "https://live-evg7.tv360.bitel.com.pe/bitel/nativachanchamayoSRT/playlist.m3u8"
       ],
       "youtubeChannelId": "UCnativa_tv_peru_oficial",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCnativa_tv_peru_oficial&autoplay=1&mute=0"
     },
     {
       "id": 11,
-      "name": "Congreso TV / Justicia TV",
-      "keywords": ["congreso", "justicia tv", "justiciatv"],
+      "name": "Congreso TV",
+      "category": "NACIONALES",
       "urls": [
         "http://190.93.224.42/JUSTICIA-TV/index.m3u8",
-        "http://45.171.108.253:8888/CONGRESO/index.m3u8",
-        "http://190.93.224.42/CONGRESO/index.m3u8"
+        "http://138.121.15.230:9002/CANAL-CONGRESO/index.m3u8",
+        "https://60417ddeaf0d9.streamlock.net/srtc/smil:srtc.smil/playlist.m3u8"
       ],
       "youtubeChannelId": "UCcongreso_peru_oficial",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCcongreso_peru_oficial&autoplay=1&mute=0"
     },
     {
       "id": 12,
-      "name": "Sol TV / Señales Regionales",
-      "keywords": ["sol tv", "antares", "antena sur", "36 tv huacho", "agro tv"],
+      "name": "Sol TV",
+      "category": "NACIONALES",
       "urls": [
-        "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8",
         "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8",
-        "https://5949aa132c8fb.streamlock.net:1963/iptvantares/liveantarestv/playlist.m3u8",
-        "https://live-evg8.tv360.bitel.com.pe/bitel/agroSRT/playlist.m3u8",
-        "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8"
+        "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8",
+        "https://s.emisoras.tv:8081/girasoltv/index.m3u8"
       ],
       "youtubeChannelId": "UCsol_tv_peru_oficial",
       "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCsol_tv_peru_oficial&autoplay=1&mute=0"
+    },
+    {
+      "id": 13,
+      "name": "ESPN",
+      "category": "DEPORTES",
+      "urls": [
+        "https://barinaslive1.boldmss.com/ESPN/ESPN.isml/ESPN.m3u8",
+        "http://190.61.47.54:8000/play/a004/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null
+    },
+    {
+      "id": 14,
+      "name": "ESPN 2",
+      "category": "DEPORTES",
+      "urls": [
+        "https://barinaslive1.boldmss.com/ESPN_2/ESPN_2.isml/ESPN_2.m3u8",
+        "http://190.61.47.54:8000/play/a005/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null
+    },
+    {
+      "id": 15,
+      "name": "DSports (DirecTV)",
+      "category": "DEPORTES",
+      "urls": [
+        "http://38.187.7.252:8000/play/a03d/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null
+    },
+    {
+      "id": 16,
+      "name": "Claro Sports",
+      "category": "DEPORTES",
+      "urls": [
+        "http://168.196.127.137:6001/play/a08r/index.m3u8"
+      ],
+      "youtubeChannelId": "UCclIclT9b0o43p3-vj3c85Q",
+      "youtubeEmbedUrl": "https://www.youtube.com/embed/live_stream?channel=UCclIclT9b0o43p3-vj3c85Q&autoplay=1&mute=0"
+    },
+    {
+      "id": 17,
+      "name": "TyC Sports / TUDN",
+      "category": "DEPORTES",
+      "urls": [
+        "http://45.170.130.224:8000/play/a020/index.m3u8",
+        "https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null
+    },
+    {
+      "id": 18,
+      "name": "Ovación TV / Fútbol Perú",
+      "category": "DEPORTES",
+      "urls": [
+        "http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8",
+        "http://190.93.224.42/RPP/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null
+    },
+    {
+      "id": 19,
+      "name": "FIFA+ / Red Bull TV",
+      "category": "DEPORTES",
+      "urls": [
+        "https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8",
+        "https://jmp2.uk/plu-660c29b5aec9680008f5b4a4.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null
+    },
+    {
+      "id": 20,
+      "name": "Real Madrid TV / Barça TV",
+      "category": "DEPORTES",
+      "urls": [
+        "https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null
+    },
+    {
+      "name": "Cinecanal Pacific (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://138.121.15.230:9002/CINECANAL/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 21
+    },
+    {
+      "name": "Discovery Channel Latin America (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://45.171.64.30:6060/play/a032/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 22
+    },
+    {
+      "name": "Space (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://45.171.64.30:6060/play/a04n/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 23
+    },
+    {
+      "name": "TNT Series Latin America (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://168.196.127.137:6001/play/a095/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 24
+    },
+    {
+      "name": "Cine Familiar (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/cinefamiliar.stream/playlist.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 25
+    },
+    {
+      "name": "Cine Hispano (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/cinehispano.stream/playlist.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 26
+    },
+    {
+      "name": "Cine Sony (720p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "https://a-cdn.klowdtv.com/live1/cine_720p/playlist.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 27
+    },
+    {
+      "name": "Cinecanal South",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "https://bantel-cdn1.iptvperu.tv:1936/btnscrtn/Cinecanal-key/chunks.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 28
+    },
+    {
+      "name": "Discovery Kids Latin America (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://181.224.200.5:2277/play/a00o/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 29
+    },
+    {
+      "name": "Discovery Kids Latin America Chile (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://38.224.231.176:8000/play/a01j/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 30
+    },
+    {
+      "name": "Discovery Kids Latin America Colombia (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://38.134.250.110:8000/play/a003/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 31
+    },
+    {
+      "name": "Discovery Kids Latin America Mexico (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://38.65.175.84:8000/play/a0an/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 32
+    },
+    {
+      "name": "Discovery Science Latin America (720p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://45.171.64.30:6060/play/a007/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 33
+    },
+    {
+      "name": "Discovery Theater Latin America (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://181.224.200.5:2277/play/a0bj/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 34
+    },
+    {
+      "name": "Discovery Turbo Latin America (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://38.134.250.110:8000/play/a01y/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 35
+    },
+    {
+      "name": "Discovery World (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://168.196.127.137:6001/play/a097/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 36
+    },
+    {
+      "name": "History 2 Latin America (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://138.121.15.230:9002/HISTORY-2/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 37
+    },
+    {
+      "name": "Imagen Universal TV",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "https://imagenuniversaltv.net:3771/live/iutvlive.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 38
+    },
+    {
+      "name": "Investigation Discovery Latin America South (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://38.65.175.84:8000/play/a0ch/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 39
+    },
+    {
+      "name": "Radio Universal (720p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "https://videostream.chileservidores.com:8081/universal/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 40
+    },
+    {
+      "name": "Star Channel (Chile) (720p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://138.121.15.230:9002/STAR-CHANNEL/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 41
+    },
+    {
+      "name": "Star Channel (Colombia) (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://190.61.47.54:8000/play/a035/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 42
+    },
+    {
+      "name": "TNT Latin America (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://45.171.64.30:6060/play/a03i/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 43
+    },
+    {
+      "name": "TNT Latin America Colombia (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://181.78.211.244:8005/play/a09g/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 44
+    },
+    {
+      "name": "TNT Novelas (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://190.93.224.42/TNT-NOVELAS/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 45
+    },
+    {
+      "name": "TNT Novelas Colombia (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://190.61.47.54:8000/play/a02f/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 46
+    },
+    {
+      "name": "36 TV Huacho (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 47
+    },
+    {
+      "name": "Antena SUR (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 48
+    },
+    {
+      "name": "Huacho Peru TV",
+      "category": "REGIONALES",
+      "urls": [
+        "https://tv.huachotv.com/stream.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 49
+    },
+    {
+      "name": "PiuraTV (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 50
+    },
+    {
+      "name": "Television Tarapoto (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg11.tv360.bitel.com.pe/bitel/tvtarapotoSRT/playlist.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 51
+    },
+    {
+      "name": "TV Cosmos (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://videoserver.tmcreativos.com:19360/tvcosmos/tvcosmos.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 52
+    },
+    {
+      "name": "TV Norte Chiclayo (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg5.tv360.bitel.com.pe/bitel/tvnorte/playlist.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 53
+    },
+    {
+      "name": "Girasol TV (1080i)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://s.emisoras.tv:8081/girasoltv/index.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 54
+    },
+    {
+      "name": "Sol TV (Guatemala) (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://cdn.streamhispanatv.net:3409/live/soltvlive.m3u8"
+      ],
+      "youtubeChannelId": null,
+      "youtubeEmbedUrl": null,
+      "id": 55
     }
   ]
 }

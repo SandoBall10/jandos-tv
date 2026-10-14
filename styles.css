@@ -350,6 +350,80 @@ html, body {
     border-color: #22C55E;
 }
 
+/* Separadores de Categoría en la Guía */
+.guide-category-header {
+    padding: 12px 20px;
+    margin-top: 14px;
+    margin-bottom: 6px;
+    border-radius: 8px;
+    font-size: 1.6rem;
+    font-weight: 900;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.guide-category-header.cat-NACIONALES {
+    background: rgba(239, 68, 68, 0.22);
+    color: #FCA5A5;
+    border-left: 6px solid #EF4444;
+}
+
+.guide-category-header.cat-DEPORTES {
+    background: rgba(16, 185, 129, 0.22);
+    color: #6EE7B7;
+    border-left: 6px solid #10B981;
+}
+
+.guide-category-header.cat-CINE {
+    background: rgba(139, 92, 246, 0.22);
+    color: #C4B5FD;
+    border-left: 6px solid #8B5CF6;
+}
+
+.guide-category-header.cat-REGIONALES {
+    background: rgba(59, 130, 246, 0.22);
+    color: #93C5FD;
+    border-left: 6px solid #3B82F6;
+}
+
+/* Badge de categoría en cada canal */
+.guide-item-cat {
+    font-size: 1.3rem;
+    font-weight: 800;
+    padding: 3px 10px;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.guide-item-cat.cat-NACIONALES {
+    background: #EF4444;
+    color: #FFFFFF;
+}
+
+.guide-item-cat.cat-DEPORTES {
+    background: #10B981;
+    color: #FFFFFF;
+}
+
+.guide-item-cat.cat-CINE {
+    background: #8B5CF6;
+    color: #FFFFFF;
+}
+
+.guide-item-cat.cat-REGIONALES {
+    background: #3B82F6;
+    color: #FFFFFF;
+}
+
+.guide-item.focused .guide-item-cat {
+    background: #000000;
+    color: #FFD700;
+}
+
 .guide-item.active-playing .guide-item-name::after {
     content: " (EN VIVO)";
     color: #22C55E;
