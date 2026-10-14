@@ -604,10 +604,11 @@
                 let catClass = 'cat-CINE';
                 if (category === 'NACIONALES') catClass = 'cat-NACIONALES';
                 else if (category === 'DEPORTES') catClass = 'cat-DEPORTES';
+                else if (category === 'DIBUJOS Y ANIMACIÓN' || category === 'DIBUJOS' || category === 'ANIMACION' || category === 'ANIMACIÓN') catClass = 'cat-ANIMACION';
                 else if (category === 'REGIONALES') catClass = 'cat-REGIONALES';
 
                 catHeader.className = 'guide-category-header ' + catClass;
-                catHeader.textContent = 'BLOQUE: ' + category;
+                catHeader.textContent = (category === 'DIBUJOS Y ANIMACIÓN' || category === 'DIBUJOS' || category === 'ANIMACION' || category === 'ANIMACIÓN') ? '🟡 ' + category : 'BLOQUE: ' + category;
                 guideListEl.appendChild(catHeader);
             }
 
@@ -634,10 +635,11 @@
             let catBadgeClass = 'cat-CINE';
             if (category === 'NACIONALES') catBadgeClass = 'cat-NACIONALES';
             else if (category === 'DEPORTES') catBadgeClass = 'cat-DEPORTES';
+            else if (category === 'DIBUJOS Y ANIMACIÓN' || category === 'DIBUJOS' || category === 'ANIMACION' || category === 'ANIMACIÓN') catBadgeClass = 'cat-ANIMACION';
             else if (category === 'REGIONALES') catBadgeClass = 'cat-REGIONALES';
 
             badgeSpan.className = 'guide-item-cat ' + catBadgeClass;
-            badgeSpan.textContent = category;
+            badgeSpan.textContent = (category === 'DIBUJOS Y ANIMACIÓN') ? 'ANIMACIÓN' : category;
 
             item.appendChild(numSpan);
             item.appendChild(nameSpan);

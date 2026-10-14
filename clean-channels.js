@@ -25,7 +25,10 @@ const M3U_SOURCES = [
     { url: 'https://iptv-org.github.io/iptv/countries/pe.m3u', tag: 'peru' },
     { url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlists/playlist_peru.m3u8', tag: 'freetv-pe' },
     { url: 'https://iptv-org.github.io/iptv/languages/spa.m3u', tag: 'spanish' },
-    { url: 'https://iptv-org.github.io/iptv/categories/sports.m3u', tag: 'sports' }
+    { url: 'https://iptv-org.github.io/iptv/categories/sports.m3u', tag: 'sports' },
+    { url: 'https://iptv-org.github.io/iptv/categories/animation.m3u', tag: 'animation' },
+    { url: 'https://iptv-org.github.io/iptv/categories/kids.m3u', tag: 'kids' },
+    { url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlists/playlist_latin_america.m3u8', tag: 'freetv-latam' }
 ];
 
 // 1. Bloque Maestro 1: Nacionales Perú (Fijos 01 - 12)
@@ -240,6 +243,96 @@ const BLOCK_2_DEPORTES = [
         candidateUrls: [
             'https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8',
             'https://live20.bozztv.com/dvrfl06/astv/astv-barca/index.m3u8'
+        ]
+    }
+];
+
+// 3. Bloque Maestro: Dibujos y Animación
+const BLOCK_ANIMACION = [
+    {
+        name: 'Cartoon Network',
+        category: 'DIBUJOS Y ANIMACIÓN',
+        keywords: ['cartoon network', 'cartoon network argentina', 'cartoon network chile', 'cartoon network latin america'],
+        candidateUrls: [
+            'http://158.172.217.18:8000/play/a03a/index.m3u8',
+            'http://45.170.130.224:8000/play/a03a/index.m3u8',
+            'http://38.224.231.176:8000/play/a03a/index.m3u8'
+        ]
+    },
+    {
+        name: 'Nickelodeon',
+        category: 'DIBUJOS Y ANIMACIÓN',
+        keywords: ['nickelodeon', 'nick latino', 'nickonline', 'nick clasico', 'nick jr'],
+        candidateUrls: [
+            'https://x1colegal.com/hls/stream.m3u8',
+            'http://158.172.217.18:8000/play/a03b/index.m3u8',
+            'http://38.224.231.176:8000/play/a03b/index.m3u8',
+            'http://45.170.130.224:8000/play/a03b/index.m3u8'
+        ]
+    },
+    {
+        name: 'Discovery Kids',
+        category: 'DIBUJOS Y ANIMACIÓN',
+        keywords: ['discovery kids', 'discovery kids latin america', 'discovery kids chile', 'discovery kids colombia'],
+        candidateUrls: [
+            'http://38.224.231.176:8000/play/a01j/index.m3u8',
+            'http://38.134.250.110:8000/play/a003/index.m3u8',
+            'http://45.170.130.224:8000/play/a01j/index.m3u8'
+        ]
+    },
+    {
+        name: 'Disney Channel',
+        category: 'DIBUJOS Y ANIMACIÓN',
+        keywords: ['disney channel', 'disney channel latin america', 'disney channel argentina'],
+        candidateUrls: [
+            'http://45.134.141.161:2200/ARG/Disney_Channel/index.m3u8',
+            'http://138.121.15.230:9002/DISNEY-CHANNEL/index.m3u8',
+            'http://181.78.14.26:4000/play/a015/index.m3u8',
+            'http://38.224.231.176:8000/play/a015/index.m3u8'
+        ]
+    },
+    {
+        name: 'Disney Jr.',
+        category: 'DIBUJOS Y ANIMACIÓN',
+        keywords: ['disney jr', 'disney junior', 'disney jr.'],
+        candidateUrls: [
+            'http://181.78.14.26:4000/play/a073/index.m3u8',
+            'http://45.185.163.75:8000/play/a016/index.m3u8',
+            'http://38.224.231.176:8000/play/a016/index.m3u8'
+        ]
+    },
+    {
+        name: 'Tooncast / Cartoonito',
+        category: 'DIBUJOS Y ANIMACIÓN',
+        keywords: ['tooncast', 'cartoonito', 'boomerang'],
+        candidateUrls: [
+            'http://38.134.250.110:8000/play/a01t/index.m3u8',
+            'http://200.62.239.170:830/play/a07n/index.m3u8',
+            'http://38.224.231.176:8000/play/a01t/index.m3u8'
+        ]
+    },
+    {
+        name: 'Bob Esponja 24/7',
+        category: 'DIBUJOS Y ANIMACIÓN',
+        keywords: ['bob esponja', 'spongebob', 'bob esponja 24/7'],
+        candidateUrls: [
+            'https://bob.x1colegal.com/hls/stream.m3u8'
+        ]
+    },
+    {
+        name: 'Dreiko TV (Dibujos y Anime Clásico)',
+        category: 'DIBUJOS Y ANIMACIÓN',
+        keywords: ['dreiko tv', 'dreiko'],
+        candidateUrls: [
+            'https://cloudvideo.servers10.com:8081/8020/index.m3u8'
+        ]
+    },
+    {
+        name: 'MAX Anime 24/7',
+        category: 'DIBUJOS Y ANIMACIÓN',
+        keywords: ['max anime', 'anime 24/7', 'dragon ball', 'locomotion', 'energigeeek'],
+        candidateUrls: [
+            'https://cdnlive.klicgo.net/maxanime/live/playlist.m3u8'
         ]
     }
 ];
@@ -688,7 +781,7 @@ async function main() {
     console.log('\n--- VERIFICANDO BLOQUE 3: CINE, CULTURA Y REGIONALES (DEEP CHECK) ---');
     const cineKeywords = [
         'cinecanal', 'cinelatino', 'cine familiar', 'cine hispano', 'cine sony', 'paramount',
-        'dhe', 'tnt', 'space', 'warner', 'universal', 'star channel', 'film', 'history', 'discovery'
+        'dhe', 'tnt', 'space', 'warner', 'universal', 'star channel', 'film', 'history', 'discovery channel'
     ];
     const regionalKeywords = [
         'arequipa', 'cusco', 'trujillo', 'piura', 'huacho', 'chimbote', 'puno', 'chiclayo',
@@ -703,9 +796,14 @@ async function main() {
     allRawChannels.sort((a, b) => getCdnScore(b.url) - getCdnScore(a.url));
 
     for (const raw of allRawChannels) {
-        if (verifiedBlock3.length >= 25) break; // Limitar a 25 para un total óptimo de 45 canales rápidos y probados
+        if (verifiedBlock3.length >= 25) break;
 
         const rawLower = raw.name.toLowerCase();
+        // Evitar que canales infantiles o de animación se clasifiquen como cine
+        if (rawLower.includes('kids') || rawLower.includes('disney') || rawLower.includes('nick') || rawLower.includes('cartoon')) {
+            continue;
+        }
+
         const matchesTarget = targetBlock3Keywords.some(kw => rawLower.includes(kw));
 
         if (matchesTarget && !testedUrls.has(raw.url)) {
@@ -725,7 +823,69 @@ async function main() {
         }
     }
 
-    // 5. Consolidar la Parrilla Final con IDs continuos
+    const cineList = verifiedBlock3.filter(ch => ch.category === 'CINE Y CULTURA');
+    const regionalList = verifiedBlock3.filter(ch => ch.category === 'REGIONALES');
+
+    // 5. Procesar Bloque: DIBUJOS Y ANIMACIÓN
+    console.log('\n--- VERIFICANDO BLOQUE: DIBUJOS Y ANIMACIÓN (DEEP CHECK) ---');
+    const finalAnimacion = [];
+    for (const ch of BLOCK_ANIMACION) {
+        process.stdout.write(`Probando ${ch.name}... `);
+        const allCandidates = [...ch.candidateUrls, ...findExtraUrlsForKeywords(ch.keywords)];
+        const uniqueCandidates = [...new Set(allCandidates)];
+        uniqueCandidates.sort((a, b) => getCdnScore(b) - getCdnScore(a));
+        const workingUrls = [];
+
+        for (const u of uniqueCandidates) {
+            const hasCdn = workingUrls.some(w => getCdnScore(w) >= 70);
+            if (hasCdn && (u.includes(':8000/play/') || u.includes(':6001/play/'))) {
+                continue;
+            }
+
+            const ok = await testHlsDeep(u);
+            if (ok) {
+                workingUrls.push(u);
+                testedUrls.add(u);
+                if (workingUrls.length >= 2) break;
+            }
+        }
+
+        if (workingUrls.length === 0) {
+            const sortedFallback = [...ch.candidateUrls].sort((a, b) => getCdnScore(b) - getCdnScore(a));
+            workingUrls.push(sortedFallback[0]);
+            console.log(`[FALLBACK ASIGNADO]`);
+        } else {
+            console.log(`[OK] (${workingUrls.length} señales 100% activas)`);
+        }
+
+        finalAnimacion.push({
+            name: ch.name,
+            category: 'DIBUJOS Y ANIMACIÓN',
+            urls: workingUrls
+        });
+    }
+
+    // Buscar señales adicionales de animación en español en allRawChannels (Cartoonito, Boomerang, Anime, etc.)
+    const extraAnimKeywords = ['cartoonito', 'boomerang', 'anime', 'dragon ball', 'locomotion', 'energigeeek', 'pluto tv anime', 'nick clasico'];
+    for (const raw of allRawChannels) {
+        if (finalAnimacion.length >= 15) break;
+        const rawLower = raw.name.toLowerCase();
+        const matchesExtra = extraAnimKeywords.some(kw => rawLower.includes(kw));
+        if (matchesExtra && !testedUrls.has(raw.url)) {
+            testedUrls.add(raw.url);
+            const ok = await testHlsDeep(raw.url);
+            if (ok) {
+                console.log(`  [+ VERIFICADO H.264+AAC] ${raw.name} (DIBUJOS Y ANIMACIÓN)`);
+                finalAnimacion.push({
+                    name: raw.name,
+                    category: 'DIBUJOS Y ANIMACIÓN',
+                    urls: [raw.url]
+                });
+            }
+        }
+    }
+
+    // 6. Consolidar la Parrilla Final con IDs continuos
     console.log('\n--- CONSOLIDANDO PARRILLA FINAL ---');
     let nextId = 1;
     const finalChannelsList = [];
@@ -742,23 +902,31 @@ async function main() {
         finalChannelsList.push(ch);
     });
 
-    // Bloque 3: Cine y Cultura PRIMERO, luego Regionales
-    const cineList = verifiedBlock3.filter(ch => ch.category === 'CINE Y CULTURA');
-    const regionalList = verifiedBlock3.filter(ch => ch.category === 'REGIONALES');
-    const sortedBlock3 = [...cineList, ...regionalList];
-
-    sortedBlock3.forEach(ch => {
+    // Bloque 3: Cine y Cultura
+    cineList.forEach(ch => {
         ch.id = nextId++;
         finalChannelsList.push(ch);
     });
 
-    console.log(`Parrilla final lista con ${finalChannelsList.length} canales verificados en profundidad (${finalNacionales.length} Nacionales, ${finalDeportes.length} Deportes, ${cineList.length} Cine/Cultura, ${regionalList.length} Regionales).`);
+    // Bloque 4: Dibujos y Animación (ubicado justo después del bloque de Cine y Cultura, antes de Regionales)
+    finalAnimacion.forEach(ch => {
+        ch.id = nextId++;
+        finalChannelsList.push(ch);
+    });
+
+    // Bloque 5: Regionales
+    regionalList.forEach(ch => {
+        ch.id = nextId++;
+        finalChannelsList.push(ch);
+    });
+
+    console.log(`Parrilla final lista con ${finalChannelsList.length} canales verificados en profundidad (${finalNacionales.length} Nacionales, ${finalDeportes.length} Deportes, ${cineList.length} Cine/Cultura, ${finalAnimacion.length} Dibujos/Animación, ${regionalList.length} Regionales).`);
 
     const outputJson = {
-        version: '1.3.0',
+        version: '1.4.0',
         updated: new Date().toISOString().split('T')[0],
         totalChannels: finalChannelsList.length,
-        description: 'Parrilla curada con verificación profunda HLS + CORS para Jandos-TV (Exclusivo Hls.js en TV).',
+        description: 'Parrilla curada con verificación profunda HLS + CORS para Jandos-TV (Exclusivo Hls.js en TV). Incluye Bloque exclusivo de Dibujos y Animación.',
         channels: finalChannelsList
     };
 

@@ -398,6 +398,12 @@ html, body {
     border-left: 6px solid #8B5CF6;
 }
 
+.guide-category-header.cat-ANIMACION {
+    background: rgba(245, 158, 11, 0.25);
+    color: #FCD34D;
+    border-left: 6px solid #F59E0B;
+}
+
 .guide-category-header.cat-REGIONALES {
     background: rgba(59, 130, 246, 0.22);
     color: #93C5FD;
@@ -427,6 +433,12 @@ html, body {
 .guide-item-cat.cat-CINE {
     background: #8B5CF6;
     color: #FFFFFF;
+}
+
+.guide-item-cat.cat-ANIMACION {
+    background: #F59E0B;
+    color: #000000;
+    font-weight: 900;
 }
 
 .guide-item-cat.cat-REGIONALES {
