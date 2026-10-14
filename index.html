@@ -9,11 +9,11 @@
     <script src="hls.min.js"></script>
 </head>
 <body>
-    <!-- 1. Contenedor de Video Pantalla Completa -->
+    <!-- 1. Contenedor de Video Pantalla Completa (Exclusivo HLS) -->
     <div id="video-container">
-        <video id="player" playsinline autoplay></video>
-        <!-- Respaldo YouTube Live cuando las señales HLS fallan -->
-        <iframe id="youtube-player" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>
+        <video id="tv-player" playsinline autoplay></video>
+        <!-- Aviso sutil cuando el navegador bloquea autoplay con audio -->
+        <div id="mute-notice" class="mute-notice">🔇 Presiona cualquier tecla o haz clic para activar el audio</div>
     </div>
 
     <!-- 2. OSD (Cartel Informativo Esquina Superior Izquierda) -->

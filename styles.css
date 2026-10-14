@@ -37,6 +37,7 @@ html, body {
     justify-content: center;
 }
 
+#tv-player,
 #player {
     width: 100vw;
     height: 100vh;
@@ -46,20 +47,34 @@ html, body {
     border: none;
 }
 
-#youtube-player {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    border: none;
+/* Aviso sutil de audio silenciado por bloqueo de navegador */
+.mute-notice {
+    position: fixed;
+    bottom: 36px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 120;
+    background: rgba(15, 23, 42, 0.95);
+    color: #FACC15;
+    border: 3px solid #EAB308;
+    border-radius: 30px;
+    padding: 14px 28px;
+    font-size: 2.2rem;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(234, 179, 8, 0.3);
     display: none;
-    background-color: #000000;
-    z-index: 2;
+    pointer-events: none;
+    animation: pulseMute 1.8s infinite alternate ease-in-out;
 }
 
-#youtube-player.active {
+.mute-notice.visible {
     display: block;
+}
+
+@keyframes pulseMute {
+    from { transform: translateX(-50%) scale(1); }
+    to { transform: translateX(-50%) scale(1.04); }
 }
 
 /* --------------------------------------------------------------------------

@@ -1,23 +1,34 @@
 /**
- * clean-channels.js - Script de Limpieza y Curación de Canales para Jandos-TV
- * Descarga las listas, verifica en paralelo que cada stream responda con HTTP 200 y #EXTM3U,
- * elimina canales caídos/congelados y organiza la parrilla en bloques VIP (Nacionales, Deportes, Cine/Regionales).
+ * clean-channels.js - Script de Limpieza y Verificación Profunda HLS + CORS para Jandos-TV
+ * 
+ * Verifica no solo que el .m3u8 responda HTTP 200, sino:
+ * 1. Descarga el manifiesto maestro (#EXTM3U) con cabecera Origin (CORS check).
+ * 2. Si es Master Playlist (#EXT-X-STREAM-INF), resuelve y descarga la sub-playlist (Media Playlist).
+ * 3. Extrae el primer segmento de video (.ts, .m4s, .aac) y hace un GET con Range: bytes=0-1024
+ *    comprobando que entregue datos (> 0 bytes) y que NO esté bloqueado por CORS.
+ * 4. Elimina canales muertos y organiza la lista maestra en bloques VIP:
+ *    - Bloque 1: Nacionales Perú (01-12)
+ *    - Bloque 2: Deportes (13-20)
+ *    - Bloque 3: Cine y Cultura (21+) y Regionales del Perú
  */
 
 const fs = require('fs');
 const path = require('path');
 
-const TIMEOUT_MS = 3500;
+const TIMEOUT_MS = 4000;
 const OUTPUT_FILE = path.join(__dirname, 'canales-remotos.json');
+const CORS_TEST_ORIGIN = 'http://localhost:3000';
+const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
-// Fuentes M3U a consultar
+// Fuentes M3U oficiales y actualizadas
 const M3U_SOURCES = [
     { url: 'https://iptv-org.github.io/iptv/countries/pe.m3u', tag: 'peru' },
-    { url: 'https://iptv-org.github.io/iptv/categories/sports.m3u', tag: 'sports' },
-    { url: 'https://iptv-org.github.io/iptv/languages/spa.m3u', tag: 'spanish' }
+    { url: 'https://raw.githubusercontent.com/Free-TV/IPTV/master/playlists/playlist_peru.m3u8', tag: 'freetv-pe' },
+    { url: 'https://iptv-org.github.io/iptv/languages/spa.m3u', tag: 'spanish' },
+    { url: 'https://iptv-org.github.io/iptv/categories/sports.m3u', tag: 'sports' }
 ];
 
-// 1. Bloque Maestro 1: Nacionales Perú (Fijos 01 - 12 con respaldo YouTube Live)
+// 1. Bloque Maestro 1: Nacionales Perú (Fijos 01 - 12)
 const BLOCK_1_NACIONALES = [
     {
         id: 1,
@@ -25,13 +36,10 @@ const BLOCK_1_NACIONALES = [
         category: 'NACIONALES',
         keywords: ['latina', 'frecuencia latina', 'canal 2'],
         candidateUrls: [
-            'https://dai.google.com/linear/hls/event/oYQGDqEGTmGdHE_fz9oLlg/master.m3u8',
-            'https://redirector.rudo.video/hls-video/plus226/latina4/latina4.smil/playlist.m3u8',
             'http://190.93.224.42/LATINA/index.m3u8',
-            'http://45.171.108.253:8888/LATINA/index.m3u8'
-        ],
-        youtubeChannelId: 'UC6Xw2bFj8vQf0sD8tK8y0qw',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC6Xw2bFj8vQf0sD8tK8y0qw&autoplay=1&mute=0'
+            'https://dai.google.com/linear/hls/event/oYQGDqEGTmGdHE_fz9oLlg/master.m3u8',
+            'https://redirector.rudo.video/hls-video/567ffde3fa319fadf3419efda25619456231dfea/latina/latina.smil/playlist.m3u8'
+        ]
     },
     {
         id: 2,
@@ -39,11 +47,11 @@ const BLOCK_1_NACIONALES = [
         category: 'NACIONALES',
         keywords: ['america television', 'américa televisión', 'america tv', 'américa tv', 'canal 4'],
         candidateUrls: [
-            'http://45.171.108.253:8888/AMERICA/index.m3u8',
-            'http://190.93.224.42/AMERICA/index.m3u8'
-        ],
-        youtubeChannelId: 'UC4Z4s3zB8T4xVzT2k7_0nCw',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC4Z4s3zB8T4xVzT2k7_0nCw&autoplay=1&mute=0'
+            'https://live-bd1.tv360.bitel.com.pe/manifest/america/master_clean_source.m3u8',
+            'https://live-bd1.tv360.bitel.com.pe/manifest/america/playlist_clean_source_720p.m3u8',
+            'https://live-bd1.tv360.bitel.com.pe/manifest/america/playlist_clean_source_480p.m3u8',
+            'http://45.171.108.253:8888/AMERICA/index.m3u8'
+        ]
     },
     {
         id: 3,
@@ -53,9 +61,7 @@ const BLOCK_1_NACIONALES = [
         candidateUrls: [
             'http://45.171.108.253:8888/PANAMERICANA/index.m3u8',
             'http://190.93.224.42/PANAMERICANA/index.m3u8'
-        ],
-        youtubeChannelId: 'UC8L0o0s3t308_e9c0z4A_ww',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_e9c0z4A_ww&autoplay=1&mute=0'
+        ]
     },
     {
         id: 4,
@@ -64,12 +70,8 @@ const BLOCK_1_NACIONALES = [
         keywords: ['tv peru', 'tv perú', 'canal 7', 'tnp'],
         candidateUrls: [
             'http://190.93.224.42/TV-PERU/index.m3u8',
-            'http://45.171.108.253:8888/TVPERU/index.m3u8',
-            'http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/nacionaltv_peru.stream/playlist.m3u8',
-            'https://k20.usastreams.com:8081/tvperuanisima/index.m3u8'
-        ],
-        youtubeChannelId: 'UCyvK7t9N8eP1ZfQ7dF2u3gA',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCyvK7t9N8eP1ZfQ7dF2u3gA&autoplay=1&mute=0'
+            'http://45.171.108.253:8888/TVPERU/index.m3u8'
+        ]
     },
     {
         id: 5,
@@ -79,9 +81,7 @@ const BLOCK_1_NACIONALES = [
         candidateUrls: [
             'http://190.93.224.42/ATV/index.m3u8',
             'http://45.171.108.253:8888/ATV/index.m3u8'
-        ],
-        youtubeChannelId: 'UC8L0o0s3t308_atv_noticias',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_atv_noticias&autoplay=1&mute=0'
+        ]
     },
     {
         id: 6,
@@ -90,11 +90,9 @@ const BLOCK_1_NACIONALES = [
         keywords: ['atv+', 'atv plus', 'atv mas', 'atv más'],
         candidateUrls: [
             'http://45.171.108.253:8888/ATV/index.m3u8',
-            'http://190.93.224.42/ATV-MAS/index.m3u8',
-            'http://190.93.224.42/ATV-SUR/index.m3u8'
-        ],
-        youtubeChannelId: 'UC8L0o0s3t308_atv_mas',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_atv_mas&autoplay=1&mute=0'
+            'http://190.93.224.42/ATV-SUR/index.m3u8',
+            'http://190.93.224.42/ATV/index.m3u8'
+        ]
     },
     {
         id: 7,
@@ -104,9 +102,7 @@ const BLOCK_1_NACIONALES = [
         candidateUrls: [
             'http://190.93.224.42/TV-PERU-NOTICIAS/index.m3u8',
             'http://45.171.108.253:8888/TVPERUNOTICIAS/index.m3u8'
-        ],
-        youtubeChannelId: 'UCyvK7t9N8eP1ZfQ7dF2u3gA',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCyvK7t9N8eP1ZfQ7dF2u3gA&autoplay=1&mute=0'
+        ]
     },
     {
         id: 8,
@@ -116,9 +112,7 @@ const BLOCK_1_NACIONALES = [
         candidateUrls: [
             'http://190.93.224.42/WILLAX/index.m3u8',
             'http://45.171.108.253:8888/WILLAX/index.m3u8'
-        ],
-        youtubeChannelId: 'UCwillax_oficial_envivo',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCwillax_oficial_envivo&autoplay=1&mute=0'
+        ]
     },
     {
         id: 9,
@@ -128,9 +122,7 @@ const BLOCK_1_NACIONALES = [
         candidateUrls: [
             'http://190.93.224.42/EXITOSA/index.m3u8',
             'http://45.171.108.253:8888/EXITOSA/index.m3u8'
-        ],
-        youtubeChannelId: 'UCa5T-U9o3j0c8vK8y0exitosa',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCa5T-U9o3j0c8vK8y0exitosa&autoplay=1&mute=0'
+        ]
     },
     {
         id: 10,
@@ -140,9 +132,7 @@ const BLOCK_1_NACIONALES = [
         candidateUrls: [
             'http://187.102.210.46/NATIVATV/index.m3u8',
             'https://live-evg7.tv360.bitel.com.pe/bitel/nativachanchamayoSRT/playlist.m3u8'
-        ],
-        youtubeChannelId: 'UCnativa_tv_peru_oficial',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCnativa_tv_peru_oficial&autoplay=1&mute=0'
+        ]
     },
     {
         id: 11,
@@ -151,11 +141,8 @@ const BLOCK_1_NACIONALES = [
         keywords: ['congreso', 'justicia tv', 'justiciatv'],
         candidateUrls: [
             'http://190.93.224.42/JUSTICIA-TV/index.m3u8',
-            'http://45.171.108.253:8888/CONGRESO/index.m3u8',
-            'http://190.93.224.42/CONGRESO/index.m3u8'
-        ],
-        youtubeChannelId: 'UCcongreso_peru_oficial',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCcongreso_peru_oficial&autoplay=1&mute=0'
+            'http://138.121.15.230:9002/CANAL-CONGRESO/index.m3u8'
+        ]
     },
     {
         id: 12,
@@ -163,12 +150,11 @@ const BLOCK_1_NACIONALES = [
         category: 'NACIONALES',
         keywords: ['sol tv'],
         candidateUrls: [
-            'https://5949aa132c8fb.streamlock.net:1963/iptvantares/liveantarestv/playlist.m3u8',
             'https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8',
-            'https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8'
-        ],
-        youtubeChannelId: 'UCsol_tv_peru_oficial',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCsol_tv_peru_oficial&autoplay=1&mute=0'
+            'https://cdn.streamhispanatv.net:3409/live/soltvlive.m3u8',
+            'https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8',
+            'https://s.emisoras.tv:8081/girasoltv/index.m3u8'
+        ]
     }
 ];
 
@@ -181,8 +167,7 @@ const BLOCK_2_DEPORTES = [
         keywords: ['espn latin america', 'espn hd', 'espn colombia', 'espn argentina', 'espn '],
         candidateUrls: [
             'https://barinaslive1.boldmss.com/ESPN/ESPN.isml/ESPN.m3u8',
-            'http://190.61.47.54:8000/play/a004/index.m3u8',
-            'http://85.237.89.160:9590/usa-s/ESPN-HD/index.m3u8'
+            'http://190.61.47.54:8000/play/a004/index.m3u8'
         ]
     },
     {
@@ -201,7 +186,8 @@ const BLOCK_2_DEPORTES = [
         category: 'DEPORTES',
         keywords: ['dsports', 'directv sports'],
         candidateUrls: [
-            'http://38.187.7.252:8000/play/a03d/index.m3u8',
+            'http://45.170.130.224:8000/play/a03d/index.m3u8',
+            'http://168.196.127.137:6001/play/a03d/index.m3u8',
             'http://187.102.208.209:8000/play/a0bq/index.m3u8'
         ]
     },
@@ -211,10 +197,10 @@ const BLOCK_2_DEPORTES = [
         category: 'DEPORTES',
         keywords: ['claro sports', 'clarosports'],
         candidateUrls: [
-            'http://168.196.127.137:6001/play/a08r/index.m3u8'
-        ],
-        youtubeChannelId: 'UCclIclT9b0o43p3-vj3c85Q',
-        youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCclIclT9b0o43p3-vj3c85Q&autoplay=1&mute=0'
+            'http://168.196.127.137:6001/play/a08r/index.m3u8',
+            'http://45.170.130.224:8000/play/a08r/index.m3u8',
+            'https://clarosports-live.akamaized.net/hls/live/2004245/clarosports1/master.m3u8'
+        ]
     },
     {
         id: 17,
@@ -222,9 +208,8 @@ const BLOCK_2_DEPORTES = [
         category: 'DEPORTES',
         keywords: ['tyc sports', 'tyc', 'tudn'],
         candidateUrls: [
-            'https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-',
             'http://45.170.130.224:8000/play/a020/index.m3u8',
-            'http://45.190.13.8/TUDNHD/index.m3u8'
+            'https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8'
         ]
     },
     {
@@ -233,8 +218,8 @@ const BLOCK_2_DEPORTES = [
         category: 'DEPORTES',
         keywords: ['ovacion', 'ovación', 'futbol peru', 'fútbol perú'],
         candidateUrls: [
-            'http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8',
-            'http://190.93.224.42/RPP/index.m3u8'
+            'http://190.93.224.42/RPP/index.m3u8',
+            'http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8'
         ]
     },
     {
@@ -243,9 +228,8 @@ const BLOCK_2_DEPORTES = [
         category: 'DEPORTES',
         keywords: ['fifa+', 'fifa', 'red bull tv'],
         candidateUrls: [
-            'https://6c849fb3.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/TEctbX',
-            'https://886bd3fbc782459f8de7555d32d7e9ce.mediatailor.us-west-2.amazonaws.com/v1/',
-            'https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8'
+            'https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8',
+            'https://jmp2.uk/plu-660c29b5aec9680008f5b4a4.m3u8'
         ]
     },
     {
@@ -260,23 +244,121 @@ const BLOCK_2_DEPORTES = [
     }
 ];
 
-// Comprobar si una URL de streaming está viva y responde rápido
-async function testStreamUrl(url) {
-    if (!url || !url.startsWith('http')) return false;
+// Helper para verificar cabeceras CORS
+function isCorsAllowed(res) {
+    const allowOrigin = res.headers.get('access-control-allow-origin');
+    return allowOrigin === '*' || allowOrigin === CORS_TEST_ORIGIN;
+}
+
+/**
+ * Verificación profunda de streaming HLS:
+ * a) Descarga el .m3u8 principal con cabecera Origin.
+ * b) Si es Master Playlist, resuelve la sub-playlist (Media Playlist) y la descarga.
+ * c) Localiza el primer segmento de video (.ts, .m4s, .aac) y hace un GET con Range: bytes=0-1024
+ *    comprobando que entregue datos (> 0 bytes) y que NO esté bloqueado por CORS.
+ */
+async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
+    if (!url || typeof url !== 'string' || !url.startsWith('http')) return false;
+
     try {
-        const res = await fetch(url, {
-            method: 'GET',
+        // a) Descargar Manifiesto Maestro
+        const res1 = await fetch(url, {
             headers: {
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36'
+                'Origin': CORS_TEST_ORIGIN,
+                'User-Agent': USER_AGENT
             },
-            signal: AbortSignal.timeout(TIMEOUT_MS)
+            signal: AbortSignal.timeout(timeoutMs)
         });
 
-        if (!res.ok) return false;
+        if (!res1.ok) return false;
+        if (!isCorsAllowed(res1)) return false;
 
-        const text = await res.text();
-        // Verificar que sea una lista HLS válida
-        return text.includes('#EXTM3U') || text.includes('#EXTINF') || text.includes('.ts') || text.includes('.m3u8');
+        const text1 = await res1.text();
+        if (!text1.includes('#EXTM3U')) return false;
+
+        let mediaPlaylistUrl = url;
+        let mediaPlaylistText = text1;
+
+        // b) Si es un Master Playlist (#EXT-X-STREAM-INF), resolver Media Playlist
+        if (text1.includes('#EXT-X-STREAM-INF')) {
+            const lines = text1.split(/\r?\n/).map(l => l.trim());
+            let subPath = null;
+            for (let i = 0; i < lines.length; i++) {
+                if (lines[i].startsWith('#EXT-X-STREAM-INF')) {
+                    for (let j = i + 1; j < lines.length; j++) {
+                        const nextLine = lines[j];
+                        if (nextLine && !nextLine.startsWith('#')) {
+                            subPath = nextLine;
+                            break;
+                        }
+                    }
+                    if (subPath) break;
+                }
+            }
+
+            if (!subPath) return false;
+            mediaPlaylistUrl = subPath.startsWith('http') ? subPath : new URL(subPath, url).href;
+
+            const res2 = await fetch(mediaPlaylistUrl, {
+                headers: {
+                    'Origin': CORS_TEST_ORIGIN,
+                    'User-Agent': USER_AGENT
+                },
+                signal: AbortSignal.timeout(timeoutMs)
+            });
+
+            if (!res2.ok) return false;
+            if (!isCorsAllowed(res2)) return false;
+
+            mediaPlaylistText = await res2.text();
+            if (!mediaPlaylistText.includes('#EXTM3U')) return false;
+        }
+
+        // c) Localizar primer segmento de video (.ts, .m4s, .aac o después de #EXTINF)
+        const mediaLines = mediaPlaylistText.split(/\r?\n/).map(l => l.trim());
+        let segmentPath = null;
+
+        for (let i = 0; i < mediaLines.length; i++) {
+            if (mediaLines[i].startsWith('#EXTINF:')) {
+                for (let j = i + 1; j < mediaLines.length; j++) {
+                    const l = mediaLines[j];
+                    if (l && !l.startsWith('#')) {
+                        segmentPath = l;
+                        break;
+                    }
+                }
+                if (segmentPath) break;
+            }
+        }
+
+        if (!segmentPath) {
+            for (const l of mediaLines) {
+                if (l && !l.startsWith('#') && (l.includes('.ts') || l.includes('.m4s') || l.includes('.aac') || l.includes('segment') || l.includes('frag'))) {
+                    segmentPath = l;
+                    break;
+                }
+            }
+        }
+
+        if (!segmentPath) return false;
+
+        const segmentUrl = segmentPath.startsWith('http') ? segmentPath : new URL(segmentPath, mediaPlaylistUrl).href;
+
+        // Comprobación de entrega de bytes de video reales y cabeceras CORS
+        const res3 = await fetch(segmentUrl, {
+            headers: {
+                'Origin': CORS_TEST_ORIGIN,
+                'User-Agent': USER_AGENT,
+                'Range': 'bytes=0-1024'
+            },
+            signal: AbortSignal.timeout(timeoutMs)
+        });
+
+        if (!res3.ok && res3.status !== 206) return false;
+        if (!isCorsAllowed(res3)) return false;
+
+        const buf = await res3.arrayBuffer();
+        return buf.byteLength > 0;
     } catch (e) {
         return false;
     }
@@ -286,7 +368,7 @@ async function testStreamUrl(url) {
 async function fetchM3U(url) {
     try {
         console.log(`[M3U] Descargando ${url}...`);
-        const res = await fetch(url, { signal: AbortSignal.timeout(10000) });
+        const res = await fetch(url, { signal: AbortSignal.timeout(12000) });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const text = await res.text();
         const lines = text.split(/\r?\n/);
@@ -315,7 +397,7 @@ async function fetchM3U(url) {
 }
 
 async function main() {
-    console.log('=== JANDOS-TV: INICIANDO CURACIÓN Y LIMPIEZA DE CANALES ===\n');
+    console.log('=== JANDOS-TV: INICIANDO CURACIÓN CON VERIFICACIÓN PROFUNDA HLS + CORS ===\n');
 
     // 1. Descargar listas M3U en paralelo
     const m3uResults = await Promise.all(M3U_SOURCES.map(s => fetchM3U(s.url)));
@@ -336,7 +418,7 @@ async function main() {
     }
 
     // 2. Procesar Bloque 1: Nacionales Perú
-    console.log('\n--- VERIFICANDO BLOQUE 1: NACIONALES PERÚ ---');
+    console.log('\n--- VERIFICANDO BLOQUE 1: NACIONALES PERÚ (DEEP CHECK) ---');
     const finalNacionales = [];
     for (const ch of BLOCK_1_NACIONALES) {
         process.stdout.write(`Probando ${ch.name}... `);
@@ -345,34 +427,31 @@ async function main() {
         const workingUrls = [];
 
         for (const u of uniqueCandidates) {
-            const ok = await testStreamUrl(u);
+            const ok = await testHlsDeep(u);
             if (ok) {
                 workingUrls.push(u);
-                if (workingUrls.length >= 3) break; // Máximo 3 señales vivas por canal
+                if (workingUrls.length >= 2) break; // Máximo 2 señales vivas verificadas
             }
         }
 
-        // Si ningún stream responde rápido, conservar al menos el primero como fallback para que el auto-failover
-        // pruebe YouTube Live oficial
         if (workingUrls.length === 0) {
+            // Respaldar con primera señal candidata conocida
             workingUrls.push(ch.candidateUrls[0]);
-            console.log(`[RESCATADO CON YOUTUBE LIVE] (0 HLS activos)`);
+            console.log(`[FALLBACK ASIGNADO] (0 señales deep-ok)`);
         } else {
-            console.log(`[OK] (${workingUrls.length} señales activas)`);
+            console.log(`[OK] (${workingUrls.length} señales 100% activas)`);
         }
 
         finalNacionales.push({
             id: ch.id,
             name: ch.name,
             category: 'NACIONALES',
-            urls: workingUrls,
-            youtubeChannelId: ch.youtubeChannelId || null,
-            youtubeEmbedUrl: ch.youtubeEmbedUrl || null
+            urls: workingUrls
         });
     }
 
     // 3. Procesar Bloque 2: Deportes
-    console.log('\n--- VERIFICANDO BLOQUE 2: DEPORTES ---');
+    console.log('\n--- VERIFICANDO BLOQUE 2: DEPORTES (DEEP CHECK) ---');
     const finalDeportes = [];
     for (const ch of BLOCK_2_DEPORTES) {
         process.stdout.write(`Probando ${ch.name}... `);
@@ -381,7 +460,7 @@ async function main() {
         const workingUrls = [];
 
         for (const u of uniqueCandidates) {
-            const ok = await testStreamUrl(u);
+            const ok = await testHlsDeep(u);
             if (ok) {
                 workingUrls.push(u);
                 if (workingUrls.length >= 2) break;
@@ -389,25 +468,22 @@ async function main() {
         }
 
         if (workingUrls.length === 0) {
-            // Respaldar con URL de contingencia conocida
             workingUrls.push(ch.candidateUrls[0]);
-            console.log(`[CONSERVADO CON FALLBACK]`);
+            console.log(`[FALLBACK ASIGNADO]`);
         } else {
-            console.log(`[OK] (${workingUrls.length} señales activas)`);
+            console.log(`[OK] (${workingUrls.length} señales 100% activas)`);
         }
 
         finalDeportes.push({
             id: ch.id,
             name: ch.name,
             category: 'DEPORTES',
-            urls: workingUrls,
-            youtubeChannelId: ch.youtubeChannelId || null,
-            youtubeEmbedUrl: ch.youtubeEmbedUrl || null
+            urls: workingUrls
         });
     }
 
     // 4. Procesar Bloque 3: Cine, Cultura y Regionales Selectos
-    console.log('\n--- VERIFICANDO BLOQUE 3: CINE, CULTURA Y REGIONALES ---');
+    console.log('\n--- VERIFICANDO BLOQUE 3: CINE, CULTURA Y REGIONALES (DEEP CHECK) ---');
     const cineKeywords = [
         'cinecanal', 'cinelatino', 'cine familiar', 'cine hispano', 'cine sony', 'paramount',
         'dhe', 'tnt', 'space', 'warner', 'universal', 'star channel', 'film', 'history', 'discovery'
@@ -421,49 +497,47 @@ async function main() {
     const verifiedBlock3 = [];
     const testedUrls = new Set();
 
-    // Probar candidatos del bloque 3
     for (const raw of allRawChannels) {
-        if (verifiedBlock3.length >= 35) break; // Limitar a ~35 para un total de ~55 canales
+        if (verifiedBlock3.length >= 25) break; // Limitar a 25 para un total óptimo de 45 canales rápidos y probados
 
         const rawLower = raw.name.toLowerCase();
         const matchesTarget = targetBlock3Keywords.some(kw => rawLower.includes(kw));
 
         if (matchesTarget && !testedUrls.has(raw.url)) {
             testedUrls.add(raw.url);
-            const ok = await testStreamUrl(raw.url);
+            const ok = await testHlsDeep(raw.url);
             if (ok) {
-                // Determinar subcategoría legible
                 const isRegional = regionalKeywords.some(kw => rawLower.includes(kw));
                 const category = isRegional ? 'REGIONALES' : 'CINE Y CULTURA';
 
-                console.log(`  [+ ACTIVO] ${raw.name} (${category})`);
+                console.log(`  [+ VERIFICADO] ${raw.name} (${category})`);
                 verifiedBlock3.push({
                     name: raw.name,
                     category: category,
-                    urls: [raw.url],
-                    youtubeChannelId: null,
-                    youtubeEmbedUrl: null
+                    urls: [raw.url]
                 });
             }
         }
     }
 
-    // 5. Consolidar la Parrilla Completa con IDs continuos
+    // 5. Consolidar la Parrilla Final con IDs continuos
     console.log('\n--- CONSOLIDANDO PARRILLA FINAL ---');
     let nextId = 1;
     const finalChannelsList = [];
 
+    // Bloque 1: Nacionales (1 a 12)
     finalNacionales.forEach(ch => {
         ch.id = nextId++;
         finalChannelsList.push(ch);
     });
 
+    // Bloque 2: Deportes (13 a 20)
     finalDeportes.forEach(ch => {
         ch.id = nextId++;
         finalChannelsList.push(ch);
     });
 
-    // Colocar primero Cine y Cultura, luego Regionales del Perú
+    // Bloque 3: Cine y Cultura PRIMERO, luego Regionales
     const cineList = verifiedBlock3.filter(ch => ch.category === 'CINE Y CULTURA');
     const regionalList = verifiedBlock3.filter(ch => ch.category === 'REGIONALES');
     const sortedBlock3 = [...cineList, ...regionalList];
@@ -473,13 +547,13 @@ async function main() {
         finalChannelsList.push(ch);
     });
 
-    console.log(`Parrilla final lista con ${finalChannelsList.length} canales curados y funcionando (${finalNacionales.length} Nacionales, ${finalDeportes.length} Deportes, ${cineList.length} Cine/Cultura, ${regionalList.length} Regionales).`);
+    console.log(`Parrilla final lista con ${finalChannelsList.length} canales verificados en profundidad (${finalNacionales.length} Nacionales, ${finalDeportes.length} Deportes, ${cineList.length} Cine/Cultura, ${regionalList.length} Regionales).`);
 
     const outputJson = {
-        version: '1.2.0',
+        version: '1.3.0',
         updated: new Date().toISOString().split('T')[0],
         totalChannels: finalChannelsList.length,
-        description: 'Parrilla curada y optimizada para Jandos-TV con bloques VIP: Nacionales (01-12), Deportes (13-20), Cine y Regionales.',
+        description: 'Parrilla curada con verificación profunda HLS + CORS para Jandos-TV (Exclusivo Hls.js en TV).',
         channels: finalChannelsList
     };
 

@@ -19,34 +19,35 @@
     const STORAGE_KEY_LAST_CHANNEL = 'jandos_tv_last_channel_index';
     const OSD_DURATION_MS = 4000;
     const NUMBER_BUFFER_TIMEOUT_MS = 1800;
-    const STREAM_TIMEOUT_MS = 4500; // Reducido a 4.5 segundos para no hacer esperar al abuelo
-    const CHANNEL_WATCHDOG_MS = 8000; // 8 segundos máximo antes de saltar al siguiente si no reproduce
+    const STREAM_TIMEOUT_MS = 8000; // 8 segundos para dar tiempo a los buffers peruanos
+    const CHANNEL_WATCHDOG_MS = 15000; // 15 segundos máximo antes de saltar si no hay reproducción
+    const CORS_TEST_ORIGIN = 'http://localhost:3000';
 
     // --------------------------------------------------------------------------
     // 2. Parrilla Base Curada (Cargada desde canales-remotos.json)
     // --------------------------------------------------------------------------
     let channels = [
-        { id: 1, name: 'Latina Televisión', category: 'NACIONALES', urls: ['https://dai.google.com/linear/hls/event/oYQGDqEGTmGdHE_fz9oLlg/master.m3u8', 'https://redirector.rudo.video/hls-video/plus226/latina4/latina4.smil/playlist.m3u8'], youtubeChannelId: 'UC6Xw2bFj8vQf0sD8tK8y0qw', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC6Xw2bFj8vQf0sD8tK8y0qw&autoplay=1&mute=0' },
-        { id: 2, name: 'América Televisión', category: 'NACIONALES', urls: ['http://45.171.108.253:8888/AMERICA/index.m3u8', 'http://190.93.224.42/AMERICA/index.m3u8'], youtubeChannelId: 'UC4Z4s3zB8T4xVzT2k7_0nCw', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC4Z4s3zB8T4xVzT2k7_0nCw&autoplay=1&mute=0' },
-        { id: 3, name: 'Panamericana TV', category: 'NACIONALES', urls: ['http://45.171.108.253:8888/PANAMERICANA/index.m3u8', 'http://190.93.224.42/PANAMERICANA/index.m3u8'], youtubeChannelId: 'UC8L0o0s3t308_e9c0z4A_ww', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_e9c0z4A_ww&autoplay=1&mute=0' },
-        { id: 4, name: 'TV Perú', category: 'NACIONALES', urls: ['http://190.93.224.42/TV-PERU/index.m3u8', 'http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/nacionaltv_peru.stream/playlist.m3u8', 'https://k20.usastreams.com:8081/tvperuanisima/index.m3u8'], youtubeChannelId: 'UCyvK7t9N8eP1ZfQ7dF2u3gA', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCyvK7t9N8eP1ZfQ7dF2u3gA&autoplay=1&mute=0' },
-        { id: 5, name: 'ATV', category: 'NACIONALES', urls: ['http://190.93.224.42/ATV/index.m3u8', 'http://45.171.108.253:8888/ATV/index.m3u8'], youtubeChannelId: 'UC8L0o0s3t308_atv_noticias', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_atv_noticias&autoplay=1&mute=0' },
-        { id: 6, name: 'ATV+', category: 'NACIONALES', urls: ['http://45.171.108.253:8888/ATV/index.m3u8', 'http://190.93.224.42/ATV-MAS/index.m3u8'], youtubeChannelId: 'UC8L0o0s3t308_atv_mas', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UC8L0o0s3t308_atv_mas&autoplay=1&mute=0' },
-        { id: 7, name: 'TV Perú Noticias', category: 'NACIONALES', urls: ['http://190.93.224.42/TV-PERU-NOTICIAS/index.m3u8', 'http://45.171.108.253:8888/TVPERUNOTICIAS/index.m3u8'], youtubeChannelId: 'UCyvK7t9N8eP1ZfQ7dF2u3gA', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCyvK7t9N8eP1ZfQ7dF2u3gA&autoplay=1&mute=0' },
-        { id: 8, name: 'Willax TV', category: 'NACIONALES', urls: ['http://190.93.224.42/WILLAX/index.m3u8', 'http://45.171.108.253:8888/WILLAX/index.m3u8'], youtubeChannelId: 'UCwillax_oficial_envivo', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCwillax_oficial_envivo&autoplay=1&mute=0' },
-        { id: 9, name: 'Exitosa TV', category: 'NACIONALES', urls: ['http://190.93.224.42/EXITOSA/index.m3u8', 'http://45.171.108.253:8888/EXITOSA/index.m3u8'], youtubeChannelId: 'UCa5T-U9o3j0c8vK8y0exitosa', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCa5T-U9o3j0c8vK8y0exitosa&autoplay=1&mute=0' },
-        { id: 10, name: 'Nativa TV', category: 'NACIONALES', urls: ['http://187.102.210.46/NATIVATV/index.m3u8', 'https://live-evg7.tv360.bitel.com.pe/bitel/nativachanchamayoSRT/playlist.m3u8'], youtubeChannelId: 'UCnativa_tv_peru_oficial', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCnativa_tv_peru_oficial&autoplay=1&mute=0' },
-        { id: 11, name: 'Congreso TV', category: 'NACIONALES', urls: ['http://190.93.224.42/JUSTICIA-TV/index.m3u8', 'http://45.171.108.253:8888/CONGRESO/index.m3u8'], youtubeChannelId: 'UCcongreso_peru_oficial', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCcongreso_peru_oficial&autoplay=1&mute=0' },
-        { id: 12, name: 'Sol TV', category: 'NACIONALES', urls: ['https://5949aa132c8fb.streamlock.net:1963/iptvantares/liveantarestv/playlist.m3u8', 'https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8'], youtubeChannelId: 'UCsol_tv_peru_oficial', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCsol_tv_peru_oficial&autoplay=1&mute=0' },
+        { id: 1, name: 'Latina Televisión', category: 'NACIONALES', urls: ['http://190.93.224.42/LATINA/index.m3u8', 'https://dai.google.com/linear/hls/event/oYQGDqEGTmGdHE_fz9oLlg/master.m3u8'] },
+        { id: 2, name: 'América Televisión', category: 'NACIONALES', urls: ['https://live-bd1.tv360.bitel.com.pe/manifest/america/master_clean_source.m3u8'] },
+        { id: 3, name: 'Panamericana TV', category: 'NACIONALES', urls: ['http://45.171.108.253:8888/PANAMERICANA/index.m3u8', 'http://190.93.224.42/PANAMERICANA/index.m3u8'] },
+        { id: 4, name: 'TV Perú', category: 'NACIONALES', urls: ['http://190.93.224.42/TV-PERU/index.m3u8'] },
+        { id: 5, name: 'ATV', category: 'NACIONALES', urls: ['http://190.93.224.42/ATV/index.m3u8'] },
+        { id: 6, name: 'ATV+', category: 'NACIONALES', urls: ['http://45.171.108.253:8888/ATV/index.m3u8', 'http://190.93.224.42/ATV-SUR/index.m3u8'] },
+        { id: 7, name: 'TV Perú Noticias', category: 'NACIONALES', urls: ['http://190.93.224.42/TV-PERU-NOTICIAS/index.m3u8'] },
+        { id: 8, name: 'Willax TV', category: 'NACIONALES', urls: ['http://190.93.224.42/WILLAX/index.m3u8'] },
+        { id: 9, name: 'Exitosa TV', category: 'NACIONALES', urls: ['http://190.93.224.42/EXITOSA/index.m3u8'] },
+        { id: 10, name: 'Nativa TV', category: 'NACIONALES', urls: ['http://187.102.210.46/NATIVATV/index.m3u8'] },
+        { id: 11, name: 'Congreso TV', category: 'NACIONALES', urls: ['http://190.93.224.42/JUSTICIA-TV/index.m3u8'] },
+        { id: 12, name: 'Sol TV', category: 'NACIONALES', urls: ['https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8', 'https://cdn.streamhispanatv.net:3409/live/soltvlive.m3u8'] },
         // Deportes
-        { id: 13, name: 'ESPN', category: 'DEPORTES', urls: ['https://barinaslive1.boldmss.com/ESPN/ESPN.isml/ESPN.m3u8', 'http://190.61.47.54:8000/play/a004/index.m3u8'], youtubeChannelId: null, youtubeEmbedUrl: null },
-        { id: 14, name: 'ESPN 2', category: 'DEPORTES', urls: ['https://barinaslive1.boldmss.com/ESPN_2/ESPN_2.isml/ESPN_2.m3u8', 'http://190.61.47.54:8000/play/a005/index.m3u8'], youtubeChannelId: null, youtubeEmbedUrl: null },
-        { id: 15, name: 'DSports (DirecTV)', category: 'DEPORTES', urls: ['http://38.187.7.252:8000/play/a03d/index.m3u8', 'http://187.102.208.209:8000/play/a0bq/index.m3u8'], youtubeChannelId: null, youtubeEmbedUrl: null },
-        { id: 16, name: 'Claro Sports', category: 'DEPORTES', urls: ['http://168.196.127.137:6001/play/a08r/index.m3u8'], youtubeChannelId: 'UCclIclT9b0o43p3-vj3c85Q', youtubeEmbedUrl: 'https://www.youtube.com/embed/live_stream?channel=UCclIclT9b0o43p3-vj3c85Q&autoplay=1&mute=0' },
-        { id: 17, name: 'TyC Sports / TUDN', category: 'DEPORTES', urls: ['https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-', 'http://45.170.130.224:8000/play/a020/index.m3u8'], youtubeChannelId: null, youtubeEmbedUrl: null },
-        { id: 18, name: 'Ovación TV / Fútbol Perú', category: 'DEPORTES', urls: ['http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8', 'http://190.93.224.42/RPP/index.m3u8'], youtubeChannelId: null, youtubeEmbedUrl: null },
-        { id: 19, name: 'FIFA+ / Red Bull TV', category: 'DEPORTES', urls: ['https://6c849fb3.wurl.com/master/f36d25e7e52f1ba8d7e56eb859c636563214f541/TEctbX', 'https://886bd3fbc782459f8de7555d32d7e9ce.mediatailor.us-west-2.amazonaws.com/v1/'], youtubeChannelId: null, youtubeEmbedUrl: null },
-        { id: 20, name: 'Real Madrid TV / Barça TV', category: 'DEPORTES', urls: ['https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8', 'https://live20.bozztv.com/dvrfl06/astv/astv-barca/index.m3u8'], youtubeChannelId: null, youtubeEmbedUrl: null }
+        { id: 13, name: 'ESPN', category: 'DEPORTES', urls: ['https://barinaslive1.boldmss.com/ESPN/ESPN.isml/ESPN.m3u8'] },
+        { id: 14, name: 'ESPN 2', category: 'DEPORTES', urls: ['https://barinaslive1.boldmss.com/ESPN_2/ESPN_2.isml/ESPN_2.m3u8'] },
+        { id: 15, name: 'DSports (DirecTV)', category: 'DEPORTES', urls: ['http://45.170.130.224:8000/play/a03d/index.m3u8'] },
+        { id: 16, name: 'Claro Sports', category: 'DEPORTES', urls: ['http://168.196.127.137:6001/play/a08r/index.m3u8'] },
+        { id: 17, name: 'TyC Sports / TUDN', category: 'DEPORTES', urls: ['http://45.170.130.224:8000/play/a020/index.m3u8', 'https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8'] },
+        { id: 18, name: 'Ovación TV / Fútbol Perú', category: 'DEPORTES', urls: ['http://190.93.224.42/RPP/index.m3u8'] },
+        { id: 19, name: 'FIFA+ / Red Bull TV', category: 'DEPORTES', urls: ['https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8'] },
+        { id: 20, name: 'Real Madrid TV / Barça TV', category: 'DEPORTES', urls: ['https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8'] }
     ];
 
     // --------------------------------------------------------------------------
@@ -55,7 +56,6 @@
     let currentChannelIndex = 0;
     let previousChannelIndex = 0; // Para el botón Recall (Canal Anterior)
     let currentStreamUrlIndex = 0; // Índice de la URL HLS que se está probando dentro del canal
-    let isYouTubeActive = false; // Bandera de transmisión de YouTube activa
     let isSkipping = false; // Bandera de salto automático de canal
     let guideFocusedIndex = 0;
     let isGuideOpen = false;
@@ -70,9 +70,9 @@
     // Reproductor HLS
     let hlsInstance = null;
 
-    // Elementos del DOM
-    const videoEl = document.getElementById('player');
-    const youtubePlayerEl = document.getElementById('youtube-player');
+    // Elementos del DOM (Soporta tv-player y player)
+    const videoEl = document.getElementById('tv-player') || document.getElementById('player');
+    const muteNoticeEl = document.getElementById('mute-notice');
     const osdEl = document.getElementById('osd');
     const osdNumberEl = document.getElementById('osd-number');
     const osdNameEl = document.getElementById('osd-name');
@@ -198,22 +198,39 @@
         }
     }
 
-    function resetVideoAndYouTubeState() {
-        isYouTubeActive = false;
-        if (youtubePlayerEl) {
-            youtubePlayerEl.classList.remove('active');
-            youtubePlayerEl.src = '';
+    function resetPlayerState() {
+        if (hlsInstance) {
+            try { hlsInstance.destroy(); } catch (e) {}
+            hlsInstance = null;
         }
         if (videoEl) {
-            videoEl.style.display = 'block';
+            videoEl.pause();
+            videoEl.removeAttribute('src');
+            videoEl.load();
+        }
+    }
+
+    function showMuteNotice() {
+        if (muteNoticeEl) muteNoticeEl.classList.add('visible');
+    }
+
+    function hideMuteNotice() {
+        if (muteNoticeEl) muteNoticeEl.classList.remove('visible');
+    }
+
+    function unmuteAudioIfNeeded() {
+        if (videoEl && videoEl.muted) {
+            videoEl.muted = false;
+            hideMuteNotice();
+            console.log('Jandos-TV: Audio activado tras interacción');
         }
     }
 
     function startChannelWatchdog() {
         if (channelWatchdogTimer) clearTimeout(channelWatchdogTimer);
-        // Watchdog de 8 segundos: si no hay frames de video, saltar al siguiente canal
+        // Watchdog de 15 segundos: si no hay frames de video reproducidos, saltar al siguiente canal
         channelWatchdogTimer = setTimeout(function () {
-            console.warn('Jandos-TV Watchdog: 8 segundos sin reproducción. Pasando al siguiente canal.');
+            console.warn('Jandos-TV Watchdog: 15 segundos sin reproducción. Pasando al siguiente canal.');
             skipToNextChannel('Canal sin transmisión en este momento. Pasando al siguiente...');
         }, CHANNEL_WATCHDOG_MS);
     }
@@ -251,7 +268,7 @@
 
         currentChannelIndex = targetIndex;
         currentStreamUrlIndex = 0;
-        resetVideoAndYouTubeState();
+        resetPlayerState();
 
         const channel = channels[currentChannelIndex];
         console.log('Jandos-TV: Sintonizando canal ' + (currentChannelIndex + 1) + ': ' + channel.name);
@@ -266,14 +283,14 @@
         showStatus('Sintonizando ' + channel.name, 'Conectando con la señal...');
         updateGuideActiveChannel();
 
-        // Iniciar Watchdog de 8 segundos
+        // Iniciar Watchdog de 15 segundos
         startChannelWatchdog();
 
         loadActiveStream();
     }
 
     function loadActiveStream() {
-        resetVideoAndYouTubeState();
+        resetPlayerState();
         const channel = channels[currentChannelIndex];
         if (!channel || !channel.urls || channel.urls.length === 0) {
             handleStreamFailure('Sin URLs HLS disponibles');
@@ -287,14 +304,32 @@
         const streamUrl = channel.urls[currentStreamUrlIndex];
         console.log('Jandos-TV: Probando stream [' + (currentStreamUrlIndex + 1) + '/' + channel.urls.length + ']: ' + streamUrl);
 
-        // Timeout reducido a 4.5 segundos por señal individual
+        // Timeout de 8 segundos por señal individual
         if (streamLoadTimeoutTimer) clearTimeout(streamLoadTimeoutTimer);
         streamLoadTimeoutTimer = setTimeout(function () {
-            console.warn('Jandos-TV: Timeout de 4.5s para la señal ' + (currentStreamUrlIndex + 1));
+            console.warn('Jandos-TV: Timeout de 8s para la señal ' + (currentStreamUrlIndex + 1));
             handleStreamFailure('Tiempo de espera agotado');
         }, STREAM_TIMEOUT_MS);
 
         loadStream(streamUrl);
+    }
+
+    function attemptPlayVideo() {
+        if (!videoEl) return;
+        const playPromise = videoEl.play();
+        if (playPromise !== undefined) {
+            playPromise.then(function () {
+                hideMuteNotice();
+            }).catch(function (error) {
+                console.warn('Jandos-TV: Autoplay con audio bloqueado por el navegador. Activando mute temporal:', error);
+                videoEl.muted = true;
+                videoEl.play().then(function () {
+                    showMuteNotice();
+                }).catch(function (err) {
+                    console.error('Jandos-TV: Fallo play con mute:', err);
+                });
+            });
+        }
     }
 
     function loadStream(streamUrl) {
@@ -310,20 +345,17 @@
         if (window.Hls && window.Hls.isSupported()) {
             hlsInstance = new window.Hls({
                 enableWorker: true,
-                lowLatencyMode: true,
-                manifestLoadingTimeOut: 4500,
-                manifestLoadingMaxRetry: 1,
-                levelLoadingTimeOut: 4500,
-                fragLoadingTimeOut: 5000
+                lowLatencyMode: false,
+                backBufferLength: 30,
+                manifestLoadingTimeOut: 10000,
+                levelLoadingTimeOut: 10000
             });
 
             hlsInstance.loadSource(streamUrl);
             hlsInstance.attachMedia(videoEl);
 
             hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, function () {
-                videoEl.play().catch(function (e) {
-                    console.log('Jandos-TV: Esperando interacción', e);
-                });
+                attemptPlayVideo();
             });
 
             hlsInstance.on(window.Hls.Events.ERROR, function (event, data) {
@@ -334,46 +366,11 @@
             });
         } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
             videoEl.src = streamUrl;
-            videoEl.play().catch(function (e) {
-                console.log('Jandos-TV: Play nativo', e);
-            });
+            attemptPlayVideo();
         } else {
             console.error('Jandos-TV: Formato no soportado');
             handleStreamFailure('Formato no soportado');
         }
-    }
-
-    function tryYouTubeFallback() {
-        const channel = channels[currentChannelIndex];
-        if (!channel) return false;
-
-        let ytEmbed = channel.youtubeEmbedUrl;
-        if (!ytEmbed && channel.youtubeChannelId) {
-            ytEmbed = 'https://www.youtube.com/embed/live_stream?channel=' + channel.youtubeChannelId + '&autoplay=1&mute=0';
-        }
-
-        if (ytEmbed) {
-            console.log('Jandos-TV: Activando respaldo YouTube Live para ' + channel.name + ': ' + ytEmbed);
-            clearStreamTimers();
-
-            if (hlsInstance) {
-                try { hlsInstance.destroy(); } catch (e) {}
-                hlsInstance = null;
-            }
-            try { videoEl.pause(); } catch (e) {}
-            videoEl.style.display = 'none';
-
-            isYouTubeActive = true;
-            youtubePlayerEl.src = ytEmbed;
-            youtubePlayerEl.classList.add('active');
-
-            showStatus('Señal Oficial YouTube Live', 'Conectando con la transmisión oficial...');
-            showOSD();
-            setTimeout(hideStatus, 3000);
-            return true;
-        }
-
-        return false;
     }
 
     function handleStreamFailure(reason) {
@@ -395,13 +392,8 @@
             return;
         }
 
-        // 2. Si todas las señales HLS fallaron, probar YouTube Live oficial si está disponible
-        if (!isYouTubeActive && tryYouTubeFallback()) {
-            return;
-        }
-
-        // 3. Si no tiene YouTube Live ni más señales, activar el salto automático al siguiente canal (Watchdog)
-        console.warn('Jandos-TV: Canal ' + channel.name + ' sin señales funcionales. Saltando...');
+        // 2. Si todas las señales HLS fallaron, activar el salto automático al siguiente canal (Watchdog)
+        console.warn('Jandos-TV: Canal ' + channel.name + ' sin señales funcionales (' + reason + '). Saltando...');
         skipToNextChannel('Canal sin transmisión en este momento. Pasando al siguiente...');
     }
 
@@ -414,7 +406,7 @@
             return;
         }
 
-        resetVideoAndYouTubeState();
+        resetPlayerState();
         currentStreamUrlIndex = (currentStreamUrlIndex + 1) % channel.urls.length;
         console.log('Jandos-TV: Cambio manual de señal a [' + (currentStreamUrlIndex + 1) + '/' + channel.urls.length + ']');
 
@@ -430,15 +422,11 @@
     });
 
     videoEl.addEventListener('waiting', function () {
-        if (!isYouTubeActive) {
-            showStatus('Sintonizando canal...', 'Cargando señal...');
-        }
+        showStatus('Sintonizando canal...', 'Cargando señal...');
     });
 
     videoEl.addEventListener('error', function () {
-        if (!isYouTubeActive) {
-            handleStreamFailure('Error del elemento video');
-        }
+        handleStreamFailure('Error del elemento video');
     });
 
     // --------------------------------------------------------------------------
@@ -593,9 +581,7 @@
                 id: rCh.id || (idx + 1),
                 name: rCh.name,
                 category: rCh.category || (idx < 12 ? 'NACIONALES' : (idx < 20 ? 'DEPORTES' : 'VARIEDADES')),
-                urls: Array.isArray(rCh.urls) ? rCh.urls : (rCh.url ? [rCh.url] : []),
-                youtubeChannelId: rCh.youtubeChannelId || null,
-                youtubeEmbedUrl: rCh.youtubeEmbedUrl || null
+                urls: Array.isArray(rCh.urls) ? rCh.urls : (rCh.url ? [rCh.url] : [])
             };
         });
 
@@ -640,6 +626,9 @@
     // 10. Controlador de Eventos de Teclado y Control Remoto Samsung
     // --------------------------------------------------------------------------
     function onKeyDown(e) {
+        // Al interactuar con cualquier tecla, activar audio si estaba silenciado por el navegador
+        unmuteAudioIfNeeded();
+
         const keyCode = e.keyCode;
 
         // Tecla Return / Atrás de Samsung Tizen: 10009 (Escape: 27, Backspace: 8)
@@ -729,6 +718,8 @@
     function init() {
         initTizenFeatures();
         document.addEventListener('keydown', onKeyDown, false);
+        document.addEventListener('click', unmuteAudioIfNeeded, false);
+        document.addEventListener('touchstart', unmuteAudioIfNeeded, false);
 
         // Recuperar último canal visto desde localStorage
         let savedIndex = 0;
