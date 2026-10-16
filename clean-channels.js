@@ -1,15 +1,20 @@
 /**
  * clean-channels.js - Script de Limpieza y Verificación Profunda HLS + CORS para Jandos-TV
  * 
- * Verifica no solo que el .m3u8 responda HTTP 200, sino:
- * 1. Descarga el manifiesto maestro (#EXTM3U) con cabecera Origin (CORS check).
- * 2. Si es Master Playlist (#EXT-X-STREAM-INF), resuelve y descarga la sub-playlist (Media Playlist).
- * 3. Extrae el primer segmento de video (.ts, .m4s, .aac) y hace un GET con Range: bytes=0-1024
- *    comprobando que entregue datos (> 0 bytes) y que NO esté bloqueado por CORS.
- * 4. Elimina canales muertos y organiza la lista maestra en bloques VIP:
+ * REGLAS DE ORO:
+ * 1. "SI FUNCIONA, NO SE TOCA": Verifica primero las URLs existentes en canales-remotos.json.
+ *    Si una señal sigue respondiendo con H.264+AAC válido, queda estrictamente conservada.
+ *    Solo se buscan reemplazos para canales cuyas URLs estén 100% caídas.
+ * 2. ANTI-COLISIÓN: Matcher estricto por tvg-id oficial y procedencia peruana garantizada,
+ *    prohibiendo coincidencias parciales con canales extranjeros.
+ * 3. PRESERVACIÓN DE SERIES 24/7: Mantiene intactos los canales 21 al 26 con sus episodios ordenados.
+ * 4. ORGANIZACIÓN VIP:
  *    - Bloque 1: Nacionales Perú (01-12)
  *    - Bloque 2: Deportes (13-20)
- *    - Bloque 3: Cine y Cultura (21+) y Regionales del Perú
+ *    - Bloque 3: Series y Anime 24/7 (21-26)
+ *    - Bloque 4: Cine y Cultura (27+)
+ *    - Bloque 5: Dibujos y Animación
+ *    - Bloque 6: Regionales del Perú
  */
 
 const fs = require('fs');
@@ -17,6 +22,7 @@ const path = require('path');
 
 const TIMEOUT_MS = 4000;
 const OUTPUT_FILE = path.join(__dirname, 'canales-remotos.json');
+const SERIES_CATALOGO_FILE = path.join(__dirname, 'series-catalogo.json');
 const CORS_TEST_ORIGIN = 'http://localhost:3000';
 const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36';
 
@@ -32,13 +38,14 @@ const M3U_SOURCES = [
     { url: 'https://iptv-org.github.io/iptv/categories/kids.m3u', tag: 'kids' }
 ];
 
-// 1. Bloque Maestro 1: Nacionales Perú (Fijos 01 - 12)
+// 1. Bloque Maestro 1: Nacionales Perú (Fijos 01 - 12) con tvg-ids oficiales y nombres exactos
 const BLOCK_1_NACIONALES = [
     {
         id: 1,
         name: 'Latina Televisión',
         category: 'NACIONALES',
-        keywords: ['latina televisión', 'latina television', 'latina.pe', 'frecuencia latina'],
+        tvgIds: ['Latina.pe', 'LatinaTelevisión.pe', 'LatinaTelevision.pe', 'FrecuenciaLatina.pe'],
+        exactNames: ['latina televisión', 'latina television', 'latina tv', 'latina hd', 'frecuencia latina', 'latina'],
         candidateUrls: [
             'http://190.93.224.42/LATINA/index.m3u8'
         ]
@@ -47,7 +54,8 @@ const BLOCK_1_NACIONALES = [
         id: 2,
         name: 'América Televisión',
         category: 'NACIONALES',
-        keywords: ['america television', 'américa televisión', 'america tv', 'américa tv', 'canal 4'],
+        tvgIds: ['AmericaTelevision.pe', 'AmericaTV.pe', 'Canal4.pe'],
+        exactNames: ['américa televisión', 'america television', 'américa tv', 'america tv', 'canal 4', 'america hd', 'américa hd'],
         candidateUrls: [
             'https://live-bd1.tv360.bitel.com.pe/manifest/america/master_clean_source.m3u8',
             'https://live-bd1.tv360.bitel.com.pe/manifest/america/playlist_clean_source_720p.m3u8',
@@ -59,7 +67,8 @@ const BLOCK_1_NACIONALES = [
         id: 3,
         name: 'Panamericana TV',
         category: 'NACIONALES',
-        keywords: ['panamericana', 'canal 5'],
+        tvgIds: ['PanamericanaTelevision.pe', 'PanamericanaTV.pe', 'Canal5.pe'],
+        exactNames: ['panamericana tv', 'panamericana televisión', 'panamericana television', 'panamericana', 'canal 5'],
         candidateUrls: [
             'http://45.171.108.253:8888/PANAMERICANA/index.m3u8',
             'http://190.93.224.42/PANAMERICANA/index.m3u8'
@@ -69,7 +78,8 @@ const BLOCK_1_NACIONALES = [
         id: 4,
         name: 'TV Perú',
         category: 'NACIONALES',
-        keywords: ['tv peru', 'tv perú', 'canal 7', 'tnp'],
+        tvgIds: ['TVPeru.pe', 'Canal7.pe'],
+        exactNames: ['tv perú', 'tv peru', 'tv perú hd', 'tv peru hd', 'canal 7 perú', 'canal 7 peru'],
         candidateUrls: [
             'http://190.93.224.42/TV-PERU/index.m3u8',
             'http://45.171.108.253:8888/TVPERU/index.m3u8'
@@ -79,7 +89,8 @@ const BLOCK_1_NACIONALES = [
         id: 5,
         name: 'ATV',
         category: 'NACIONALES',
-        keywords: ['atv', 'canal 9', 'andina de television'],
+        tvgIds: ['ATV.pe', 'AndinaDeTelevision.pe', 'Canal9.pe'],
+        exactNames: ['atv', 'atv hd', 'atv perú', 'atv peru', 'andina de televisión'],
         candidateUrls: [
             'http://190.93.224.42/ATV/index.m3u8',
             'http://45.171.108.253:8888/ATV/index.m3u8'
@@ -89,7 +100,8 @@ const BLOCK_1_NACIONALES = [
         id: 6,
         name: 'ATV+',
         category: 'NACIONALES',
-        keywords: ['atv+', 'atv plus', 'atv mas', 'atv más'],
+        tvgIds: ['ATVPlus.pe', 'ATVMas.pe'],
+        exactNames: ['atv+', 'atv plus', 'atv mas', 'atv más', 'atv+ noticias'],
         candidateUrls: [
             'http://45.171.108.253:8888/ATV/index.m3u8',
             'http://190.93.224.42/ATV-SUR/index.m3u8',
@@ -100,7 +112,8 @@ const BLOCK_1_NACIONALES = [
         id: 7,
         name: 'TV Perú Noticias',
         category: 'NACIONALES',
-        keywords: ['tv peru noticias', 'tv perú noticias', '7.3', 'peru noticias'],
+        tvgIds: ['TVPeruNoticias.pe', 'Canal73.pe'],
+        exactNames: ['tv perú noticias', 'tv peru noticias', 'perú noticias', '7.3', 'tv perú 7.3'],
         candidateUrls: [
             'http://190.93.224.42/TV-PERU-NOTICIAS/index.m3u8',
             'http://45.171.108.253:8888/TVPERUNOTICIAS/index.m3u8'
@@ -110,7 +123,8 @@ const BLOCK_1_NACIONALES = [
         id: 8,
         name: 'Willax TV',
         category: 'NACIONALES',
-        keywords: ['willax'],
+        tvgIds: ['WillaxTelevision.pe', 'WillaxTV.pe', 'Willax.pe'],
+        exactNames: ['willax tv', 'willax televisión', 'willax television', 'willax'],
         candidateUrls: [
             'http://190.93.224.42/WILLAX/index.m3u8',
             'http://45.171.108.253:8888/WILLAX/index.m3u8'
@@ -120,7 +134,8 @@ const BLOCK_1_NACIONALES = [
         id: 9,
         name: 'Exitosa TV',
         category: 'NACIONALES',
-        keywords: ['exitosa'],
+        tvgIds: ['ExitosaTV.pe', 'Exitosa.pe'],
+        exactNames: ['exitosa tv', 'exitosa televisión', 'exitosa television', 'exitosa'],
         candidateUrls: [
             'http://190.93.224.42/EXITOSA/index.m3u8',
             'http://45.171.108.253:8888/EXITOSA/index.m3u8'
@@ -130,7 +145,8 @@ const BLOCK_1_NACIONALES = [
         id: 10,
         name: 'Nativa TV',
         category: 'NACIONALES',
-        keywords: ['nativa'],
+        tvgIds: ['NativaTV.pe', 'Nativa.pe'],
+        exactNames: ['nativa tv', 'nativa televisión', 'nativa television', 'nativa'],
         candidateUrls: [
             'http://187.102.210.46/NATIVATV/index.m3u8',
             'https://live-evg7.tv360.bitel.com.pe/bitel/nativachanchamayoSRT/playlist.m3u8'
@@ -140,7 +156,8 @@ const BLOCK_1_NACIONALES = [
         id: 11,
         name: 'Congreso TV',
         category: 'NACIONALES',
-        keywords: ['congreso', 'justicia tv', 'justiciatv'],
+        tvgIds: ['CanalDelCongreso.pe', 'CongresoTV.pe', 'JusticiaTV.pe'],
+        exactNames: ['congreso tv', 'canal del congreso', 'justicia tv', 'justiciatv', 'congreso'],
         candidateUrls: [
             'http://190.93.224.42/JUSTICIA-TV/index.m3u8',
             'http://138.121.15.230:9002/CANAL-CONGRESO/index.m3u8'
@@ -150,7 +167,8 @@ const BLOCK_1_NACIONALES = [
         id: 12,
         name: 'Sol TV',
         category: 'NACIONALES',
-        keywords: ['sol tv'],
+        tvgIds: ['SolTV.pe'],
+        exactNames: ['sol tv', 'sol tv perú', 'sol tv trujillo', 'soltv'],
         candidateUrls: [
             'https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8',
             'https://cdn.streamhispanatv.net:3409/live/soltvlive.m3u8',
@@ -160,9 +178,10 @@ const BLOCK_1_NACIONALES = [
     }
 ];
 
-// 2. Bloque Maestro 2: Deportes (Fijos 13+)
+// 2. Bloque Maestro 2: Deportes (Fijos 13 - 20)
 const BLOCK_2_DEPORTES = [
     {
+        id: 13,
         name: 'L1 MAX (Liga 1 Max)',
         category: 'DEPORTES',
         keywords: ['liga 1 max', 'l1 max', 'l1 play', 'liga 1', 'liga1max', 'l1'],
@@ -174,6 +193,7 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
+        id: 14,
         name: 'GOLPERU',
         category: 'DEPORTES',
         keywords: ['golperu', 'gol peru', 'gol-peru', 'gol_peru'],
@@ -181,11 +201,11 @@ const BLOCK_2_DEPORTES = [
             'http://190.93.224.42/GOLPERU/index.m3u8',
             'http://45.4.1.201:8000/play/a03e/index.m3u8',
             'https://cablered.iptvperu.tv:1936/cablered/golperu.stream/playlist.m3u8',
-            'https://clarosports-live.akamaized.net/hls/live/2004245/clarosports1/master.m3u8',
             'http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8'
         ]
     },
     {
+        id: 15,
         name: 'Movistar Deportes',
         category: 'DEPORTES',
         keywords: ['movistar deportes', 'movistardeportes', 'cmd'],
@@ -197,6 +217,7 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
+        id: 16,
         name: 'ESPN',
         category: 'DEPORTES',
         keywords: ['espn latin america', 'espn hd', 'espn colombia', 'espn argentina', 'espn '],
@@ -206,6 +227,7 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
+        id: 17,
         name: 'ESPN 2',
         category: 'DEPORTES',
         keywords: ['espn 2', 'espn2'],
@@ -215,6 +237,7 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
+        id: 18,
         name: 'DSports (DirecTV)',
         category: 'DEPORTES',
         keywords: ['dsports', 'directv sports'],
@@ -225,6 +248,7 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
+        id: 19,
         name: 'Claro Sports',
         category: 'DEPORTES',
         keywords: ['claro sports', 'clarosports'],
@@ -235,129 +259,13 @@ const BLOCK_2_DEPORTES = [
         ]
     },
     {
+        id: 20,
         name: 'TyC Sports / TUDN',
         category: 'DEPORTES',
         keywords: ['tyc sports', 'tyc', 'tudn'],
         candidateUrls: [
             'https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8',
             'http://45.170.130.224:8000/play/a020/index.m3u8'
-        ]
-    },
-    {
-        name: 'Ovación TV / Fútbol Perú',
-        category: 'DEPORTES',
-        keywords: ['ovacion', 'ovación', 'futbol peru', 'fútbol perú'],
-        candidateUrls: [
-            'http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8',
-            'http://190.93.224.42/RPP/index.m3u8'
-        ]
-    },
-    {
-        name: 'FIFA+ / Red Bull TV',
-        category: 'DEPORTES',
-        keywords: ['fifa+', 'fifa', 'red bull tv'],
-        candidateUrls: [
-            'https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8',
-            'https://jmp2.uk/plu-660c29b5aec9680008f5b4a4.m3u8'
-        ]
-    },
-    {
-        name: 'Real Madrid TV / Barça TV',
-        category: 'DEPORTES',
-        keywords: ['real madrid', 'barça', 'barca tv'],
-        candidateUrls: [
-            'https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8',
-            'https://live20.bozztv.com/dvrfl06/astv/astv-barca/index.m3u8'
-        ]
-    }
-];
-
-// 3. Bloque Maestro: Dibujos y Animación
-const BLOCK_ANIMACION = [
-    {
-        name: 'Cartoon Network',
-        category: 'DIBUJOS Y ANIMACIÓN',
-        keywords: ['cartoon network', 'cartoon network argentina', 'cartoon network chile', 'cartoon network latin america'],
-        candidateUrls: [
-            'http://158.172.217.18:8000/play/a03a/index.m3u8',
-            'http://45.170.130.224:8000/play/a03a/index.m3u8',
-            'http://38.224.231.176:8000/play/a03a/index.m3u8'
-        ]
-    },
-    {
-        name: 'Nickelodeon',
-        category: 'DIBUJOS Y ANIMACIÓN',
-        keywords: ['nickelodeon', 'nick latino', 'nickonline', 'nick clasico', 'nick jr'],
-        candidateUrls: [
-            'https://x1colegal.com/hls/stream.m3u8',
-            'http://158.172.217.18:8000/play/a03b/index.m3u8',
-            'http://38.224.231.176:8000/play/a03b/index.m3u8',
-            'http://45.170.130.224:8000/play/a03b/index.m3u8'
-        ]
-    },
-    {
-        name: 'Discovery Kids',
-        category: 'DIBUJOS Y ANIMACIÓN',
-        keywords: ['discovery kids', 'discovery kids latin america', 'discovery kids chile', 'discovery kids colombia'],
-        candidateUrls: [
-            'http://38.224.231.176:8000/play/a01j/index.m3u8',
-            'http://38.134.250.110:8000/play/a003/index.m3u8',
-            'http://45.170.130.224:8000/play/a01j/index.m3u8'
-        ]
-    },
-    {
-        name: 'Disney Channel',
-        category: 'DIBUJOS Y ANIMACIÓN',
-        keywords: ['disney channel', 'disney channel latin america', 'disney channel argentina'],
-        candidateUrls: [
-            'http://45.134.141.161:2200/ARG/Disney_Channel/index.m3u8',
-            'http://138.121.15.230:9002/DISNEY-CHANNEL/index.m3u8',
-            'http://181.78.14.26:4000/play/a015/index.m3u8',
-            'http://38.224.231.176:8000/play/a015/index.m3u8'
-        ]
-    },
-    {
-        name: 'Disney Jr.',
-        category: 'DIBUJOS Y ANIMACIÓN',
-        keywords: ['disney jr', 'disney junior', 'disney jr.'],
-        candidateUrls: [
-            'http://181.78.14.26:4000/play/a073/index.m3u8',
-            'http://45.185.163.75:8000/play/a016/index.m3u8',
-            'http://38.224.231.176:8000/play/a016/index.m3u8'
-        ]
-    },
-    {
-        name: 'Tooncast / Cartoonito',
-        category: 'DIBUJOS Y ANIMACIÓN',
-        keywords: ['tooncast', 'cartoonito', 'boomerang'],
-        candidateUrls: [
-            'http://38.134.250.110:8000/play/a01t/index.m3u8',
-            'http://200.62.239.170:830/play/a07n/index.m3u8',
-            'http://38.224.231.176:8000/play/a01t/index.m3u8'
-        ]
-    },
-    {
-        name: 'Bob Esponja 24/7',
-        category: 'DIBUJOS Y ANIMACIÓN',
-        keywords: ['bob esponja', 'spongebob', 'bob esponja 24/7'],
-        candidateUrls: [
-            'https://bob.x1colegal.com/hls/stream.m3u8'
-        ]
-    },
-    {
-        name: 'Dreiko TV (Dibujos y Anime Clásico)',
-        category: 'DIBUJOS Y ANIMACIÓN',
-        keywords: ['dreiko tv', 'dreiko'],
-        candidateUrls: [
-            'https://cloudvideo.servers10.com:8081/8020/index.m3u8'
-        ]
-    },
-    {
-        name: 'MAX Anime 24/7',
-        category: 'DIBUJOS Y ANIMACIÓN',
-        keywords: ['max anime', 'anime 24/7', 'dragon ball', 'locomotion', 'energigeeek'],
-        candidateUrls: [
-            'https://cdnlive.klicgo.net/maxanime/live/playlist.m3u8'
         ]
     }
 ];
@@ -370,8 +278,6 @@ function isCorsAllowed(res) {
 
 /**
  * Puntuación de calidad de origen y estabilidad CDN:
- * Prioriza CDNs globales seguras con HTTPS (Akamai, CloudFront, Bitel, Amagi, etc.)
- * sobre servidores HTTP de IPs crudas que suelen traer MPEG-2 / AC-3 o congelarse.
  */
 function getCdnScore(url) {
     if (!url || typeof url !== 'string') return 0;
@@ -394,9 +300,7 @@ function getCdnScore(url) {
 }
 
 /**
- * Analiza un búfer de datos TS (primeros 16 KB) buscando PAT y PMT.
- * Determina con precisión matemática si el stream transporta códec de video H.264
- * y códec de audio AAC, detectando y descartando códecs incompatibles (HEVC, MPEG-2, AC-3).
+ * Analiza un búfer TS buscando códecs compatibles (H.264 + AAC)
  */
 function inspectTsCodecs(buf) {
     if (!buf || buf.length < 188) {
@@ -429,14 +333,13 @@ function inspectTsCodecs(buf) {
         const afc = (p[3] & 0x30) >> 4;
 
         let payloadStart = 4;
-        if (afc === 2) continue; // solo adaptación
+        if (afc === 2) continue;
         if (afc === 3) {
             const afl = p[4];
             payloadStart = 5 + afl;
         }
         if (payloadStart >= 188) continue;
 
-        // PAT (PID 0)
         if (pid === 0) {
             let ptr = payloadStart;
             if (pusi) ptr += 1 + p[ptr];
@@ -454,7 +357,6 @@ function inspectTsCodecs(buf) {
                 }
             }
         } else if (pmtPid !== null && pid === pmtPid) {
-            // PMT (PID del canal)
             let ptr = payloadStart;
             if (pusi) ptr += 1 + p[ptr];
             if (ptr + 12 < 188 && p[ptr] === 0x02) {
@@ -481,10 +383,6 @@ function inspectTsCodecs(buf) {
     return { isTs: true, hasH264, hasAac, hasHevc, hasMpeg2, hasAc3 };
 }
 
-/**
- * Inspecciona las etiquetas #EXT-X-STREAM-INF y #EXT-X-MEDIA del manifiesto
- * para detectar códecs incompatibles declarados.
- */
 function checkManifestCodecs(manifestText) {
     const lines = manifestText.split(/\r?\n/).map(l => l.trim());
     let hasAvc1 = false;
@@ -511,24 +409,28 @@ function checkManifestCodecs(manifestText) {
 }
 
 /**
- * Verificación profunda de streaming HLS:
- * a) Descarga el .m3u8 principal con cabecera Origin (CORS check).
- * b) Inspecciona el manifiesto y rechaza códecs incompatibles (HEVC / AC-3 sin avc1+mp4a).
- * c) Si es Master Playlist, resuelve la sub-playlist (Media Playlist) compatible.
- * d) Descarga los primeros 16 KB del primer segmento (.ts o .m4s).
- * e) En streams TS, valida la presencia de video H.264 (0x1b) y audio AAC (0x0f/0x11),
- *    descartando HEVC (0x24), MPEG-2 (0x02) y Dolby AC-3 (0x81/0x87).
+ * Verificación profunda HLS + CORS
  */
 async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
     if (!url || typeof url !== 'string' || !url.startsWith('http')) return false;
 
+    // Si es un enlace directo a video .mp4 de series/archivo, probar con HEAD Range
+    if (url.includes('.mp4')) {
+        try {
+            const res = await fetch(url, {
+                method: 'HEAD',
+                headers: { 'Range': 'bytes=0-1024', 'User-Agent': USER_AGENT },
+                signal: AbortSignal.timeout(timeoutMs)
+            });
+            return res.status === 200 || res.status === 206;
+        } catch (e) {
+            return false;
+        }
+    }
+
     try {
-        // a) Descargar Manifiesto Maestro con Origin
         const res1 = await fetch(url, {
-            headers: {
-                'Origin': CORS_TEST_ORIGIN,
-                'User-Agent': USER_AGENT
-            },
+            headers: { 'Origin': CORS_TEST_ORIGIN, 'User-Agent': USER_AGENT },
             signal: AbortSignal.timeout(timeoutMs)
         });
 
@@ -538,7 +440,6 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
         const text1 = await res1.text();
         if (!text1.includes('#EXTM3U')) return false;
 
-        // b) Rechazar si declara códecs incompatibles sin alternativa avc1 + mp4a
         const mCodecs = checkManifestCodecs(text1);
         if (mCodecs.hasExplicitCodecs) {
             if ((mCodecs.hasHevc || mCodecs.hasAc3) && !(mCodecs.hasAvc1 && mCodecs.hasMp4a)) {
@@ -549,7 +450,6 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
         let mediaPlaylistUrl = url;
         let mediaPlaylistText = text1;
 
-        // c) Si es Master Playlist (#EXT-X-STREAM-INF), resolver sub-playlist compatible
         if (text1.includes('#EXT-X-STREAM-INF')) {
             const lines = text1.split(/\r?\n/).map(l => l.trim());
             let subPath = null;
@@ -557,7 +457,7 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
                 if (lines[i].startsWith('#EXT-X-STREAM-INF')) {
                     const lLower = lines[i].toLowerCase();
                     if (lLower.includes('hev') || lLower.includes('hvc') || lLower.includes('ac-3')) {
-                        continue; // Evitar variantes incompatibles
+                        continue;
                     }
                     for (let j = i + 1; j < lines.length; j++) {
                         const nextLine = lines[j];
@@ -571,7 +471,6 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
             }
 
             if (!subPath) {
-                // Fallback a primera variante si no había atributos de codec
                 for (let i = 0; i < lines.length; i++) {
                     if (lines[i].startsWith('#EXT-X-STREAM-INF')) {
                         for (let j = i + 1; j < lines.length; j++) {
@@ -590,10 +489,7 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
             mediaPlaylistUrl = subPath.startsWith('http') ? subPath : new URL(subPath, url).href;
 
             const res2 = await fetch(mediaPlaylistUrl, {
-                headers: {
-                    'Origin': CORS_TEST_ORIGIN,
-                    'User-Agent': USER_AGENT
-                },
+                headers: { 'Origin': CORS_TEST_ORIGIN, 'User-Agent': USER_AGENT },
                 signal: AbortSignal.timeout(timeoutMs)
             });
 
@@ -604,7 +500,6 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
             if (!mediaPlaylistText.includes('#EXTM3U')) return false;
         }
 
-        // d) Localizar primer segmento de video (.ts, .m4s, .mp4, .aac o tras #EXTINF)
         const mediaLines = mediaPlaylistText.split(/\r?\n/).map(l => l.trim());
         let segmentPath = null;
 
@@ -634,7 +529,6 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
 
         const segmentUrl = segmentPath.startsWith('http') ? segmentPath : new URL(segmentPath, mediaPlaylistUrl).href;
 
-        // e) Descarga y verificación de primeros 16 KB del segmento de video
         const res3 = await fetch(segmentUrl, {
             headers: {
                 'Origin': CORS_TEST_ORIGIN,
@@ -653,11 +547,10 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
         const buf = Buffer.from(arrayBuf);
         const tsInfo = inspectTsCodecs(buf);
 
-        // Si es un flujo TS, verificar que no tenga códecs incompatibles
         if (tsInfo.isTs) {
-            if (tsInfo.hasHevc) return false; // Pantalla negra por HEVC H.265
-            if (tsInfo.hasMpeg2 && !tsInfo.hasH264) return false; // Pantalla negra por MPEG-2
-            if (tsInfo.hasAc3 && !tsInfo.hasAac) return false; // Audio Dolby no soportado sin AAC
+            if (tsInfo.hasHevc) return false;
+            if (tsInfo.hasMpeg2 && !tsInfo.hasH264) return false;
+            if (tsInfo.hasAc3 && !tsInfo.hasAac) return false;
         }
 
         return true;
@@ -666,8 +559,7 @@ async function testHlsDeep(url, timeoutMs = TIMEOUT_MS) {
     }
 }
 
-// Descargar y parsear listas M3U
-// Descargar y parsear listas M3U
+// Descargar y parsear listas M3U con tvg-id y país
 async function fetchM3U(source) {
     const url = typeof source === 'string' ? source : source.url;
     const tag = typeof source === 'object' ? source.tag : '';
@@ -679,17 +571,34 @@ async function fetchM3U(source) {
         const lines = text.split(/\r?\n/);
         const channels = [];
         let currentName = null;
+        let currentTvgId = '';
+        let currentCountry = '';
 
         for (const line of lines) {
             const trimmed = line.trim();
             if (!trimmed) continue;
             if (trimmed.startsWith('#EXTINF:')) {
+                const idMatch = trimmed.match(/tvg-id="([^"]*)"/i);
+                currentTvgId = idMatch ? idMatch[1].trim() : '';
+
+                const countryMatch = trimmed.match(/tvg-country="([^"]*)"/i);
+                currentCountry = countryMatch ? countryMatch[1].trim() : '';
+
                 const commaIdx = trimmed.lastIndexOf(',');
                 currentName = commaIdx !== -1 ? trimmed.substring(commaIdx + 1).trim() : 'Canal';
             } else if (trimmed.startsWith('http://') || trimmed.startsWith('https://')) {
                 if (currentName) {
-                    channels.push({ name: currentName, url: trimmed, tag, sourceUrl: url });
+                    channels.push({
+                        name: currentName,
+                        url: trimmed,
+                        tag,
+                        sourceUrl: url,
+                        tvgId: currentTvgId,
+                        country: currentCountry
+                    });
                     currentName = null;
+                    currentTvgId = '';
+                    currentCountry = '';
                 }
             }
         }
@@ -702,69 +611,166 @@ async function fetchM3U(source) {
 }
 
 async function main() {
-    console.log('=== JANDOS-TV: INICIANDO CURACIÓN CON VERIFICACIÓN PROFUNDA HLS + CORS ===\n');
+    console.log('=== JANDOS-TV: CURACIÓN INTELIGENTE ("SI FUNCIONA, NO SE TOCA") ===\n');
 
-    // 1. Descargar listas M3U en paralelo
+    // 1. Cargar canales-remotos.json existente
+    let existingRemote = null;
+    let existingChannels = [];
+    if (fs.existsSync(OUTPUT_FILE)) {
+        try {
+            existingRemote = JSON.parse(fs.readFileSync(OUTPUT_FILE, 'utf-8'));
+            existingChannels = existingRemote.channels || [];
+            console.log(`Canales existentes cargados de ${OUTPUT_FILE}: ${existingChannels.length}`);
+        } catch (e) {
+            console.warn('No se pudo leer canales-remotos.json:', e.message);
+        }
+    }
+
+    // 2. Extraer o cargar el bloque de SERIES Y ANIME para preservarlo intacto
+    let preservedSeriesChannels = existingChannels.filter(c => c.category === 'SERIES Y ANIME');
+    if (preservedSeriesChannels.length === 0 && fs.existsSync(SERIES_CATALOGO_FILE)) {
+        try {
+            const catData = JSON.parse(fs.readFileSync(SERIES_CATALOGO_FILE, 'utf-8'));
+            if (catData && catData.series && catData.series.length > 0) {
+                preservedSeriesChannels = catData.series.map((s, idx) => ({
+                    id: 21 + idx,
+                    name: s.name,
+                    category: 'SERIES Y ANIME',
+                    urls: s.urls || [],
+                    episodes: s.episodes || []
+                }));
+                console.log(`Catálogo de series cargado de ${SERIES_CATALOGO_FILE}: ${preservedSeriesChannels.length} series.`);
+            }
+        } catch (e) {
+            console.warn('No se pudo leer series-catalogo.json:', e.message);
+        }
+    }
+
+    // 3. FASE "SI FUNCIONA, NO SE TOCA":
+    // Verificar previamente todas las URLs de canales existentes
+    console.log('\n--- FASE 1: VERIFICACIÓN DE SEÑALES ACTIVAS EXISTENTES ---');
+    const existingWorkingMap = new Map(); // key: nombre en minúsculas -> array de urls vivas
+
+    for (const exCh of existingChannels) {
+        if (exCh.category === 'SERIES Y ANIME') continue; // Las series se preservan con sus episodios
+        const chKey = exCh.name.toLowerCase().trim();
+        const verifiedUrls = [];
+
+        for (const u of (exCh.urls || [])) {
+            const ok = await testHlsDeep(u);
+            if (ok) {
+                verifiedUrls.push(u);
+            }
+        }
+
+        if (verifiedUrls.length > 0) {
+            existingWorkingMap.set(chKey, verifiedUrls);
+            console.log(`  ✓ [SI FUNCIONA, NO SE TOCA] ${exCh.name}: ${verifiedUrls.length} señal(es) activa(s) conservadas.`);
+        } else {
+            console.log(`  ✗ [REQUIERE REPARACIÓN] ${exCh.name}: todas sus señales cayeron.`);
+        }
+    }
+
+    // 4. Descargar listas M3U en paralelo (solo necesarias para canales que requieran reparación o bloque cine/regional)
+    console.log('\n--- FASE 2: DESCARGA DE FUENTES M3U PARA REPARACIONES Y CONTENIDO ---');
     const m3uResults = await Promise.all(M3U_SOURCES.map(s => fetchM3U(s)));
     const allRawChannels = m3uResults.flat();
-    console.log(`Total canales en bruto recolectados: ${allRawChannels.length}`);
+    console.log(`Total canales en bruto disponibles: ${allRawChannels.length}`);
 
-    // Helper para emparejar URLs adicionales encontradas en los M3U con un canal
-    function findExtraUrlsForKeywords(keywords, channelName = '') {
+    // Matcher estricto anti-colisión para canales peruanos
+    function findPeruvianCandidates(chDef) {
         const found = [];
-        const isLatina = channelName.toLowerCase().includes('latina');
+        const targetTvgIds = (chDef.tvgIds || []).map(id => id.toLowerCase().trim());
+        const exactNames = (chDef.exactNames || []).map(n => n.toLowerCase().trim());
+
+        const foreignBlacklist = ['bolivia', 'argentina', 'chile', 'colombia', 'mexico', 'méxico', 'ecuador', 'uruguay', 'venezuela', 'jujuy', 'mendoza', 'santa fe'];
+
         for (const raw of allRawChannels) {
-            const rawName = raw.name.toLowerCase().trim();
-            if (isLatina) {
-                // Regla estricta para Latina Televisión: Solo Perú (pe.m3u o playlist_peru.m3u8) y coincidencia exacta
-                const isPeruSource = (raw.tag === 'peru' || raw.tag === 'freetv-pe' || raw.tag === 'pe-streams' ||
-                    (raw.sourceUrl && (raw.sourceUrl.includes('pe.m3u') || raw.sourceUrl.includes('playlist_peru'))));
-                if (!isPeruSource) continue;
-                const isExactLatina = ['latina televisión', 'latina television', 'latina tv', 'latina.pe', 'frecuencia latina'].some(kw => rawName === kw || rawName === kw + ' hd');
-                if (!isExactLatina) continue;
-            } else {
-                const matches = keywords.some(kw => rawName.includes(kw.toLowerCase()));
-                if (!matches) continue;
+            const rawTvgId = (raw.tvgId || '').toLowerCase().trim();
+            const rawName = (raw.name || '').toLowerCase().trim();
+            const rawCountry = (raw.country || '').toLowerCase().trim();
+            const isPeruSource = (raw.tag === 'peru' || raw.tag === 'freetv-pe' || raw.tag === 'pe-streams' ||
+                (raw.sourceUrl && (raw.sourceUrl.includes('pe.m3u') || raw.sourceUrl.includes('playlist_peru'))) ||
+                rawCountry === 'pe' || rawTvgId.endsWith('.pe'));
+
+            // Descartar si el nombre contiene nombres de países o regiones extranjeras
+            if (foreignBlacklist.some(b => rawName.includes(b))) {
+                continue;
             }
-            if (!found.includes(raw.url)) {
+
+            let matches = false;
+
+            // 1. Coincidencia por tvg-id oficial
+            if (rawTvgId && targetTvgIds.some(tid => rawTvgId === tid || rawTvgId === tid.replace('.pe', '') + '.pe')) {
+                matches = true;
+            }
+
+            // 2. Coincidencia exacta de nombre (exclusivo para fuentes de Perú)
+            if (!matches && isPeruSource && exactNames.some(en => rawName === en || rawName === en + ' hd')) {
+                matches = true;
+            }
+
+            if (matches && !found.includes(raw.url)) {
                 found.push(raw.url);
             }
         }
         return found;
     }
 
-    // 2. Procesar Bloque 1: Nacionales Perú
-    console.log('\n--- VERIFICANDO BLOQUE 1: NACIONALES PERÚ (DEEP CHECK) ---');
+    // Helper general para búsqueda en deportes y animación
+    function findExtraUrlsForKeywords(keywords) {
+        const found = [];
+        for (const raw of allRawChannels) {
+            const rawName = (raw.name || '').toLowerCase().trim();
+            if (keywords.some(kw => rawName.includes(kw.toLowerCase()))) {
+                if (!found.includes(raw.url)) found.push(raw.url);
+            }
+        }
+        return found;
+    }
+
+    // 5. Procesar Bloque 1: Nacionales Perú (Fijos 01 - 12)
+    console.log('\n--- VERIFICANDO BLOQUE 1: NACIONALES PERÚ (01 - 12) ---');
     const finalNacionales = [];
     for (const ch of BLOCK_1_NACIONALES) {
-        process.stdout.write(`Probando ${ch.name}... `);
-        const allCandidates = [...ch.candidateUrls, ...findExtraUrlsForKeywords(ch.keywords, ch.name)];
-        const uniqueCandidates = [...new Set(allCandidates)];
-        // Priorizar CDNs estables
-        uniqueCandidates.sort((a, b) => getCdnScore(b) - getCdnScore(a));
+        const chKey = ch.name.toLowerCase().trim();
+        const existingWorking = existingWorkingMap.get(chKey);
+
+        if (existingWorking && existingWorking.length > 0) {
+            console.log(`Probando ${ch.name}... [CONSERVADO] (${existingWorking.length} señales operativas previas)`);
+            finalNacionales.push({
+                id: ch.id,
+                name: ch.name,
+                category: 'NACIONALES',
+                urls: existingWorking
+            });
+            continue;
+        }
+
+        // Si cayó o no tenía señal operativa, buscar y verificar candidatos
+        process.stdout.write(`Reparando ${ch.name}... `);
+        const peruvianFound = findPeruvianCandidates(ch);
+        const allCandidates = [...ch.candidateUrls, ...peruvianFound];
+        const uniqueCandidates = [...new Set(allCandidates)].sort((a, b) => getCdnScore(b) - getCdnScore(a));
         const workingUrls = [];
 
         for (const u of uniqueCandidates) {
-            // Si ya existe una señal CDN estable verificada, descartar IPs crudas inestables :8000/play/
             const hasCdn = workingUrls.some(w => getCdnScore(w) >= 70);
-            if (hasCdn && (u.includes(':8000/play/') || u.includes(':6001/play/'))) {
-                continue;
-            }
+            if (hasCdn && (u.includes(':8000/play/') || u.includes(':6001/play/'))) continue;
 
             const ok = await testHlsDeep(u);
             if (ok) {
                 workingUrls.push(u);
-                if (workingUrls.length >= 2) break; // Máximo 2 señales vivas verificadas
+                if (workingUrls.length >= 2) break;
             }
         }
 
         if (workingUrls.length === 0) {
-            // Respaldar con la candidata de mayor calidad CDN
             const sortedFallback = [...ch.candidateUrls].sort((a, b) => getCdnScore(b) - getCdnScore(a));
             workingUrls.push(sortedFallback[0]);
-            console.log(`[FALLBACK ASIGNADO] (0 señales deep-ok)`);
+            console.log(`[FALLBACK ASIGNADO]`);
         } else {
-            console.log(`[OK] (${workingUrls.length} señales 100% activas)`);
+            console.log(`[REPARADO CON ÉXITO] (${workingUrls.length} señales activas)`);
         }
 
         finalNacionales.push({
@@ -775,23 +781,32 @@ async function main() {
         });
     }
 
-    // 3. Procesar Bloque 2: Deportes
-    console.log('\n--- VERIFICANDO BLOQUE 2: DEPORTES (DEEP CHECK) ---');
+    // 6. Procesar Bloque 2: Deportes (Fijos 13 - 20)
+    console.log('\n--- VERIFICANDO BLOQUE 2: DEPORTES (13 - 20) ---');
     const finalDeportes = [];
     for (const ch of BLOCK_2_DEPORTES) {
-        process.stdout.write(`Probando ${ch.name}... `);
+        const chKey = ch.name.toLowerCase().trim();
+        const existingWorking = existingWorkingMap.get(chKey);
+
+        if (existingWorking && existingWorking.length > 0) {
+            console.log(`Probando ${ch.name}... [CONSERVADO] (${existingWorking.length} señales operativas previas)`);
+            finalDeportes.push({
+                id: ch.id,
+                name: ch.name,
+                category: 'DEPORTES',
+                urls: existingWorking
+            });
+            continue;
+        }
+
+        process.stdout.write(`Reparando ${ch.name}... `);
         const allCandidates = [...ch.candidateUrls, ...findExtraUrlsForKeywords(ch.keywords)];
-        const uniqueCandidates = [...new Set(allCandidates)];
-        // Priorizar CDNs estables
-        uniqueCandidates.sort((a, b) => getCdnScore(b) - getCdnScore(a));
+        const uniqueCandidates = [...new Set(allCandidates)].sort((a, b) => getCdnScore(b) - getCdnScore(a));
         const workingUrls = [];
 
         for (const u of uniqueCandidates) {
-            // Si ya existe una señal CDN estable verificada, descartar IPs crudas inestables :8000/play/
             const hasCdn = workingUrls.some(w => getCdnScore(w) >= 70);
-            if (hasCdn && (u.includes(':8000/play/') || u.includes(':6001/play/'))) {
-                continue;
-            }
+            if (hasCdn && (u.includes(':8000/play/') || u.includes(':6001/play/'))) continue;
 
             const ok = await testHlsDeep(u);
             if (ok) {
@@ -801,15 +816,11 @@ async function main() {
         }
 
         if (workingUrls.length === 0) {
-            // Asignar en posición 0 la URL oficial dedicada y en posición 1 el respaldo deportivo probado
             workingUrls.push(ch.candidateUrls[0]);
-            if (ch.candidateUrls.length > 1) {
-                const backup = ch.candidateUrls[ch.candidateUrls.length - 1];
-                if (!workingUrls.includes(backup)) workingUrls.push(backup);
-            }
-            console.log(`[FALLBACK ASIGNADO] (${workingUrls.length} señales: dedicada + respaldo activo)`);
+            if (ch.candidateUrls.length > 1) workingUrls.push(ch.candidateUrls[ch.candidateUrls.length - 1]);
+            console.log(`[FALLBACK ASIGNADO]`);
         } else {
-            console.log(`[OK] (${workingUrls.length} señales 100% activas)`);
+            console.log(`[REPARADO CON ÉXITO] (${workingUrls.length} señales activas)`);
         }
 
         finalDeportes.push({
@@ -820,164 +831,153 @@ async function main() {
         });
     }
 
-    // 4. Procesar Bloque 3: Cine, Cultura y Regionales Selectos
-    console.log('\n--- VERIFICANDO BLOQUE 3: CINE, CULTURA Y REGIONALES (DEEP CHECK) ---');
-    const cineKeywords = [
-        'cinecanal', 'cinelatino', 'cine familiar', 'cine hispano', 'cine sony', 'paramount',
-        'dhe', 'tnt', 'space', 'warner', 'universal', 'star channel', 'film', 'history', 'discovery channel'
-    ];
-    const regionalKeywords = [
-        'arequipa', 'cusco', 'trujillo', 'piura', 'huacho', 'chimbote', 'puno', 'chiclayo',
-        'iquitos', 'tarapoto', 'tacna', 'antena sur', 'tv cosmos', 'sol tv', 'andina rtv'
-    ];
+    // 7. Bloque 3: Series y Anime 24/7 (Canales 21 al 26)
+    console.log('\n--- BLOQUE 3: SERIES Y ANIME 24/7 (21 - 26) ---');
+    const finalSeries = preservedSeriesChannels.slice(0, 6).map((s, idx) => ({
+        id: 21 + idx,
+        name: s.name,
+        category: 'SERIES Y ANIME',
+        urls: s.urls || [],
+        episodes: s.episodes || []
+    }));
+    console.log(`  ✓ ${finalSeries.length} canales de Series y Anime preservados (21-26).`);
 
-    const targetBlock3Keywords = [...cineKeywords, ...regionalKeywords];
-    const verifiedBlock3 = [];
-    const testedUrls = new Set();
+    // 8. Bloque 4: Cine y Cultura (Conservar existentes + agregar verificados)
+    console.log('\n--- VERIFICANDO BLOQUE 4: CINE Y CULTURA (27+) ---');
+    const existingCine = existingChannels.filter(c => c.category === 'CINE Y CULTURA');
+    const verifiedCine = [];
 
-    // Ordenar canales recolectados para evaluar primero streams CDN de alta reputación
-    allRawChannels.sort((a, b) => getCdnScore(b.url) - getCdnScore(a.url));
-
-    for (const raw of allRawChannels) {
-        if (verifiedBlock3.length >= 25) break;
-
-        const rawLower = raw.name.toLowerCase();
-        // Evitar que canales infantiles o de animación se clasifiquen como cine
-        if (rawLower.includes('kids') || rawLower.includes('disney') || rawLower.includes('nick') || rawLower.includes('cartoon')) {
-            continue;
+    for (const c of existingCine) {
+        const working = existingWorkingMap.get(c.name.toLowerCase().trim());
+        if (working && working.length > 0) {
+            verifiedCine.push({
+                name: c.name,
+                category: 'CINE Y CULTURA',
+                urls: working
+            });
         }
+    }
 
-        const matchesTarget = targetBlock3Keywords.some(kw => rawLower.includes(kw));
-
-        if (matchesTarget && !testedUrls.has(raw.url)) {
-            testedUrls.add(raw.url);
-            const ok = await testHlsDeep(raw.url);
-            if (ok) {
-                const isRegional = regionalKeywords.some(kw => rawLower.includes(kw));
-                const category = isRegional ? 'REGIONALES' : 'CINE Y CULTURA';
-
-                console.log(`  [+ VERIFICADO H.264+AAC] ${raw.name} (${category})`);
-                verifiedBlock3.push({
-                    name: raw.name,
-                    category: category,
-                    urls: [raw.url]
-                });
+    // Buscar señales adicionales de cine si hay menos de 10
+    if (verifiedCine.length < 10) {
+        const cineKeywords = ['cinecanal', 'cinelatino', 'cine familiar', 'cine hispano', 'cine sony', 'paramount', 'dhe', 'tnt', 'universal', 'star channel'];
+        for (const raw of allRawChannels) {
+            if (verifiedCine.length >= 12) break;
+            const rLower = (raw.name || '').toLowerCase();
+            if (cineKeywords.some(kw => rLower.includes(kw))) {
+                if (!verifiedCine.some(v => v.urls.includes(raw.url))) {
+                    const ok = await testHlsDeep(raw.url);
+                    if (ok) {
+                        verifiedCine.push({
+                            name: raw.name,
+                            category: 'CINE Y CULTURA',
+                            urls: [raw.url]
+                        });
+                        console.log(`  [+ CINE VERIFICADO] ${raw.name}`);
+                    }
+                }
             }
         }
     }
 
-    const cineList = verifiedBlock3.filter(ch => ch.category === 'CINE Y CULTURA');
-    const regionalList = verifiedBlock3.filter(ch => ch.category === 'REGIONALES');
+    // 9. Bloque 5: Dibujos y Animación
+    console.log('\n--- VERIFICANDO BLOQUE 5: DIBUJOS Y ANIMACIÓN ---');
+    const existingAnim = existingChannels.filter(c => c.category === 'DIBUJOS Y ANIMACIÓN' || c.category === 'ANIMACION');
+    const verifiedAnim = [];
 
-    // 5. Procesar Bloque: DIBUJOS Y ANIMACIÓN
-    console.log('\n--- VERIFICANDO BLOQUE: DIBUJOS Y ANIMACIÓN (DEEP CHECK) ---');
-    const finalAnimacion = [];
-    for (const ch of BLOCK_ANIMACION) {
-        process.stdout.write(`Probando ${ch.name}... `);
-        const allCandidates = [...ch.candidateUrls, ...findExtraUrlsForKeywords(ch.keywords)];
-        const uniqueCandidates = [...new Set(allCandidates)];
-        uniqueCandidates.sort((a, b) => getCdnScore(b) - getCdnScore(a));
-        const workingUrls = [];
-
-        for (const u of uniqueCandidates) {
-            const hasCdn = workingUrls.some(w => getCdnScore(w) >= 70);
-            if (hasCdn && (u.includes(':8000/play/') || u.includes(':6001/play/'))) {
-                continue;
-            }
-
-            const ok = await testHlsDeep(u);
-            if (ok) {
-                workingUrls.push(u);
-                testedUrls.add(u);
-                if (workingUrls.length >= 2) break;
-            }
-        }
-
-        if (workingUrls.length === 0) {
-            const sortedFallback = [...ch.candidateUrls].sort((a, b) => getCdnScore(b) - getCdnScore(a));
-            workingUrls.push(sortedFallback[0]);
-            console.log(`[FALLBACK ASIGNADO]`);
-        } else {
-            console.log(`[OK] (${workingUrls.length} señales 100% activas)`);
-        }
-
-        finalAnimacion.push({
-            name: ch.name,
-            category: 'DIBUJOS Y ANIMACIÓN',
-            urls: workingUrls
-        });
-    }
-
-    // Buscar señales adicionales de animación en español en allRawChannels (Cartoonito, Boomerang, Anime, etc.)
-    const extraAnimKeywords = ['cartoonito', 'boomerang', 'anime', 'dragon ball', 'locomotion', 'energigeeek', 'pluto tv anime', 'nick clasico'];
-    for (const raw of allRawChannels) {
-        if (finalAnimacion.length >= 15) break;
-        const rawLower = raw.name.toLowerCase();
-        const matchesExtra = extraAnimKeywords.some(kw => rawLower.includes(kw));
-        if (matchesExtra && !testedUrls.has(raw.url)) {
-            testedUrls.add(raw.url);
-            const ok = await testHlsDeep(raw.url);
-            if (ok) {
-                console.log(`  [+ VERIFICADO H.264+AAC] ${raw.name} (DIBUJOS Y ANIMACIÓN)`);
-                finalAnimacion.push({
-                    name: raw.name,
-                    category: 'DIBUJOS Y ANIMACIÓN',
-                    urls: [raw.url]
-                });
-            }
+    for (const c of existingAnim) {
+        const working = existingWorkingMap.get(c.name.toLowerCase().trim());
+        if (working && working.length > 0) {
+            verifiedAnim.push({
+                name: c.name,
+                category: 'DIBUJOS Y ANIMACIÓN',
+                urls: working
+            });
         }
     }
 
-    // 6. Consolidar la Parrilla Final con IDs continuos
-    console.log('\n--- CONSOLIDANDO PARRILLA FINAL ---');
+    // 10. Bloque 6: Regionales del Perú
+    console.log('\n--- VERIFICANDO BLOQUE 6: REGIONALES DEL PERÚ ---');
+    const existingReg = existingChannels.filter(c => c.category === 'REGIONALES');
+    const verifiedReg = [];
+
+    for (const c of existingReg) {
+        const working = existingWorkingMap.get(c.name.toLowerCase().trim());
+        if (working && working.length > 0) {
+            verifiedReg.push({
+                name: c.name,
+                category: 'REGIONALES',
+                urls: working
+            });
+        }
+    }
+
+    // 11. Consolidación de la Parrilla Maestra con numeración secuencial
+    console.log('\n--- CONSOLIDANDO PARRILLA FINAL COMPLETA ---');
     let nextId = 1;
     const finalChannelsList = [];
 
-    // Bloque 1: Nacionales (1 a 12)
+    // 1. Nacionales Perú (1 - 12)
     finalNacionales.forEach(ch => {
         ch.id = nextId++;
         finalChannelsList.push(ch);
     });
 
-    // Bloque 2: Deportes (13 a 20)
+    // 2. Deportes (13 - 20)
     finalDeportes.forEach(ch => {
         ch.id = nextId++;
         finalChannelsList.push(ch);
     });
 
-    // Bloque 3: Cine y Cultura
-    cineList.forEach(ch => {
+    // 3. Series y Anime (21 - 26)
+    finalSeries.forEach(ch => {
         ch.id = nextId++;
         finalChannelsList.push(ch);
     });
 
-    // Bloque 4: Dibujos y Animación (ubicado justo después del bloque de Cine y Cultura, antes de Regionales)
-    finalAnimacion.forEach(ch => {
+    // 4. Cine y Cultura (27+)
+    verifiedCine.forEach(ch => {
         ch.id = nextId++;
         finalChannelsList.push(ch);
     });
 
-    // Bloque 5: Regionales
-    regionalList.forEach(ch => {
+    // 5. Dibujos y Animación
+    verifiedAnim.forEach(ch => {
         ch.id = nextId++;
         finalChannelsList.push(ch);
     });
 
-    console.log(`Parrilla final lista con ${finalChannelsList.length} canales verificados en profundidad (${finalNacionales.length} Nacionales, ${finalDeportes.length} Deportes, ${cineList.length} Cine/Cultura, ${finalAnimacion.length} Dibujos/Animación, ${regionalList.length} Regionales).`);
+    // 6. Regionales
+    verifiedReg.forEach(ch => {
+        ch.id = nextId++;
+        finalChannelsList.push(ch);
+    });
+
+    console.log(`\nParrilla consolidada con éxito: ${finalChannelsList.length} canales totales.`);
+    console.log(`- Nacionales: ${finalNacionales.length} (01-12)`);
+    console.log(`- Deportes: ${finalDeportes.length} (13-20)`);
+    console.log(`- Series y Anime 24/7: ${finalSeries.length} (21-26)`);
+    console.log(`- Cine y Cultura: ${verifiedCine.length}`);
+    console.log(`- Dibujos y Animación: ${verifiedAnim.length}`);
+    console.log(`- Regionales: ${verifiedReg.length}`);
 
     const outputJson = {
-        version: '1.4.0',
+        version: '1.5.0',
         updated: new Date().toISOString().split('T')[0],
         totalChannels: finalChannelsList.length,
-        description: 'Parrilla curada con verificación profunda HLS + CORS para Jandos-TV (Exclusivo Hls.js en TV). Incluye Bloque exclusivo de Dibujos y Animación.',
+        description: 'Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.',
         channels: finalChannelsList
     };
 
     fs.writeFileSync(OUTPUT_FILE, JSON.stringify(outputJson, null, 2), 'utf-8');
-    console.log(`\nArchivo guardado con éxito en: ${OUTPUT_FILE}`);
+    console.log(`\n✓ Archivo guardado con éxito en: ${OUTPUT_FILE}`);
 }
 
-main().catch(err => {
-    console.error('Error fatal en clean-channels.js:', err);
-    process.exit(1);
-});
+if (require.main === module) {
+    main().catch(err => {
+        console.error('Error fatal en clean-channels.js:', err);
+        process.exit(1);
+    });
+}
+
+module.exports = { testHlsDeep, fetchM3U };

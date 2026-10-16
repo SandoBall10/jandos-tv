@@ -3,7 +3,8 @@
  * Diseñado con cero fricción, altísimo contraste y parrilla curada por bloques VIP:
  * 1. Nacionales Perú (01-12)
  * 2. Deportes (13-20)
- * 3. Cine, Cultura y Regionales (21+)
+ * 3. Series y Anime 24/7 (21-26) [Maratón Continua y Selector de Capítulos en Orden]
+ * 4. Cine, Cultura y Regionales (27+)
  */
 
 (function () {
@@ -14,17 +15,19 @@
     // --------------------------------------------------------------------------
     const CUSTOM_REMOTE_JSON_URL = 'https://raw.githubusercontent.com/SandoBall10/jandos-tv/main/canales-remotos.json';
     const LOCAL_FALLBACK_JSON_URL = './canales-remotos.json';
+    const LOCAL_SERIES_CATALOGO_URL = './series-catalogo.json';
     const REMOTE_CONFIG_INTERVAL_MS = 30 * 60 * 1000; // 30 minutos
 
     const STORAGE_KEY_LAST_CHANNEL = 'jandos_tv_last_channel_index';
+    const STORAGE_KEY_SERIES_PROGRESS = 'jandos_series_progress';
     const OSD_DURATION_MS = 4000;
     const NUMBER_BUFFER_TIMEOUT_MS = 1800;
-    const STREAM_TIMEOUT_MS = 8000; // 8 segundos para dar tiempo a los buffers peruanos
-    const CHANNEL_WATCHDOG_MS = 15000; // 15 segundos máximo antes de saltar si no hay reproducción
+    const STREAM_TIMEOUT_MS = 8000;
+    const CHANNEL_WATCHDOG_MS = 15000;
     const CORS_TEST_ORIGIN = 'http://localhost:3000';
 
     // --------------------------------------------------------------------------
-    // 2. Parrilla Base Curada (Cargada desde canales-remotos.json)
+    // 2. Parrilla Base Curada (Respaldada por canales-remotos.json)
     // --------------------------------------------------------------------------
     let channels = [
         { id: 1, name: 'Latina Televisión', category: 'NACIONALES', urls: ['http://190.93.224.42/LATINA/index.m3u8'] },
@@ -40,25 +43,46 @@
         { id: 11, name: 'Congreso TV', category: 'NACIONALES', urls: ['http://190.93.224.42/JUSTICIA-TV/index.m3u8'] },
         { id: 12, name: 'Sol TV', category: 'NACIONALES', urls: ['https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8', 'https://cdn.streamhispanatv.net:3409/live/soltvlive.m3u8'] },
         // Deportes
-        { id: 13, name: 'ESPN', category: 'DEPORTES', urls: ['https://barinaslive1.boldmss.com/ESPN/ESPN.isml/ESPN.m3u8'] },
-        { id: 14, name: 'ESPN 2', category: 'DEPORTES', urls: ['https://barinaslive1.boldmss.com/ESPN_2/ESPN_2.isml/ESPN_2.m3u8'] },
-        { id: 15, name: 'DSports (DirecTV)', category: 'DEPORTES', urls: ['http://45.170.130.224:8000/play/a03d/index.m3u8'] },
-        { id: 16, name: 'Claro Sports', category: 'DEPORTES', urls: ['http://168.196.127.137:6001/play/a08r/index.m3u8'] },
-        { id: 17, name: 'TyC Sports / TUDN', category: 'DEPORTES', urls: ['http://45.170.130.224:8000/play/a020/index.m3u8', 'https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8'] },
-        { id: 18, name: 'Ovación TV / Fútbol Perú', category: 'DEPORTES', urls: ['http://190.93.224.42/RPP/index.m3u8'] },
-        { id: 19, name: 'FIFA+ / Red Bull TV', category: 'DEPORTES', urls: ['https://rbmn-live.akamaized.net/hls/live/590964/BoRB-AT/master.m3u8'] },
-        { id: 20, name: 'Real Madrid TV / Barça TV', category: 'DEPORTES', urls: ['https://rmtv.akamaized.net/hls/live/2043153/rmtv-es-web/master.m3u8'] }
+        { id: 13, name: 'L1 MAX (Liga 1 Max)', category: 'DEPORTES', urls: ['https://cablered.iptvperu.tv:1936/cablered/liga1max.stream/playlist.m3u8'] },
+        { id: 14, name: 'GOLPERU', category: 'DEPORTES', urls: ['http://190.93.224.42/GOLPERU/index.m3u8'] },
+        { id: 15, name: 'Movistar Deportes', category: 'DEPORTES', urls: ['http://170.244.209.30:8000/play/a1i8/index.m3u8'] },
+        { id: 16, name: 'ESPN', category: 'DEPORTES', urls: ['https://barinaslive1.boldmss.com/ESPN/ESPN.isml/ESPN.m3u8'] },
+        { id: 17, name: 'ESPN 2', category: 'DEPORTES', urls: ['https://barinaslive1.boldmss.com/ESPN_2/ESPN_2.isml/ESPN_2.m3u8'] },
+        { id: 18, name: 'DSports (DirecTV)', category: 'DEPORTES', urls: ['http://45.170.130.224:8000/play/a03d/index.m3u8'] },
+        { id: 19, name: 'Claro Sports', category: 'DEPORTES', urls: ['http://168.196.127.137:6001/play/a08r/index.m3u8'] },
+        { id: 20, name: 'TyC Sports / TUDN', category: 'DEPORTES', urls: ['https://amg26268-amg26268c14-freelivesports-emea-10267.playouts.now.amagi.tv/ts-us-e2-n2/playlist/amg26268-sportsstudio-tycsports-freelivesportsemea/playlist.m3u8'] },
+        // Series y Anime 24/7 (21 a 26)
+        { id: 21, name: 'El Chavo del 8 (24/7)', category: 'SERIES Y ANIME', slug: 'el-chavo-del-8', urls: [] },
+        { id: 22, name: 'La Familia Ingalls (24/7)', category: 'SERIES Y ANIME', slug: 'la-familia-ingalls', urls: [] },
+        { id: 23, name: 'Dragon Ball Z (24/7)', category: 'SERIES Y ANIME', slug: 'dragon-ball-z', urls: [] },
+        { id: 24, name: 'Caballeros del Zodiaco (24/7)', category: 'SERIES Y ANIME', slug: 'caballeros-del-zodiaco', urls: [] },
+        { id: 25, name: 'Supercampeones (24/7)', category: 'SERIES Y ANIME', slug: 'supercampeones', urls: [] },
+        { id: 26, name: 'Death Note (24/7)', category: 'SERIES Y ANIME', slug: 'death-note', urls: [] }
     ];
+
+    // Catálogo maestro de Series y Capítulos
+    let seriesCatalog = [];
 
     // --------------------------------------------------------------------------
     // 3. Estado de la Aplicación
     // --------------------------------------------------------------------------
     let currentChannelIndex = 0;
-    let previousChannelIndex = 0; // Para el botón Recall (Canal Anterior)
-    let currentStreamUrlIndex = 0; // Índice de la URL HLS que se está probando dentro del canal
-    let isSkipping = false; // Bandera de salto automático de canal
+    let previousChannelIndex = 0;
+    let currentStreamUrlIndex = 0;
     let guideFocusedIndex = 0;
     let isGuideOpen = false;
+
+    // Estado del Modo Series / Maratón Continua
+    let isSeriesMode = false;
+    let currentPlayingSeries = null;
+    let currentPlayingEpisodeIndex = 0;
+
+    // Estado de la Guía Lateral con Pestañas
+    let guideCurrentTab = 'channels'; // 'channels' | 'series'
+    let seriesViewState = 'series-list'; // 'series-list' | 'episodes-list'
+    let seriesFocusedIndex = 0;
+    let selectedSeriesForEpisodes = null;
+    let episodeFocusedIndex = -1; // -1 = Botón "CONTINUAR VIENDO", 0..N = Capítulos
 
     // Temporizadores
     let osdTimer = null;
@@ -66,37 +90,49 @@
     let numberBuffer = '';
     let streamLoadTimeoutTimer = null;
     let channelWatchdogTimer = null;
-    let blackScreenTimer = null;
+    let seekNoticeTimer = null;
 
     // Reproductor HLS
     let hlsInstance = null;
 
-    // Elementos del DOM (Soporta tv-player y player)
+    // Elementos del DOM
     const videoEl = document.getElementById('tv-player') || document.getElementById('player');
     const muteNoticeEl = document.getElementById('mute-notice');
+    const seekNoticeEl = document.getElementById('seek-notice');
     const osdEl = document.getElementById('osd');
+    const osdBadgeEl = document.getElementById('osd-badge');
     const osdNumberEl = document.getElementById('osd-number');
     const osdNameEl = document.getElementById('osd-name');
     const osdClockEl = document.getElementById('osd-clock');
+    const osdLiveTagEl = document.getElementById('osd-live-tag');
+    const osdHintEl = document.getElementById('osd-hint');
     const numberDialerEl = document.getElementById('number-dialer');
     const dialerDigitsEl = document.getElementById('dialer-digits');
     const channelGuideEl = document.getElementById('channel-guide');
     const guideListEl = document.getElementById('guide-list');
+    const tabChannelsEl = document.getElementById('tab-channels');
+    const tabSeriesEl = document.getElementById('tab-series');
+    const seriesGuideContainerEl = document.getElementById('series-guide-container');
+    const seriesListEl = document.getElementById('series-list');
+    const seriesEpisodesPanelEl = document.getElementById('series-episodes-panel');
+    const episodesSeriesTitleEl = document.getElementById('episodes-series-title');
+    const episodesContinueBtnEl = document.getElementById('episodes-continue-btn');
+    const continueBtnTextEl = document.getElementById('continue-btn-text');
+    const episodesListEl = document.getElementById('episodes-list');
     const statusOverlayEl = document.getElementById('status-overlay');
     const statusTextEl = document.getElementById('status-text');
     const statusSubtextEl = document.getElementById('status-subtext');
 
     // --------------------------------------------------------------------------
-    // 4. Inicialización de Tizen, Teclas y Anti-Screensaver
+    // 4. Inicialización de Tizen y Teclas del Control Remoto
     // --------------------------------------------------------------------------
     function initTizenFeatures() {
         if (window.tizen && window.tizen.tvinputdevice) {
             const keysToRegister = [
-                'ChannelUp',
-                'ChannelDown',
-                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'
+                'ChannelUp', 'ChannelDown',
+                '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                'MediaPlay', 'MediaPause', 'MediaFastForward', 'MediaRewind'
             ];
-
             keysToRegister.forEach(function (keyName) {
                 try {
                     window.tizen.tvinputdevice.registerKey(keyName);
@@ -117,7 +153,52 @@
     }
 
     // --------------------------------------------------------------------------
-    // 5. Reloj Gigante de Perú y Notificaciones OSD
+    // 5. Utilidades de Progreso en LocalStorage
+    // --------------------------------------------------------------------------
+    function getSeriesSlug(item) {
+        if (!item) return 'serie';
+        if (item.slug) return item.slug;
+        const n = (item.seriesTitle || item.name || '').toLowerCase();
+        if (n.includes('chavo')) return 'el-chavo-del-8';
+        if (n.includes('ingalls') || n.includes('pradera')) return 'la-familia-ingalls';
+        if (n.includes('dragon ball')) return 'dragon-ball-z';
+        if (n.includes('zodiaco') || n.includes('seiya')) return 'caballeros-del-zodiaco';
+        if (n.includes('supercampeones') || n.includes('tsubasa')) return 'supercampeones';
+        if (n.includes('death note')) return 'death-note';
+        return n.replace(/[^a-z0-9]+/g, '-');
+    }
+
+    function getAllSeriesProgress() {
+        try {
+            const raw = localStorage.getItem(STORAGE_KEY_SERIES_PROGRESS);
+            return raw ? JSON.parse(raw) : {};
+        } catch (e) {
+            return {};
+        }
+    }
+
+    function getSeriesProgress(slug) {
+        const all = getAllSeriesProgress();
+        return all[slug] || null;
+    }
+
+    function saveSeriesProgress(slug, episodeIndex, num, title) {
+        try {
+            const all = getAllSeriesProgress();
+            all[slug] = {
+                episodeIndex: episodeIndex,
+                num: num,
+                title: title,
+                timestamp: Date.now()
+            };
+            localStorage.setItem(STORAGE_KEY_SERIES_PROGRESS, JSON.stringify(all));
+        } catch (e) {
+            console.warn('No se pudo guardar progreso de series:', e);
+        }
+    }
+
+    // --------------------------------------------------------------------------
+    // 6. Reloj Gigante de Perú y Notificaciones OSD
     // --------------------------------------------------------------------------
     function getPeruTime12H() {
         try {
@@ -148,40 +229,43 @@
 
     function showOSD() {
         try {
-            if (!channels || !channels[currentChannelIndex]) return;
+            if (osdClockEl) osdClockEl.textContent = getPeruTime12H();
 
-            const currentChannel = channels[currentChannelIndex];
-            if (osdNumberEl) {
-                osdNumberEl.textContent = formatChannelNumber(currentChannelIndex);
-            }
-
-            if (osdClockEl) {
-                osdClockEl.textContent = getPeruTime12H();
-            }
-
-            if (osdNameEl) {
-                if (currentChannel.urls && currentChannel.urls.length > 1 && currentStreamUrlIndex > 0) {
-                    osdNameEl.textContent = currentChannel.name + ' (Señal ' + (currentStreamUrlIndex + 1) + ' de ' + currentChannel.urls.length + ')';
-                } else {
-                    osdNameEl.textContent = currentChannel.name;
+            if (isSeriesMode && currentPlayingSeries) {
+                const ep = currentPlayingSeries.episodes && currentPlayingSeries.episodes[currentPlayingEpisodeIndex];
+                const seriesTitle = currentPlayingSeries.seriesTitle || currentPlayingSeries.name;
+                if (osdBadgeEl) osdBadgeEl.textContent = 'SERIE 24/7';
+                if (osdNumberEl) {
+                    osdNumberEl.textContent = currentPlayingSeries.id ? formatChannelNumber(currentPlayingSeries.id - 1) : '🎬';
                 }
+                if (osdNameEl) {
+                    osdNameEl.textContent = seriesTitle + (ep ? ' - ' + ep.title : '');
+                }
+                if (osdLiveTagEl) osdLiveTagEl.textContent = 'MODO MARATÓN 24/7';
+                if (osdHintEl) osdHintEl.textContent = '◄ / ► Adelantar/Retroceder 15s | OK: Guía';
+            } else {
+                if (!channels || !channels[currentChannelIndex]) return;
+                const currentChannel = channels[currentChannelIndex];
+                if (osdBadgeEl) osdBadgeEl.textContent = 'CANAL';
+                if (osdNumberEl) osdNumberEl.textContent = formatChannelNumber(currentChannelIndex);
+                if (osdNameEl) {
+                    if (currentChannel.urls && currentChannel.urls.length > 1 && currentStreamUrlIndex > 0) {
+                        osdNameEl.textContent = currentChannel.name + ' (Señal ' + (currentStreamUrlIndex + 1) + ' de ' + currentChannel.urls.length + ')';
+                    } else {
+                        osdNameEl.textContent = currentChannel.name;
+                    }
+                }
+                if (osdLiveTagEl) osdLiveTagEl.textContent = 'SEÑAL EN VIVO';
+                if (osdHintEl) osdHintEl.textContent = 'Presiona OK para la lista JANDOS-TV';
             }
 
-            if (osdEl) {
-                osdEl.classList.add('visible');
-            }
-
-            if (osdTimer) {
-                clearTimeout(osdTimer);
-            }
-
+            if (osdEl) osdEl.classList.add('visible');
+            if (osdTimer) clearTimeout(osdTimer);
             osdTimer = setTimeout(function () {
-                if (osdEl) {
-                    osdEl.classList.remove('visible');
-                }
+                if (osdEl) osdEl.classList.remove('visible');
             }, OSD_DURATION_MS);
         } catch (err) {
-            console.warn('Jandos-TV: Error seguro en showOSD:', err);
+            console.warn('Jandos-TV: Error en showOSD:', err);
         }
     }
 
@@ -191,7 +275,7 @@
             if (statusSubtextEl) statusSubtextEl.textContent = subtext || 'Por favor espere un momento';
             if (statusOverlayEl) statusOverlayEl.classList.add('visible');
         } catch (e) {
-            console.warn('Jandos-TV: Error seguro en showStatus:', e);
+            console.warn('Jandos-TV: Error en showStatus:', e);
         }
     }
 
@@ -199,12 +283,39 @@
         try {
             if (statusOverlayEl) statusOverlayEl.classList.remove('visible');
         } catch (e) {
-            console.warn('Jandos-TV: Error seguro en hideStatus:', e);
+            console.warn('Jandos-TV: Error en hideStatus:', e);
+        }
+    }
+
+    function showSeekNotice(text) {
+        if (!seekNoticeEl) return;
+        seekNoticeEl.textContent = text;
+        seekNoticeEl.classList.add('visible');
+        if (seekNoticeTimer) clearTimeout(seekNoticeTimer);
+        seekNoticeTimer = setTimeout(function () {
+            seekNoticeEl.classList.remove('visible');
+        }, 1200);
+    }
+
+    function seekRelative(seconds) {
+        if (!videoEl) return;
+        try {
+            const current = videoEl.currentTime || 0;
+            const duration = videoEl.duration || 0;
+            let target = current + seconds;
+            if (target < 0) target = 0;
+            if (duration > 0 && target > duration) target = duration;
+            videoEl.currentTime = target;
+            const sign = seconds > 0 ? '+' : '';
+            showSeekNotice((seconds > 0 ? '⏩ ' : '⏪ ') + sign + seconds + 's');
+            showOSD();
+        } catch (e) {
+            console.warn('Error al hacer seek:', e);
         }
     }
 
     // --------------------------------------------------------------------------
-    // 6. Watchdog, Salto Automático y Reproducción Multi-Señal
+    // 7. Watchdog, Salto y Reproductor Universal (HLS y MP4 Nativo)
     // --------------------------------------------------------------------------
     function clearStreamTimers() {
         if (streamLoadTimeoutTimer) {
@@ -214,10 +325,6 @@
         if (channelWatchdogTimer) {
             clearTimeout(channelWatchdogTimer);
             channelWatchdogTimer = null;
-        }
-        if (blackScreenTimer) {
-            clearTimeout(blackScreenTimer);
-            blackScreenTimer = null;
         }
     }
 
@@ -246,7 +353,6 @@
             videoEl.muted = false;
             videoEl.volume = 1.0;
             hideMuteNotice();
-            console.log('Jandos-TV: Audio forzado activo (muted=false, volume=1.0)');
         }
     }
 
@@ -256,9 +362,8 @@
 
     function startChannelWatchdog() {
         if (channelWatchdogTimer) clearTimeout(channelWatchdogTimer);
-        // Watchdog de 15 segundos: si no hay frames de video reproducidos tras 15s, mostrar mensaje sin cambiar de canal
         channelWatchdogTimer = setTimeout(function () {
-            console.warn('Jandos-TV Watchdog: 15 segundos sin reproducción en el canal actual.');
+            console.warn('Jandos-TV Watchdog: 15s sin señal activa en el canal.');
             clearStreamTimers();
             resetPlayerState();
             showStatus('Señal no disponible temporalmente en este canal', 'Presione Arriba/Abajo para cambiar');
@@ -266,25 +371,117 @@
         }, CHANNEL_WATCHDOG_MS);
     }
 
-    function skipToNextChannel(message) {
-        clearStreamTimers();
-        resetPlayerState();
-        showStatus('Señal no disponible temporalmente en este canal', 'Presione Arriba/Abajo para cambiar');
-        showOSD();
+    function attemptPlayVideo() {
+        if (!videoEl) return;
+        videoEl.muted = false;
+        videoEl.volume = 1.0;
+
+        const playPromise = videoEl.play();
+        if (playPromise !== undefined) {
+            playPromise.then(function () {
+                hideMuteNotice();
+                hideStatus();
+                if (channelWatchdogTimer) clearTimeout(channelWatchdogTimer);
+            }).catch(function (error) {
+                console.warn('Jandos-TV: Autoplay con audio bloqueado. Probando con mute temporal:', error);
+                videoEl.muted = true;
+                videoEl.play().then(function () {
+                    showMuteNotice();
+                    hideStatus();
+                }).catch(function (err) {
+                    console.error('Jandos-TV: Falló play con mute:', err);
+                });
+            });
+        }
     }
 
+    // --------------------------------------------------------------------------
+    // 8. Reproducción en Modo Maratón / Series y Episodios
+    // --------------------------------------------------------------------------
+    function playSeriesEpisode(seriesObj, episodeIndex, isChannelContext) {
+        if (!seriesObj || !seriesObj.episodes || seriesObj.episodes.length === 0) {
+            showStatus('Sin capítulos disponibles', 'Selecciona otra serie');
+            return;
+        }
+
+        clearStreamTimers();
+        resetPlayerState();
+
+        // Normalizar índice de capítulo circular
+        let targetEpIdx = episodeIndex;
+        if (targetEpIdx < 0) targetEpIdx = 0;
+        if (targetEpIdx >= seriesObj.episodes.length) targetEpIdx = 0;
+
+        const ep = seriesObj.episodes[targetEpIdx];
+        if (!ep || !ep.url) {
+            showStatus('Capítulo no disponible', 'Intente con el siguiente capítulo');
+            return;
+        }
+
+        isSeriesMode = true;
+        currentPlayingSeries = seriesObj;
+        currentPlayingEpisodeIndex = targetEpIdx;
+
+        console.log(`Jandos-TV [SERIES]: Reproduciendo ${seriesObj.seriesTitle || seriesObj.name} -> ${ep.title}`);
+
+        const slug = getSeriesSlug(seriesObj);
+        saveSeriesProgress(slug, targetEpIdx, ep.num, ep.title);
+
+        showOSD();
+        showStatus('Cargando capítulo...', ep.title);
+
+        // Los episodios son archivos .mp4 directos de Internet Archive: reproducir directamente en <video>
+        videoEl.src = ep.url;
+        videoEl.load();
+        attemptPlayVideo();
+
+        if (isGuideOpen) {
+            updateGuideActiveChannel();
+        }
+    }
+
+    // Eventos nativos del reproductor de video
+    if (videoEl) {
+        videoEl.addEventListener('playing', function () {
+            hideStatus();
+            clearStreamTimers();
+        });
+
+        videoEl.addEventListener('timeupdate', function () {
+            if (channelWatchdogTimer) {
+                clearTimeout(channelWatchdogTimer);
+                channelWatchdogTimer = null;
+            }
+        });
+
+        // REGLA DE ORO MODO MARATÓN: al finalizar un capítulo, avanza automáticamente al siguiente
+        videoEl.addEventListener('ended', function () {
+            if (isSeriesMode && currentPlayingSeries && currentPlayingSeries.episodes && currentPlayingSeries.episodes.length > 0) {
+                console.log('Jandos-TV [SERIES]: Capítulo finalizado. Avanzando al siguiente automáticamente...');
+                const nextEpIdx = (currentPlayingEpisodeIndex + 1) % currentPlayingSeries.episodes.length;
+                playSeriesEpisode(currentPlayingSeries, nextEpIdx, true);
+            }
+        });
+
+        videoEl.addEventListener('error', function (e) {
+            console.warn('Jandos-TV: Error en elemento video:', e);
+            if (!isSeriesMode) {
+                tryNextStreamUrl('Error de decodificación en video');
+            }
+        });
+    }
+
+    // --------------------------------------------------------------------------
+    // 9. Sintonización de Canales en Vivo (Modo TV Normal)
+    // --------------------------------------------------------------------------
     function playChannel(index) {
         if (!channels || channels.length === 0) return;
 
         clearStreamTimers();
 
-        // Normalizar índice circular
         let targetIndex = index;
-        if (targetIndex < 0) {
-            targetIndex = channels.length - 1;
-        } else if (targetIndex >= channels.length) {
-            targetIndex = 0;
-        }
+        if (targetIndex < 0) targetIndex = channels.length - 1;
+        else if (targetIndex >= channels.length) targetIndex = 0;
 
         if (targetIndex !== currentChannelIndex) {
             previousChannelIndex = currentChannelIndex;
@@ -294,7 +491,6 @@
         currentStreamUrlIndex = 0;
         resetPlayerState();
 
-        // Garantizar audio activado en cada cambio de canal
         if (videoEl) {
             videoEl.muted = false;
             videoEl.volume = 1.0;
@@ -310,15 +506,35 @@
             console.warn('Jandos-TV: No se pudo guardar en localStorage', e);
         }
 
-        // Actualizaciones visuales protegidas para que jamás bloqueen el reproductor de video
-        try { showOSD(); } catch (e) { console.warn('Jandos-TV: Error en showOSD', e); }
-        try { showStatus('Sintonizando ' + channel.name, 'Conectando con la señal...'); } catch (e) { console.warn('Jandos-TV: Error en showStatus', e); }
-        try { updateGuideActiveChannel(); } catch (e) { console.warn('Jandos-TV: Error en updateGuideActiveChannel', e); }
+        // SI ES CANAL DE SERIES Y ANIME 24/7 (CANALES 21 AL 26):
+        if (channel.category === 'SERIES Y ANIME' && channel.episodes && channel.episodes.length > 0) {
+            const slug = getSeriesSlug(channel);
+            const progress = getSeriesProgress(slug);
+            let targetEpIdx = 0;
 
-        // Iniciar Watchdog de 15 segundos
+            if (progress && typeof progress.episodeIndex === 'number' && progress.episodeIndex < channel.episodes.length) {
+                targetEpIdx = progress.episodeIndex;
+            } else if (slug.includes('chavo') || slug.includes('ingalls')) {
+                // Episodio aleatorio si no hay progreso previo para El Chavo o La Familia Ingalls
+                targetEpIdx = Math.floor(Math.random() * channel.episodes.length);
+            } else {
+                // Desde el capítulo 1 en orden para Anime (DBZ, Saint Seiya, Supercampeones, Death Note)
+                targetEpIdx = 0;
+            }
+
+            playSeriesEpisode(channel, targetEpIdx, true);
+            return;
+        }
+
+        // CANAL NORMAL EN VIVO (HLS):
+        isSeriesMode = false;
+        currentPlayingSeries = null;
+
+        try { showOSD(); } catch (e) {}
+        try { showStatus('Sintonizando ' + channel.name, 'Conectando con la señal...'); } catch (e) {}
+        try { updateGuideActiveChannel(); } catch (e) {}
+
         startChannelWatchdog();
-
-        // Cargar stream HLS de forma garantizada
         loadActiveStream();
     }
 
@@ -337,7 +553,6 @@
         const streamUrl = channel.urls[currentStreamUrlIndex];
         console.log('Jandos-TV: Probando stream [' + (currentStreamUrlIndex + 1) + '/' + channel.urls.length + ']: ' + streamUrl);
 
-        // Timeout de 8 segundos por señal individual
         if (streamLoadTimeoutTimer) clearTimeout(streamLoadTimeoutTimer);
         streamLoadTimeoutTimer = setTimeout(function () {
             console.warn('Jandos-TV: Timeout de 8s para la señal ' + (currentStreamUrlIndex + 1));
@@ -347,34 +562,9 @@
         loadStream(streamUrl);
     }
 
-    function attemptPlayVideo() {
-        if (!videoEl) return;
-        videoEl.muted = false;
-        videoEl.volume = 1.0;
-
-        const playPromise = videoEl.play();
-        if (playPromise !== undefined) {
-            playPromise.then(function () {
-                hideMuteNotice();
-            }).catch(function (error) {
-                console.warn('Jandos-TV: Autoplay con audio bloqueado por el navegador. Activando mute temporal:', error);
-                videoEl.muted = true;
-                videoEl.play().then(function () {
-                    showMuteNotice();
-                }).catch(function (err) {
-                    console.error('Jandos-TV: Fallo play con mute:', err);
-                });
-            });
-        }
-    }
-
     function loadStream(streamUrl) {
         if (hlsInstance) {
-            try {
-                hlsInstance.destroy();
-            } catch (e) {
-                console.warn(e);
-            }
+            try { hlsInstance.destroy(); } catch (e) {}
             hlsInstance = null;
         }
 
@@ -393,7 +583,6 @@
             hlsInstance.on(window.Hls.Events.MANIFEST_PARSED, function (event, data) {
                 console.log('Jandos-TV: Manifiesto HLS analizado con éxito.');
 
-                // 1. Filtrar o seleccionar preferentemente niveles compatibles con AVC1 (H.264) y MP4A (AAC)
                 if (data && data.levels && data.levels.length > 0) {
                     let compatibleLevelIndex = -1;
                     for (let i = 0; i < data.levels.length; i++) {
@@ -414,12 +603,10 @@
                     }
 
                     if (compatibleLevelIndex !== -1 && hlsInstance.currentLevel !== compatibleLevelIndex) {
-                        console.log('Jandos-TV: Nivel HLS compatible seleccionado (H.264+AAC): nivel ' + compatibleLevelIndex);
                         hlsInstance.currentLevel = compatibleLevelIndex;
                     }
                 }
 
-                // 2. Si hls.audioTracks tiene pistas disponibles y ninguna está activa, forzar pista 0 o español
                 if (hlsInstance.audioTracks && hlsInstance.audioTracks.length > 0) {
                     let targetTrack = 0;
                     for (let t = 0; t < hlsInstance.audioTracks.length; t++) {
@@ -430,9 +617,7 @@
                             break;
                         }
                     }
-
                     if (hlsInstance.audioTrack === -1 || hlsInstance.audioTrack === undefined) {
-                        console.log('Jandos-TV: Forzando activación de pista de audio HLS:', targetTrack);
                         hlsInstance.audioTrack = targetTrack;
                     }
                 }
@@ -444,126 +629,105 @@
                 const details = data && data.details ? data.details : '';
                 console.warn('Jandos-TV: Evento de error HLS:', data.type, details, 'Fatal:', data.fatal);
 
-                // Si ocurre incompatibilidad de códecs, saltar de inmediato al siguiente stream sin esperar timeout
                 if (
                     details === 'bufferAddCodecError' ||
                     details === 'manifestIncompatibleCodecsError' ||
-                    details === (window.Hls.ErrorDetails && window.Hls.ErrorDetails.BUFFER_ADD_CODEC_ERROR) ||
-                    details === (window.Hls.ErrorDetails && window.Hls.ErrorDetails.MANIFEST_INCOMPATIBLE_CODECS_ERROR)
+                    details === 'fragParsingError'
                 ) {
-                    console.warn('Jandos-TV: Códec no soportado detectado por Hls.js (' + details + '). Descartando señal de inmediato.');
-                    tryNextStreamUrl('Códec incompatible (' + details + ')');
+                    console.warn('Jandos-TV: Incompatibilidad de códecs detectada. Saltando de inmediato...');
+                    tryNextStreamUrl('Incompatibilidad de códec detectada');
                     return;
                 }
 
                 if (data.fatal) {
-                    console.warn('Jandos-TV: Error fatal en HLS:', details);
-                    tryNextStreamUrl(details || 'Fallo de señal');
+                    switch (data.type) {
+                        case window.Hls.ErrorTypes.NETWORK_ERROR:
+                            console.warn('Jandos-TV: Error de red fatal. Intentando recuperar...');
+                            hlsInstance.startLoad();
+                            break;
+                        case window.Hls.ErrorTypes.MEDIA_ERROR:
+                            console.warn('Jandos-TV: Error de medios fatal. Intentando recuperar...');
+                            hlsInstance.recoverMediaError();
+                            break;
+                        default:
+                            tryNextStreamUrl('Error fatal de reproducción');
+                            break;
+                    }
                 }
             });
         } else if (videoEl.canPlayType('application/vnd.apple.mpegurl')) {
             videoEl.src = streamUrl;
             attemptPlayVideo();
         } else {
-            console.error('Jandos-TV: Formato no soportado');
-            tryNextStreamUrl('Formato no soportado');
+            console.error('Jandos-TV: HLS no soportado en este dispositivo.');
+            showStatus('Reproductor no compatible', 'Este televisor no soporta transmisiones HLS');
         }
     }
 
     function tryNextStreamUrl(reason) {
-        if (streamLoadTimeoutTimer) {
-            clearTimeout(streamLoadTimeoutTimer);
-            streamLoadTimeoutTimer = null;
-        }
-
-        const channel = channels[currentChannelIndex];
-        if (!channel) return;
-
-        // 1. Probar siguiente señal HLS disponible para este canal
-        if (channel.urls && channel.urls.length > 1 && currentStreamUrlIndex < channel.urls.length - 1) {
-            currentStreamUrlIndex++;
-            console.log('Jandos-TV: Probando automáticamente señal ' + (currentStreamUrlIndex + 1) + ' para ' + channel.name + ' (motivo: ' + reason + ')');
-            showStatus('Buscando señal alterna...', 'Probando señal ' + (currentStreamUrlIndex + 1) + ' de ' + channel.urls.length);
-            showOSD();
-            loadActiveStream();
-            return;
-        }
-
-        // 2. Si todas las señales HLS fallaron, NO saltar de canal solo: quedarse en el canal con mensaje limpio
-        console.warn('Jandos-TV: Canal ' + channel.name + ' sin señales funcionales (' + reason + '). Manteniendo canal.');
         clearStreamTimers();
-        resetPlayerState();
-        showStatus('Señal no disponible temporalmente en este canal', 'Presione Arriba/Abajo para cambiar');
-        showOSD();
-    }
+        const channel = channels[currentChannelIndex];
+        if (!channel || !channel.urls || channel.urls.length === 0) return;
 
-    function handleStreamFailure(reason) {
-        tryNextStreamUrl(reason);
+        if (currentStreamUrlIndex + 1 < channel.urls.length) {
+            currentStreamUrlIndex++;
+            console.log('Jandos-TV: Cambiando a señal de respaldo ' + (currentStreamUrlIndex + 1) + ' para ' + channel.name + ' (' + reason + ')');
+            showStatus('Conectando señal de respaldo ' + (currentStreamUrlIndex + 1) + '/' + channel.urls.length, channel.name);
+            startChannelWatchdog();
+            loadActiveStream();
+        } else {
+            console.warn('Jandos-TV: Todas las señales probadas fallaron en el canal actual.');
+            resetPlayerState();
+            showStatus('Señal no disponible temporalmente en este canal', 'Presione Arriba/Abajo para cambiar');
+            showOSD();
+        }
     }
 
     function switchNextSignalManual() {
         const channel = channels[currentChannelIndex];
         if (!channel || !channel.urls || channel.urls.length <= 1) {
-            showStatus(channel ? channel.name : 'Canal', 'Este canal solo dispone de 1 señal directa');
             showOSD();
-            setTimeout(hideStatus, 2000);
             return;
         }
-
-        resetPlayerState();
         currentStreamUrlIndex = (currentStreamUrlIndex + 1) % channel.urls.length;
-        console.log('Jandos-TV: Cambio manual de señal a [' + (currentStreamUrlIndex + 1) + '/' + channel.urls.length + ']');
-
-        showStatus('Cambiando a Señal ' + (currentStreamUrlIndex + 1) + ' de ' + channel.urls.length, 'Sintonizando transmisión alternativa...');
+        console.log('Jandos-TV: Cambio manual a señal ' + (currentStreamUrlIndex + 1) + '/' + channel.urls.length);
+        showStatus('Cambiando a señal ' + (currentStreamUrlIndex + 1) + '/' + channel.urls.length, channel.name);
         showOSD();
+        startChannelWatchdog();
         loadActiveStream();
     }
 
-    // Eventos del elemento <video>
-    videoEl.addEventListener('playing', function () {
-        hideStatus();
-        // Cancelar inmediatamente watchdog y timeouts una vez que hay reproducción activa
-        clearStreamTimers();
-    });
-
-    // En timeupdate: apenas se verifique reproducción activa (readyState >= 2 o currentTime > 0), cancelar timers
-    videoEl.addEventListener('timeupdate', function () {
-        if ((videoEl.readyState >= 2 || videoEl.currentTime > 0) && !videoEl.paused) {
-            clearStreamTimers();
-            hideStatus();
-        }
-    });
-
-    videoEl.addEventListener('waiting', function () {
-        showStatus('Sintonizando canal...', 'Cargando señal...');
-    });
-
-    videoEl.addEventListener('error', function () {
-        tryNextStreamUrl('Error del elemento video');
-    });
-
     // --------------------------------------------------------------------------
-    // 7. Guía Lateral Rápida por Bloques y Categorías (Botón OK / Enter)
+    // 10. Guía Rápida Lateral con Pestañas (Canales vs Series en Orden)
     // --------------------------------------------------------------------------
     function renderGuide() {
+        if (!guideListEl) return;
         guideListEl.innerHTML = '';
         let lastCategory = null;
 
         channels.forEach(function (ch, idx) {
-            const category = ch.category || (idx < 12 ? 'NACIONALES' : (idx < 23 ? 'DEPORTES' : 'VARIEDADES'));
+            const category = ch.category || (idx < 12 ? 'NACIONALES' : (idx < 20 ? 'DEPORTES' : 'VARIEDADES'));
 
-            // Agregar separador de categoría si cambia
             if (category !== lastCategory) {
                 lastCategory = category;
                 const catHeader = document.createElement('div');
                 let catClass = 'cat-CINE';
+                let catLabel = 'BLOQUE: ' + category;
+
                 if (category === 'NACIONALES') catClass = 'cat-NACIONALES';
                 else if (category === 'DEPORTES') catClass = 'cat-DEPORTES';
-                else if (category === 'DIBUJOS Y ANIMACIÓN' || category === 'DIBUJOS' || category === 'ANIMACION' || category === 'ANIMACIÓN') catClass = 'cat-ANIMACION';
-                else if (category === 'REGIONALES') catClass = 'cat-REGIONALES';
+                else if (category === 'SERIES Y ANIME' || category === 'SERIES') {
+                    catClass = 'cat-SERIES';
+                    catLabel = '🟠 SERIES Y ANIME 24/7 (MODO MARATÓN)';
+                } else if (category === 'DIBUJOS Y ANIMACIÓN' || category === 'DIBUJOS' || category === 'ANIMACION') {
+                    catClass = 'cat-ANIMACION';
+                    catLabel = '🟡 DIBUJOS Y ANIMACIÓN';
+                } else if (category === 'REGIONALES') {
+                    catClass = 'cat-REGIONALES';
+                }
 
                 catHeader.className = 'guide-category-header ' + catClass;
-                catHeader.textContent = (category === 'DIBUJOS Y ANIMACIÓN' || category === 'DIBUJOS' || category === 'ANIMACION' || category === 'ANIMACIÓN') ? '🟡 ' + category : 'BLOQUE: ' + category;
+                catHeader.textContent = catLabel;
                 guideListEl.appendChild(catHeader);
             }
 
@@ -588,17 +752,30 @@
 
             const badgeSpan = document.createElement('span');
             let catBadgeClass = 'cat-CINE';
+            let catBadgeText = category;
+
             if (category === 'NACIONALES') catBadgeClass = 'cat-NACIONALES';
             else if (category === 'DEPORTES') catBadgeClass = 'cat-DEPORTES';
-            else if (category === 'DIBUJOS Y ANIMACIÓN' || category === 'DIBUJOS' || category === 'ANIMACION' || category === 'ANIMACIÓN') catBadgeClass = 'cat-ANIMACION';
-            else if (category === 'REGIONALES') catBadgeClass = 'cat-REGIONALES';
+            else if (category === 'SERIES Y ANIME' || category === 'SERIES') {
+                catBadgeClass = 'cat-SERIES';
+                catBadgeText = 'SERIES 24/7';
+            } else if (category === 'DIBUJOS Y ANIMACIÓN' || category === 'DIBUJOS' || category === 'ANIMACION') {
+                catBadgeClass = 'cat-ANIMACION';
+                catBadgeText = 'ANIMACIÓN';
+            } else if (category === 'REGIONALES') catBadgeClass = 'cat-REGIONALES';
 
             badgeSpan.className = 'guide-item-cat ' + catBadgeClass;
-            badgeSpan.textContent = (category === 'DIBUJOS Y ANIMACIÓN') ? 'ANIMACIÓN' : category;
+            badgeSpan.textContent = catBadgeText;
 
             item.appendChild(numSpan);
             item.appendChild(nameSpan);
             item.appendChild(badgeSpan);
+
+            item.addEventListener('click', function () {
+                playChannel(idx);
+                closeGuide();
+            });
+
             guideListEl.appendChild(item);
         });
     }
@@ -630,6 +807,205 @@
         });
     }
 
+    // --------------------------------------------------------------------------
+    // 11. Pestaña 2: Selector de Series y Capítulos en Orden
+    // --------------------------------------------------------------------------
+    function getAvailableSeries() {
+        if (seriesCatalog && seriesCatalog.length > 0) {
+            return seriesCatalog;
+        }
+        // Extraer de channels si aún no se ha cargado el JSON específico
+        const fromChannels = channels.filter(c => c.category === 'SERIES Y ANIME');
+        if (fromChannels.length > 0) {
+            return fromChannels;
+        }
+        return [];
+    }
+
+    function renderSeriesList() {
+        if (!seriesListEl) return;
+        seriesListEl.innerHTML = '';
+        const allSeries = getAvailableSeries();
+
+        allSeries.forEach(function (s, idx) {
+            const slug = getSeriesSlug(s);
+            const progress = getSeriesProgress(slug);
+            const numEps = (s.episodes && s.episodes.length) || 0;
+
+            const item = document.createElement('div');
+            item.className = 'series-item';
+            item.dataset.index = idx;
+            if (idx === seriesFocusedIndex) item.classList.add('focused');
+
+            const header = document.createElement('div');
+            header.className = 'series-item-header';
+
+            const title = document.createElement('div');
+            title.className = 'series-item-title';
+            title.textContent = s.seriesTitle || s.name;
+
+            const badge = document.createElement('div');
+            badge.className = 'series-item-badge';
+            badge.textContent = `${numEps} Caps`;
+
+            header.appendChild(title);
+            header.appendChild(badge);
+
+            const subtext = document.createElement('div');
+            subtext.className = 'series-item-subtext';
+            if (progress && progress.title) {
+                subtext.textContent = `▶ Último visto: ${progress.title}`;
+            } else {
+                subtext.textContent = 'Episodios completos en español latino - Presiona OK para abrir';
+            }
+
+            item.appendChild(header);
+            item.appendChild(subtext);
+
+            item.addEventListener('click', function () {
+                seriesFocusedIndex = idx;
+                openEpisodesView(s);
+            });
+
+            seriesListEl.appendChild(item);
+        });
+    }
+
+    function updateSeriesFocus() {
+        if (!seriesListEl || !seriesListEl.querySelectorAll) return;
+        const items = seriesListEl.querySelectorAll('.series-item');
+        items.forEach(function (item, idx) {
+            if (idx === seriesFocusedIndex) {
+                item.classList.add('focused');
+                if (item.scrollIntoView) {
+                    item.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+            } else {
+                item.classList.remove('focused');
+            }
+        });
+    }
+
+    function openEpisodesView(seriesObj) {
+        selectedSeriesForEpisodes = seriesObj;
+        seriesViewState = 'episodes-list';
+        episodeFocusedIndex = -1; // Enfocar botón "CONTINUAR VIENDO"
+
+        if (seriesListEl) seriesListEl.style.display = 'none';
+        if (seriesEpisodesPanelEl) seriesEpisodesPanelEl.style.display = 'flex';
+
+        if (episodesSeriesTitleEl) {
+            episodesSeriesTitleEl.textContent = seriesObj.seriesTitle || seriesObj.name;
+        }
+
+        const slug = getSeriesSlug(seriesObj);
+        const progress = getSeriesProgress(slug);
+
+        if (continueBtnTextEl) {
+            if (progress && progress.title) {
+                continueBtnTextEl.textContent = `CONTINUAR VIENDO (${progress.title.split('-')[0].trim()})`;
+            } else {
+                continueBtnTextEl.textContent = 'COMENZAR DESDE EL CAP. 01';
+            }
+        }
+
+        renderEpisodesList(seriesObj);
+        updateEpisodeFocus();
+    }
+
+    function renderEpisodesList(seriesObj) {
+        if (!episodesListEl) return;
+        episodesListEl.innerHTML = '';
+        const episodes = seriesObj.episodes || [];
+        const slug = getSeriesSlug(seriesObj);
+        const progress = getSeriesProgress(slug);
+
+        episodes.forEach(function (ep, idx) {
+            const item = document.createElement('div');
+            item.className = 'episode-item';
+            item.dataset.index = idx;
+
+            if (idx === episodeFocusedIndex) {
+                item.classList.add('focused');
+            }
+
+            const numSpan = document.createElement('span');
+            numSpan.className = 'episode-item-num';
+            const padNum = ep.num < 10 ? '0' + ep.num : '' + ep.num;
+            numSpan.textContent = `Cap. ${padNum}`;
+
+            const titleSpan = document.createElement('span');
+            titleSpan.className = 'episode-item-title';
+            titleSpan.textContent = ep.title.replace(/^Cap\.\s*\d+\s*[-_]\s*/i, '');
+
+            item.appendChild(numSpan);
+            item.appendChild(titleSpan);
+
+            if (progress && progress.episodeIndex === idx) {
+                const statusSpan = document.createElement('span');
+                statusSpan.className = 'episode-item-status';
+                statusSpan.textContent = 'ÚLTIMO VISTO';
+                item.appendChild(statusSpan);
+            }
+
+            item.addEventListener('click', function () {
+                episodeFocusedIndex = idx;
+                playSeriesEpisode(seriesObj, idx, false);
+                closeGuide();
+            });
+
+            episodesListEl.appendChild(item);
+        });
+    }
+
+    function updateEpisodeFocus() {
+        if (episodesContinueBtnEl) {
+            if (episodeFocusedIndex === -1) {
+                episodesContinueBtnEl.classList.add('focused');
+                if (episodesContinueBtnEl.scrollIntoView) {
+                    episodesContinueBtnEl.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+            } else {
+                episodesContinueBtnEl.classList.remove('focused');
+            }
+        }
+
+        if (!episodesListEl || !episodesListEl.querySelectorAll) return;
+        const items = episodesListEl.querySelectorAll('.episode-item');
+        items.forEach(function (item, idx) {
+            if (idx === episodeFocusedIndex) {
+                item.classList.add('focused');
+                if (item.scrollIntoView) {
+                    item.scrollIntoView({ block: 'center', behavior: 'smooth' });
+                }
+            } else {
+                item.classList.remove('focused');
+            }
+        });
+    }
+
+    function switchGuideTab(tabName) {
+        guideCurrentTab = tabName;
+        if (tabName === 'channels') {
+            if (tabChannelsEl) tabChannelsEl.classList.add('active');
+            if (tabSeriesEl) tabSeriesEl.classList.remove('active');
+            if (guideListEl) guideListEl.style.display = 'flex';
+            if (seriesGuideContainerEl) seriesGuideContainerEl.style.display = 'none';
+            updateGuideFocus();
+        } else {
+            if (tabChannelsEl) tabChannelsEl.classList.remove('active');
+            if (tabSeriesEl) tabSeriesEl.classList.add('active');
+            if (guideListEl) guideListEl.style.display = 'none';
+            if (seriesGuideContainerEl) seriesGuideContainerEl.style.display = 'flex';
+
+            seriesViewState = 'series-list';
+            if (seriesListEl) seriesListEl.style.display = 'flex';
+            if (seriesEpisodesPanelEl) seriesEpisodesPanelEl.style.display = 'none';
+            renderSeriesList();
+            updateSeriesFocus();
+        }
+    }
+
     function toggleGuide() {
         if (isGuideOpen) {
             closeGuide();
@@ -640,7 +1016,14 @@
 
     function openGuide() {
         isGuideOpen = true;
+        guideCurrentTab = 'channels';
         guideFocusedIndex = currentChannelIndex;
+
+        if (tabChannelsEl) tabChannelsEl.classList.add('active');
+        if (tabSeriesEl) tabSeriesEl.classList.remove('active');
+        if (guideListEl) guideListEl.style.display = 'flex';
+        if (seriesGuideContainerEl) seriesGuideContainerEl.style.display = 'none';
+
         renderGuide();
         channelGuideEl.classList.add('visible');
         updateGuideFocus();
@@ -652,7 +1035,7 @@
     }
 
     // --------------------------------------------------------------------------
-    // 8. Buffer de Entrada Numérica (Teclas 0 a 9)
+    // 12. Buffer de Entrada Numérica (Teclas 0 a 9)
     // --------------------------------------------------------------------------
     function handleDigitInput(digitChar) {
         if (numberBufferTimer) {
@@ -678,9 +1061,7 @@
         if (!isNaN(targetChannelNumber) && targetChannelNumber > 0) {
             const targetIndex = targetChannelNumber - 1;
             if (targetIndex < channels.length) {
-                if (isGuideOpen) {
-                    closeGuide();
-                }
+                if (isGuideOpen) closeGuide();
                 playChannel(targetIndex);
             } else {
                 playChannel(channels.length - 1);
@@ -689,7 +1070,7 @@
     }
 
     // --------------------------------------------------------------------------
-    // 9. Carga de JSON Remoto y Actualización en Caliente
+    // 13. Carga y Sincronización Remota de Canales y Series
     // --------------------------------------------------------------------------
     function applyRemoteChannelsConfig(remoteChannels) {
         if (!Array.isArray(remoteChannels) || remoteChannels.length === 0) return;
@@ -700,12 +1081,21 @@
                 id: rCh.id || (idx + 1),
                 name: rCh.name,
                 category: rCh.category || (idx < 12 ? 'NACIONALES' : (idx < 20 ? 'DEPORTES' : 'VARIEDADES')),
-                urls: Array.isArray(rCh.urls) ? rCh.urls : (rCh.url ? [rCh.url] : [])
+                slug: rCh.slug || getSeriesSlug(rCh),
+                urls: Array.isArray(rCh.urls) ? rCh.urls : (rCh.url ? [rCh.url] : []),
+                episodes: Array.isArray(rCh.episodes) ? rCh.episodes : []
             };
         });
 
+        // Actualizar catálogo de series a partir de los canales 21 a 26
+        const foundSeries = channels.filter(c => c.category === 'SERIES Y ANIME');
+        if (foundSeries.length > 0) {
+            seriesCatalog = foundSeries;
+        }
+
         if (isGuideOpen) {
-            renderGuide();
+            if (guideCurrentTab === 'channels') renderGuide();
+            else if (seriesViewState === 'series-list') renderSeriesList();
         }
     }
 
@@ -718,16 +1108,25 @@
                 });
         }
 
-        // 1. Probar URL remota de GitHub primero
+        // Cargar series-catalogo.json
+        tryFetch(LOCAL_SERIES_CATALOGO_URL)
+            .then(function (catData) {
+                if (catData && catData.series && catData.series.length > 0) {
+                    seriesCatalog = catData.series;
+                    console.log('Jandos-TV: Catálogo de series cargado (' + seriesCatalog.length + ' series)');
+                }
+            })
+            .catch(function () {});
+
+        // Cargar canales-remotos.json (GitHub primero, fallback local)
         tryFetch(CUSTOM_REMOTE_JSON_URL)
             .then(function (data) {
                 if (data && data.channels && data.channels.length > 0) {
-                    console.log('Jandos-TV: Configuración remota GitHub actualizada exitosamente (' + data.channels.length + ' canales)');
+                    console.log('Jandos-TV: Configuración remota GitHub actualizada (' + data.channels.length + ' canales)');
                     applyRemoteChannelsConfig(data.channels);
                 }
             })
             .catch(function () {
-                // 2. Si no hay conexión con GitHub, cargar plantilla local empaquetada
                 return tryFetch(LOCAL_FALLBACK_JSON_URL)
                     .then(function (localData) {
                         if (localData && localData.channels && localData.channels.length > 0) {
@@ -742,10 +1141,9 @@
     }
 
     // --------------------------------------------------------------------------
-    // 10. Controlador de Eventos de Teclado y Control Remoto Samsung
+    // 14. Controlador de Eventos de Teclado y Control Remoto Samsung
     // --------------------------------------------------------------------------
     function onKeyDown(e) {
-        // Al interactuar con cualquier tecla, activar audio si estaba silenciado por el navegador
         unmuteAudioIfNeeded();
 
         const keyCode = e.keyCode;
@@ -754,7 +1152,15 @@
         if (keyCode === 10009 || keyCode === 27 || keyCode === 8) {
             e.preventDefault();
             if (isGuideOpen) {
-                closeGuide();
+                if (guideCurrentTab === 'series' && seriesViewState === 'episodes-list') {
+                    // Volver a la lista de series
+                    seriesViewState = 'series-list';
+                    if (seriesListEl) seriesListEl.style.display = 'flex';
+                    if (seriesEpisodesPanelEl) seriesEpisodesPanelEl.style.display = 'none';
+                    updateSeriesFocus();
+                } else {
+                    closeGuide();
+                }
             } else {
                 showOSD();
             }
@@ -777,8 +1183,21 @@
         if (keyCode === 38 || keyCode === 427) {
             e.preventDefault();
             if (isGuideOpen) {
-                guideFocusedIndex = (guideFocusedIndex - 1 + channels.length) % channels.length;
-                updateGuideFocus();
+                if (guideCurrentTab === 'channels') {
+                    guideFocusedIndex = (guideFocusedIndex - 1 + channels.length) % channels.length;
+                    updateGuideFocus();
+                } else if (seriesViewState === 'series-list') {
+                    const allSeries = getAvailableSeries();
+                    if (allSeries.length > 0) {
+                        seriesFocusedIndex = (seriesFocusedIndex - 1 + allSeries.length) % allSeries.length;
+                        updateSeriesFocus();
+                    }
+                } else if (seriesViewState === 'episodes-list') {
+                    if (episodeFocusedIndex > -1) {
+                        episodeFocusedIndex--;
+                        updateEpisodeFocus();
+                    }
+                }
             } else {
                 playChannel(currentChannelIndex + 1);
             }
@@ -789,19 +1208,49 @@
         if (keyCode === 40 || keyCode === 428) {
             e.preventDefault();
             if (isGuideOpen) {
-                guideFocusedIndex = (guideFocusedIndex + 1) % channels.length;
-                updateGuideFocus();
+                if (guideCurrentTab === 'channels') {
+                    guideFocusedIndex = (guideFocusedIndex + 1) % channels.length;
+                    updateGuideFocus();
+                } else if (seriesViewState === 'series-list') {
+                    const allSeries = getAvailableSeries();
+                    if (allSeries.length > 0) {
+                        seriesFocusedIndex = (seriesFocusedIndex + 1) % allSeries.length;
+                        updateSeriesFocus();
+                    }
+                } else if (seriesViewState === 'episodes-list') {
+                    const numEps = (selectedSeriesForEpisodes && selectedSeriesForEpisodes.episodes && selectedSeriesForEpisodes.episodes.length) || 0;
+                    if (episodeFocusedIndex < numEps - 1) {
+                        episodeFocusedIndex++;
+                        updateEpisodeFocus();
+                    }
+                }
             } else {
                 playChannel(currentChannelIndex - 1);
             }
             return;
         }
 
-        // Flecha Izquierda (37): BOTÓN RECALL (Canal Anterior Visto)
+        // Flecha Izquierda (37):
+        // En Guía: Cambia a Pestaña 1 (Canales) o Vuelve a Series
+        // En Reproducción de Series: Retrocede 15s
+        // En Live TV: Recall (Canal anterior)
         if (keyCode === 37) {
             e.preventDefault();
             if (isGuideOpen) {
-                closeGuide();
+                if (guideCurrentTab === 'series') {
+                    if (seriesViewState === 'episodes-list') {
+                        seriesViewState = 'series-list';
+                        if (seriesListEl) seriesListEl.style.display = 'flex';
+                        if (seriesEpisodesPanelEl) seriesEpisodesPanelEl.style.display = 'none';
+                        updateSeriesFocus();
+                    } else {
+                        switchGuideTab('channels');
+                    }
+                } else {
+                    closeGuide();
+                }
+            } else if (isSeriesMode) {
+                seekRelative(-15);
             } else {
                 console.log('Jandos-TV: Recall al canal anterior visto: ' + (previousChannelIndex + 1));
                 playChannel(previousChannelIndex);
@@ -809,10 +1258,24 @@
             return;
         }
 
-        // Flecha Derecha (39): CAMBIO MANUAL DE SEÑAL / STREAM
+        // Flecha Derecha (39):
+        // En Guía: Cambia a Pestaña 2 (Series en Orden)
+        // En Reproducción de Series: Adelanta 15s
+        // En Live TV: Cambio manual de señal HLS
         if (keyCode === 39) {
             e.preventDefault();
-            if (!isGuideOpen) {
+            if (isGuideOpen) {
+                if (guideCurrentTab === 'channels') {
+                    switchGuideTab('series');
+                } else if (seriesViewState === 'series-list') {
+                    const allSeries = getAvailableSeries();
+                    if (allSeries.length > 0 && allSeries[seriesFocusedIndex]) {
+                        openEpisodesView(allSeries[seriesFocusedIndex]);
+                    }
+                }
+            } else if (isSeriesMode) {
+                seekRelative(+15);
+            } else {
                 switchNextSignalManual();
             }
             return;
@@ -822,8 +1285,35 @@
         if (keyCode === 13) {
             e.preventDefault();
             if (isGuideOpen) {
-                playChannel(guideFocusedIndex);
-                closeGuide();
+                if (guideCurrentTab === 'channels') {
+                    playChannel(guideFocusedIndex);
+                    closeGuide();
+                } else if (seriesViewState === 'series-list') {
+                    const allSeries = getAvailableSeries();
+                    if (allSeries.length > 0 && allSeries[seriesFocusedIndex]) {
+                        openEpisodesView(allSeries[seriesFocusedIndex]);
+                    }
+                } else if (seriesViewState === 'episodes-list') {
+                    if (selectedSeriesForEpisodes) {
+                        const slug = getSeriesSlug(selectedSeriesForEpisodes);
+                        const progress = getSeriesProgress(slug);
+                        let epIdx = 0;
+
+                        if (episodeFocusedIndex === -1) {
+                            // Botón "CONTINUAR VIENDO"
+                            if (progress && typeof progress.episodeIndex === 'number') {
+                                epIdx = progress.episodeIndex;
+                            } else {
+                                epIdx = 0;
+                            }
+                        } else {
+                            epIdx = episodeFocusedIndex;
+                        }
+
+                        playSeriesEpisode(selectedSeriesForEpisodes, epIdx, false);
+                        closeGuide();
+                    }
+                }
             } else {
                 openGuide();
             }
@@ -832,7 +1322,7 @@
     }
 
     // --------------------------------------------------------------------------
-    // 11. Arranque de la Aplicación
+    // 15. Arranque de la Aplicación
     // --------------------------------------------------------------------------
     function init() {
         initTizenFeatures();
@@ -840,7 +1330,30 @@
         document.addEventListener('click', unmuteAudioIfNeeded, false);
         document.addEventListener('touchstart', unmuteAudioIfNeeded, false);
 
-        // Recuperar último canal visto desde localStorage
+        // Eventos click para pestañas con mouse o touch
+        if (tabChannelsEl) {
+            tabChannelsEl.addEventListener('click', function () {
+                switchGuideTab('channels');
+            });
+        }
+        if (tabSeriesEl) {
+            tabSeriesEl.addEventListener('click', function () {
+                switchGuideTab('series');
+            });
+        }
+        if (episodesContinueBtnEl) {
+            episodesContinueBtnEl.addEventListener('click', function () {
+                if (selectedSeriesForEpisodes) {
+                    const slug = getSeriesSlug(selectedSeriesForEpisodes);
+                    const progress = getSeriesProgress(slug);
+                    const epIdx = (progress && typeof progress.episodeIndex === 'number') ? progress.episodeIndex : 0;
+                    playSeriesEpisode(selectedSeriesForEpisodes, epIdx, false);
+                    closeGuide();
+                }
+            });
+        }
+
+        // Recuperar último canal visto desde localStorage (inicia 100% igual en vivo)
         let savedIndex = 0;
         try {
             const raw = localStorage.getItem(STORAGE_KEY_LAST_CHANNEL);
@@ -858,13 +1371,13 @@
             savedIndex = 0;
         }
 
-        // Reproducir de inmediato el canal guardado
+        // Reproducir de inmediato el canal guardado (para el abuelo)
         playChannel(savedIndex);
 
-        // Cargar configuración de canales curada
+        // Cargar configuración de canales curada y series
         fetchRemoteJsonConfig();
 
-        // Consultar configuración remota periódicamente cada 30 minutos
+        // Consultar periódicamente
         setInterval(fetchRemoteJsonConfig, REMOTE_CONFIG_INTERVAL_MS);
     }
 

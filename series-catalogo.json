@@ -1,0 +1,1193 @@
+{
+  "updated": "2026-10-16",
+  "totalSeries": 6,
+  "series": [
+    {
+      "id": 21,
+      "slug": "el-chavo-del-8",
+      "name": "El Chavo del 8 (24/7)",
+      "seriesTitle": "El Chavo del 8",
+      "category": "SERIES Y ANIME",
+      "urls": [
+        "https://archive.org/download/el-chavo-del-8-Lat/002%20El%20Peso.mp4"
+      ],
+      "episodes": [
+        {
+          "num": 2,
+          "title": "Cap. 02 - El Peso",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/002%20El%20Peso.mp4"
+        },
+        {
+          "num": 3,
+          "title": "Cap. 03 - La Fiesta De La Buena Vecindad",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/003%20La%20Fiesta%20De%20La%20Buena%20Vecindad.mp4"
+        },
+        {
+          "num": 4,
+          "title": "Cap. 04 - Los Muebles De Don Ramon",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/004%20Los%20Muebles%20De%20Don%20Ramon.mp4"
+        },
+        {
+          "num": 5,
+          "title": "Cap. 05 - Nuevas Vecinas 1 - Gloria Llega A La Vecindad",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/005%20Nuevas%20Vecinas%201%20-%20Gloria%20Llega%20A%20La%20Vecindad.mp4"
+        },
+        {
+          "num": 6,
+          "title": "Cap. 06 - Nuevas Vecinas 2 - Gloria Y Patty",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/006%20Nuevas%20Vecinas%202%20-%20Gloria%20Y%20Patty.mp4"
+        },
+        {
+          "num": 7,
+          "title": "Cap. 07 - Nuevas Vecinas 3 - Los Desmayados",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/007%20Nuevas%20Vecinas%203%20-%20Los%20Desmayados.mp4"
+        },
+        {
+          "num": 8,
+          "title": "Cap. 08 - Don Ramon Carpintero",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/008%20Don%20Ramon%20Carpintero.mp4"
+        },
+        {
+          "num": 9,
+          "title": "Cap. 09 - La Cerbatana",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/009%20La%20Cerbatana.mp4"
+        },
+        {
+          "num": 10,
+          "title": "Cap. 10 - Los Globos",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/010%20Los%20Globos.mp4"
+        },
+        {
+          "num": 11,
+          "title": "Cap. 11 - Don Ramon Pintor",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/011%20Don%20Ramon%20Pintor.mp4"
+        },
+        {
+          "num": 13,
+          "title": "Cap. 13 - El Pastel De La Bruja Del 71",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/013%20El%20Pastel%20De%20La%20Bruja%20Del%2071.mp4"
+        },
+        {
+          "num": 14,
+          "title": "Cap. 14 - Los Pescaditos De Colores",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/014%20Los%20Pescaditos%20De%20Colores.mp4"
+        },
+        {
+          "num": 15,
+          "title": "Cap. 15 - La Chirimoya",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/015%20La%20Chirimoya.mp4"
+        },
+        {
+          "num": 16,
+          "title": "Cap. 16 - Ensuciando La Ropa",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/016%20Ensuciando%20La%20Ropa.mp4"
+        },
+        {
+          "num": 17,
+          "title": "Cap. 17 - Jugando A La Escuelita",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/017%20Jugando%20A%20La%20Escuelita.mp4"
+        },
+        {
+          "num": 18,
+          "title": "Cap. 18 - Ping Pong",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/018%20Ping%20Pong.mp4"
+        },
+        {
+          "num": 20,
+          "title": "Cap. 20 - No Van A La Escuela",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/020%20No%20Van%20A%20La%20Escuela.mp4"
+        },
+        {
+          "num": 21,
+          "title": "Cap. 21 - Don Ramon Peluquero",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/021%20Don%20Ramon%20Peluquero.mp4"
+        },
+        {
+          "num": 22,
+          "title": "Cap. 22 - Barquitos De Papel",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/022%20Barquitos%20De%20Papel.mp4"
+        },
+        {
+          "num": 23,
+          "title": "Cap. 23 - Los Espantos",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/023%20Los%20Espantos.mp4"
+        },
+        {
+          "num": 24,
+          "title": "Cap. 24 - El Tio Jacinto",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/024%20El%20Tio%20Jacinto.mp4"
+        },
+        {
+          "num": 25,
+          "title": "Cap. 25 - Fiesta De La Buena Vecindad",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/025%20Fiesta%20De%20La%20Buena%20Vecindad.mp4"
+        },
+        {
+          "num": 26,
+          "title": "Cap. 26 - Juegan A La Independencia",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/026%20Juegan%20A%20La%20Independencia.mp4"
+        },
+        {
+          "num": 27,
+          "title": "Cap. 27 - Pelea Por El Tendedero",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/027%20Pelea%20Por%20El%20Tendedero.mp4"
+        },
+        {
+          "num": 29,
+          "title": "Cap. 29 - La Orquesta",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/029%20La%20Orquesta.mp4"
+        },
+        {
+          "num": 30,
+          "title": "Cap. 30 - Satanas",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/030%20Satanas.mp4"
+        },
+        {
+          "num": 31,
+          "title": "Cap. 31 - Don Ramon Zapatero",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/031%20Don%20Ramon%20Zapatero.mp4"
+        },
+        {
+          "num": 32,
+          "title": "Cap. 32 - La Sobrina De La Bruja Del 71",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/032%20La%20Sobrina%20De%20La%20Bruja%20Del%2071.mp4"
+        },
+        {
+          "num": 33,
+          "title": "Cap. 33 - Futbol",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/033%20Futbol.mp4"
+        },
+        {
+          "num": 34,
+          "title": "Cap. 34 - Don Ramon Atropellado",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/034%20Don%20Ramon%20Atropellado.mp4"
+        },
+        {
+          "num": 36,
+          "title": "Cap. 36 - Navidad",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/036%20Navidad.mp4"
+        },
+        {
+          "num": 38,
+          "title": "Cap. 38 - Declaracion A Doña Florinda",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/038%20Declaracion%20A%20Do%C3%B1a%20Florinda.mp4"
+        },
+        {
+          "num": 39,
+          "title": "Cap. 39 - Quico Enfermo",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/039%20Quico%20Enfermo.mp4"
+        },
+        {
+          "num": 41,
+          "title": "Cap. 41 - La Cruz Roja",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/041%20La%20Cruz%20Roja.mp4"
+        },
+        {
+          "num": 42,
+          "title": "Cap. 42 - Los Globos Y Los Favores",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/042%20Los%20Globos%20Y%20Los%20Favores.mp4"
+        },
+        {
+          "num": 43,
+          "title": "Cap. 43 - Los Pantalones De Don Ramon",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/043%20Los%20Pantalones%20De%20Don%20Ramon.mp4"
+        },
+        {
+          "num": 44,
+          "title": "Cap. 44 - El Ratero",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/044%20El%20Ratero.mp4"
+        },
+        {
+          "num": 45,
+          "title": "Cap. 45 - Primer Dia De Clases",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/045%20Primer%20Dia%20De%20Clases.mp4"
+        },
+        {
+          "num": 47,
+          "title": "Cap. 47 - Cazando Lagartijas",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/047%20Cazando%20Lagartijas.mp4"
+        },
+        {
+          "num": 48,
+          "title": "Cap. 48 - Ensuciando A Quico",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/048%20Ensuciando%20A%20Quico.mp4"
+        },
+        {
+          "num": 49,
+          "title": "Cap. 49 - La Casita Del Chavo",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/049%20La%20Casita%20Del%20Chavo.mp4"
+        },
+        {
+          "num": 54,
+          "title": "Cap. 54 - Aguas Frescas 2",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/054%20Aguas%20Frescas%202.mp4"
+        },
+        {
+          "num": 56,
+          "title": "Cap. 56 - Album De Estampitas",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/056%20Album%20De%20Estampitas.mp4"
+        },
+        {
+          "num": 57,
+          "title": "Cap. 57 - Don Ramon Se Va De La Vecindad",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/057%20Don%20Ramon%20Se%20Va%20De%20La%20Vecindad.mp4"
+        },
+        {
+          "num": 58,
+          "title": "Cap. 58 - Don Ramon Jardinero",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/058%20Don%20Ramon%20Jardinero.mp4"
+        },
+        {
+          "num": 59,
+          "title": "Cap. 59 - Los Dibujos De Los Niños",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/059%20Los%20Dibujos%20De%20Los%20Ni%C3%B1os.mp4"
+        },
+        {
+          "num": 60,
+          "title": "Cap. 60 - El Cayo Del Señor Barriga",
+          "url": "https://archive.org/download/el-chavo-del-8-Lat/060%20El%20Cayo%20Del%20Se%C3%B1or%20Barriga.mp4"
+        }
+      ]
+    },
+    {
+      "id": 22,
+      "slug": "la-familia-ingalls",
+      "name": "La Familia Ingalls (24/7)",
+      "seriesTitle": "La Familia Ingalls",
+      "category": "SERIES Y ANIME",
+      "urls": [
+        "https://archive.org/download/casadelapraderatemp01/1x00%20Episodio%20Piloto%20-%20Parte%201.mp4"
+      ],
+      "episodes": [
+        {
+          "num": 1,
+          "title": "Cap. 01 - Episodio Piloto - Parte 1",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x00%20Episodio%20Piloto%20-%20Parte%201.mp4"
+        },
+        {
+          "num": 2,
+          "title": "Cap. 02 - Episodio Piloto - Parte 2",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x00%20Episodio%20Piloto%20-%20Parte%202.mp4"
+        },
+        {
+          "num": 3,
+          "title": "Cap. 03 - Chicas campesinas",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x03%20Chicas%20campesinas.mp4"
+        },
+        {
+          "num": 4,
+          "title": "Cap. 04 - Una cosecha de amigos",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x04%20Una%20cosecha%20de%20amigos.mp4"
+        },
+        {
+          "num": 5,
+          "title": "Cap. 05 - Una caminata de 100 millas",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x05%20Una%20caminata%20de%20100%20millas.mp4"
+        },
+        {
+          "num": 6,
+          "title": "Cap. 06 - El amor de Johnny Johnson",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x06%20El%20amor%20de%20Johnny%20Johnson.mp4"
+        },
+        {
+          "num": 7,
+          "title": "Cap. 07 - Si despierto antes de morir",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x07%20Si%20despierto%20antes%20de%20morir.mp4"
+        },
+        {
+          "num": 8,
+          "title": "Cap. 08 - El regreso del señor Eduards",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x08%20El%20regreso%20del%20se%C3%B1or%20Eduards.mp4"
+        },
+        {
+          "num": 9,
+          "title": "Cap. 09 - Fiesta en el campo",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x09%20Fiesta%20en%20el%20campo.mp4"
+        },
+        {
+          "num": 10,
+          "title": "Cap. 10 - Las vacaciones de mama",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x10%20Las%20vacaciones%20de%20mama.mp4"
+        },
+        {
+          "num": 11,
+          "title": "Cap. 11 - Mama, la maestra de escuela",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x11%20Mama%2C%20la%20maestra%20de%20escuela.mp4"
+        },
+        {
+          "num": 12,
+          "title": "Cap. 12 - La voz de Tinker Jones",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x12%20La%20voz%20de%20Tinker%20Jones.mp4"
+        },
+        {
+          "num": 13,
+          "title": "Cap. 13 - El mapache",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x13%20El%20mapache.mp4"
+        },
+        {
+          "num": 14,
+          "title": "Cap. 14 - El premio",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x14%20El%20premio.mp4"
+        },
+        {
+          "num": 15,
+          "title": "Cap. 15 - Navidad en Plum Creek",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x15%20Navidad%20en%20Plum%20Creek.mp4"
+        },
+        {
+          "num": 16,
+          "title": "Cap. 16 - El amor del Dr. Backer",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x16%20El%20amor%20del%20Dr.%20Backer.mp4"
+        },
+        {
+          "num": 17,
+          "title": "Cap. 17 - Conflicto Familiar",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x17%20Conflicto%20Familiar.mp4"
+        },
+        {
+          "num": 18,
+          "title": "Cap. 18 - El hombre del Circo",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x18%20El%20hombre%20del%20Circo.mp4"
+        },
+        {
+          "num": 19,
+          "title": "Cap. 19 - La plaga",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x19%20La%20plaga.mp4"
+        },
+        {
+          "num": 20,
+          "title": "Cap. 20 - niño del dolor",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x20%20ni%C3%B1o%20del%20dolor.mp4"
+        },
+        {
+          "num": 21,
+          "title": "Cap. 21 - La cosecha de dinero",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x21%20La%20cosecha%20de%20dinero.mp4"
+        },
+        {
+          "num": 22,
+          "title": "Cap. 22 - supervivencia",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x22%20supervivencia.mp4"
+        },
+        {
+          "num": 23,
+          "title": "Cap. 23 - voy a conocer el mundo",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x23%20voy%20a%20conocer%20el%20mundo.mp4"
+        },
+        {
+          "num": 24,
+          "title": "Cap. 24 - la celebracion",
+          "url": "https://archive.org/download/casadelapraderatemp01/1x24%20la%20celebracion.mp4"
+        }
+      ]
+    },
+    {
+      "id": 23,
+      "slug": "dragon-ball-z",
+      "name": "Dragon Ball Z (24/7)",
+      "seriesTitle": "Dragon Ball Z",
+      "category": "SERIES Y ANIME",
+      "urls": [
+        "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/01.Aparece%20un%20mini%20Gok%C5%AB%2C%20su%20nombre%20es%20Gohan.mp4"
+      ],
+      "episodes": [
+        {
+          "num": 1,
+          "title": "Cap. 01 - Aparece un mini Gokū, su nombre es Gohan",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/01.Aparece%20un%20mini%20Gok%C5%AB%2C%20su%20nombre%20es%20Gohan.mp4"
+        },
+        {
+          "num": 2,
+          "title": "Cap. 02 - Un guerrero muy fuerte con antecedentes históricos, se trata del hermano mayor de Goku",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/02.Un%20guerrero%20muy%20fuerte%20con%20antecedentes%20hist%C3%B3ricos%2C%20se%20trata%20del%20hermano%20mayor%20de%20Goku.mp4"
+        },
+        {
+          "num": 3,
+          "title": "Cap. 03 - La combinación más fuerte de este mundo",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/03.La%20combinaci%C3%B3n%20m%C3%A1s%20fuerte%20de%20este%20mundo.mp4"
+        },
+        {
+          "num": 4,
+          "title": "Cap. 04 - ¡Picoro saca su mejor carta! Gohan es un niño llorón",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/04.%C2%A1Picoro%20saca%20su%20mejor%20carta!%20Gohan%20es%20un%20ni%C3%B1o%20llor%C3%B3n.mp4"
+        },
+        {
+          "num": 5,
+          "title": "Cap. 05 - Goku muere, solo hay una oportunidad",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/05.Goku%20muere%2C%20solo%20hay%20una%20oportunidad.mp4"
+        },
+        {
+          "num": 6,
+          "title": "Cap. 06 - Enma-Sama también se sorprende. Habrá que luchar en el otro mundo",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/06.Enma-Sama%20tambi%C3%A9n%20se%20sorprende.%20Habr%C3%A1%20que%20luchar%20en%20el%20otro%20mundo.mp4"
+        },
+        {
+          "num": 7,
+          "title": "Cap. 07 - Hay que sobrevivir a los dinosaurios. El duro entrenamiento de Gohan",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/07.Hay%20que%20sobrevivir%20a%20los%20dinosaurios.%20El%20duro%20entrenamiento%20de%20Gohan.mp4"
+        },
+        {
+          "num": 8,
+          "title": "Cap. 08 - Una transformación a causa del resplandor de la Luna, el poder secreto de Gohan",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/08.Una%20transformaci%C3%B3n%20a%20causa%20del%20resplandor%20de%20la%20Luna%2C%20el%20poder%20secreto%20de%20Gohan.mp4"
+        },
+        {
+          "num": 9,
+          "title": "Cap. 09 - Perdóneme señor robot. Lágrimas que desaparecen en el desierto",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/09.Perd%C3%B3neme%20se%C3%B1or%20robot.%20L%C3%A1grimas%20que%20desaparecen%20en%20el%20desierto.mp4"
+        },
+        {
+          "num": 10,
+          "title": "Cap. 10 - No llores Gohan. Es la primera batalla",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/10.No%20llores%20Gohan.%20Es%20la%20primera%20batalla.mp4"
+        },
+        {
+          "num": 11,
+          "title": "Cap. 11 - Los guerreros más fuertes del Universo, el despertar de los Saiyajins",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/11.Los%20guerreros%20m%C3%A1s%20fuertes%20del%20Universo%2C%20el%20despertar%20de%20los%20Saiyajins.mp4"
+        },
+        {
+          "num": 12,
+          "title": "Cap. 12 - Una pequeña siesta, Goku cae del camino de la serpiente",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/12.Una%20peque%C3%B1a%20siesta%2C%20Goku%20cae%20del%20camino%20de%20la%20serpiente.mp4"
+        },
+        {
+          "num": 13,
+          "title": "Cap. 13 - ¡No toques eso! La fruta secreta de Enma-Sama",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/13.%C2%A1No%20toques%20eso!%20La%20fruta%20secreta%20de%20Enma-Sama.mp4"
+        },
+        {
+          "num": 14,
+          "title": "Cap. 14 - Una dulce tentación; la hospitalidad de la Princesa Serpiente",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/14.Una%20dulce%20tentaci%C3%B3n%3B%20la%20hospitalidad%20de%20la%20Princesa%20Serpiente.mp4"
+        },
+        {
+          "num": 15,
+          "title": "Cap. 15 - ¡Escapa de Piccolo! Gohan llama a una tormenta",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/15.%C2%A1Escapa%20de%20Piccolo!%20Gohan%20llama%20a%20una%20tormenta.mp4"
+        },
+        {
+          "num": 16,
+          "title": "Cap. 16 - ¡Corre Gohan! Milk te espera en la montaña Paoz",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/16.%C2%A1Corre%20Gohan!%20Milk%20te%20espera%20en%20la%20monta%C3%B1a%20Paoz.mp4"
+        },
+        {
+          "num": 17,
+          "title": "Cap. 17 - ¡Una ciudad sin futuro! Un largo camino hacia la victoria",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/17.%C2%A1Una%20ciudad%20sin%20futuro!%20Un%20largo%20camino%20hacia%20la%20victoria.mp4"
+        },
+        {
+          "num": 18,
+          "title": "Cap. 18 - El final del camino de la serpiente. Tú eres Kaio-Sama",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/18.El%20final%20del%20camino%20de%20la%20serpiente.%20T%C3%BA%20eres%20Kaio-Sama.mp4"
+        },
+        {
+          "num": 19,
+          "title": "Cap. 19 - ¡Domina la fuerza de gravedad! Atrapa a Bubbles",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/19.%C2%A1Domina%20la%20fuerza%20de%20gravedad!%20Atrapa%20a%20Bubbles.mp4"
+        },
+        {
+          "num": 20,
+          "title": "Cap. 20 - ¡La leyenda revive! Los antepasados de Goku",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/20.%C2%A1La%20leyenda%20revive!%20Los%20antepasados%20de%20Goku.mp4"
+        },
+        {
+          "num": 21,
+          "title": "Cap. 21 - ¡Sal de ahí Shen Long! Los Saiyajin han llegado a la Tierra",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/21.%C2%A1Sal%20de%20ah%C3%AD%20Shen%20Long!%20Los%20Saiyajin%20han%20llegado%20a%20la%20Tierra.mp4"
+        },
+        {
+          "num": 22,
+          "title": "Cap. 22 - Imposible; Sai-bai-man nacidos de la tierra",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/22.Imposible%3B%20Sai-bai-man%20nacidos%20de%20la%20tierra.mp4"
+        },
+        {
+          "num": 23,
+          "title": "Cap. 23 - ¡Yamcha muere! Los temibles Sai-bai-man",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/23.%C2%A1Yamcha%20muere!%20Los%20temibles%20Sai-bai-man.mp4"
+        },
+        {
+          "num": 24,
+          "title": "Cap. 24 - ¡Adiós Ten! La táctica de sacrificio de Chaos",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/24.%C2%A1Adi%C3%B3s%20Ten!%20La%20t%C3%A1ctica%20de%20sacrificio%20de%20Chaos.mp4"
+        },
+        {
+          "num": 25,
+          "title": "Cap. 25 - ¡El sacrificio de Ten-shin-han! El último Ki-ko-ho",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/25.%C2%A1El%20sacrificio%20de%20Ten-shin-han!%20El%20%C3%BAltimo%20Ki-ko-ho.mp4"
+        },
+        {
+          "num": 26,
+          "title": "Cap. 26 - ¡Solo nos quedan tres horas de vida! ¡Apresúrate Goku!",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/26.%C2%A1Solo%20nos%20quedan%20tres%20horas%20de%20vida!%20%C2%A1Apres%C3%BArate%20Goku!.mp4"
+        },
+        {
+          "num": 27,
+          "title": "Cap. 27 - La furia de Gohan estalla",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/27.La%20furia%20de%20Gohan%20estalla.mp4"
+        },
+        {
+          "num": 28,
+          "title": "Cap. 28 - El ataque de los Saiyajins; Kami-Sama y Piccolo mueren",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/28.El%20ataque%20de%20los%20Saiyajins%3B%20Kami-Sama%20y%20Piccolo%20mueren.mp4"
+        },
+        {
+          "num": 29,
+          "title": "Cap. 29 - ¡Papá eres increíble! Una técnica mortal llamada Kaio-ken",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/29.%C2%A1Pap%C3%A1%20eres%20incre%C3%ADble!%20Una%20t%C3%A9cnica%20mortal%20llamada%20Kaio-ken.mp4"
+        },
+        {
+          "num": 30,
+          "title": "Cap. 30 - Una pelea fuera del límite; Goku contra Vegeta",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/30.Una%20pelea%20fuera%20del%20l%C3%ADmite%3B%20Goku%20contra%20Vegeta.mp4"
+        },
+        {
+          "num": 31,
+          "title": "Cap. 31 - ¡Arriesga tu vida Gokū! La última opción",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/31.%C2%A1Arriesga%20tu%20vida%20Gok%C5%AB!%20La%20%C3%BAltima%20opci%C3%B3n.mp4"
+        },
+        {
+          "num": 32,
+          "title": "Cap. 32 - ¡Su poder de pelea ha aumentado diez veces más! La trasformación de Vegeta",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/32.%C2%A1Su%20poder%20de%20pelea%20ha%20aumentado%20diez%20veces%20m%C3%A1s!%20La%20trasformaci%C3%B3n%20de%20Vegeta.mp4"
+        },
+        {
+          "num": 33,
+          "title": "Cap. 33 - ¡No te mueras papá! El poder escondido de Gohan",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/33.%C2%A1No%20te%20mueras%20pap%C3%A1!%20El%20poder%20escondido%20de%20Gohan.mp4"
+        },
+        {
+          "num": 34,
+          "title": "Cap. 34 - ¡Pégale Krilin! Una Genki-dama llena de esperanza",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/34.%C2%A1P%C3%A9gale%20Krilin!%20Una%20Genki-dama%20llena%20de%20esperanza.mp4"
+        },
+        {
+          "num": 35,
+          "title": "Cap. 35 - ¡Ocurre un milagro! La trasformación de Gohan",
+          "url": "https://archive.org/download/Dragon-Ball-Z-Latino-JP/1%20-%20Saga%20Saiyajins/35.%C2%A1Ocurre%20un%20milagro!%20La%20trasformaci%C3%B3n%20de%20Gohan.mp4"
+        }
+      ]
+    },
+    {
+      "id": 24,
+      "slug": "caballeros-del-zodiaco",
+      "name": "Caballeros del Zodiaco (24/7)",
+      "seriesTitle": "Caballeros del Zodiaco",
+      "category": "SERIES Y ANIME",
+      "urls": [
+        "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20001%20%5BD80DFE63%5D%20.mp4"
+      ],
+      "episodes": [
+        {
+          "num": 1,
+          "title": "Cap. 01 - Episodio 1",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20001%20%5BD80DFE63%5D%20.mp4"
+        },
+        {
+          "num": 2,
+          "title": "Cap. 02 - Episodio 2",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20002%20%5B6118C34F%5D%20.mp4"
+        },
+        {
+          "num": 3,
+          "title": "Cap. 03 - Episodio 3",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20003%20%5BCED2C2F0%5D%20.mp4"
+        },
+        {
+          "num": 4,
+          "title": "Cap. 04 - Episodio 4",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20004%20%5B720B34FE%5D%20.mp4"
+        },
+        {
+          "num": 5,
+          "title": "Cap. 05 - Episodio 5",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20005%20%5B1B9F113F%5D%20.mp4"
+        },
+        {
+          "num": 6,
+          "title": "Cap. 06 - Episodio 6",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20006%20%5BB68A0B35%5D%20.mp4"
+        },
+        {
+          "num": 7,
+          "title": "Cap. 07 - Episodio 7",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20007%20%5B340F1B5D%5D%20.mp4"
+        },
+        {
+          "num": 8,
+          "title": "Cap. 08 - Episodio 8",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20008%20%5B7A70F533%5D%20.mp4"
+        },
+        {
+          "num": 9,
+          "title": "Cap. 09 - Episodio 9",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20009%20%5B0E9C2D31%5D%20.mp4"
+        },
+        {
+          "num": 10,
+          "title": "Cap. 10 - Episodio 10",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20010%20%5B1A037BB8%5D%20.mp4"
+        },
+        {
+          "num": 11,
+          "title": "Cap. 11 - Episodio 11",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20011%20%5BFF39177B%5D%20.mp4"
+        },
+        {
+          "num": 12,
+          "title": "Cap. 12 - Episodio 12",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20012%20%5B99AA7F5D%5D%20.mp4"
+        },
+        {
+          "num": 13,
+          "title": "Cap. 13 - Episodio 13",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20013%20%5B14B0C52E%5D%20.mp4"
+        },
+        {
+          "num": 14,
+          "title": "Cap. 14 - Episodio 14",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20014%20%5B172BA025%5D%20.mp4"
+        },
+        {
+          "num": 15,
+          "title": "Cap. 15 - Episodio 15",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20015%20%5B9998D8BD%5D%20.mp4"
+        },
+        {
+          "num": 16,
+          "title": "Cap. 16 - Episodio 16",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20016%20%5BA594966F%5D%20.mp4"
+        },
+        {
+          "num": 17,
+          "title": "Cap. 17 - Episodio 17",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20017%20%5B2855F83B%5D%20.mp4"
+        },
+        {
+          "num": 18,
+          "title": "Cap. 18 - Episodio 18",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20018%20%5B42455CA4%5D%20.mp4"
+        },
+        {
+          "num": 19,
+          "title": "Cap. 19 - Episodio 19",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20019%20%5BD657FBD8%5D%20.mp4"
+        },
+        {
+          "num": 20,
+          "title": "Cap. 20 - Episodio 20",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20020%20%5B47DD9761%5D%20.mp4"
+        },
+        {
+          "num": 21,
+          "title": "Cap. 21 - Episodio 21",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20021%20%5B70A58E79%5D%20.mp4"
+        },
+        {
+          "num": 22,
+          "title": "Cap. 22 - Episodio 22",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20022%20%5BDFDB844A%5D%20.mp4"
+        },
+        {
+          "num": 23,
+          "title": "Cap. 23 - Episodio 23",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20023%20%5B801F5F68%5D%20.mp4"
+        },
+        {
+          "num": 24,
+          "title": "Cap. 24 - Episodio 24",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20024%20%5BD01B41C1%5D%20.mp4"
+        },
+        {
+          "num": 25,
+          "title": "Cap. 25 - Episodio 25",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20025%20%5B2AF6EDAF%5D%20.mp4"
+        },
+        {
+          "num": 26,
+          "title": "Cap. 26 - Episodio 26",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20026%20%5B1349B2FC%5D%20.mp4"
+        },
+        {
+          "num": 27,
+          "title": "Cap. 27 - Episodio 27",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20027%20%5B486CBD67%5D%20.mp4"
+        },
+        {
+          "num": 28,
+          "title": "Cap. 28 - Episodio 28",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20028%20%5B7EC22220%5D%20.mp4"
+        },
+        {
+          "num": 29,
+          "title": "Cap. 29 - Episodio 29",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20029%20%5BACD0E379%5D%20.mp4"
+        },
+        {
+          "num": 30,
+          "title": "Cap. 30 - Episodio 30",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20030%20%5BB73259BE%5D%20.mp4"
+        },
+        {
+          "num": 31,
+          "title": "Cap. 31 - Episodio 31",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20031%20%5BBAABF1D0%5D%20.mp4"
+        },
+        {
+          "num": 32,
+          "title": "Cap. 32 - Episodio 32",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20032%20%5B983B337A%5D%20.mp4"
+        },
+        {
+          "num": 33,
+          "title": "Cap. 33 - Episodio 33",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20033%20%5B542345F7%5D%20.mp4"
+        },
+        {
+          "num": 34,
+          "title": "Cap. 34 - Episodio 34",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20034%20%5B1238BF8E%5D%20.mp4"
+        },
+        {
+          "num": 35,
+          "title": "Cap. 35 - Episodio 35",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20035%20%5B2EDFE932%5D%20.mp4"
+        },
+        {
+          "num": 36,
+          "title": "Cap. 36 - Episodio 36",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20036%20%5BF0F8F5CB%5D%20.mp4"
+        },
+        {
+          "num": 37,
+          "title": "Cap. 37 - Episodio 37",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20037%20%5B233F4E30%5D%20.mp4"
+        },
+        {
+          "num": 38,
+          "title": "Cap. 38 - Episodio 38",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20038%20%5BF527D68D%5D%20.mp4"
+        },
+        {
+          "num": 39,
+          "title": "Cap. 39 - Episodio 39",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20039%20%5B107B913F%5D%20.mp4"
+        },
+        {
+          "num": 40,
+          "title": "Cap. 40 - Episodio 40",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20040%20%5B9DC48BED%5D%20.mp4"
+        },
+        {
+          "num": 41,
+          "title": "Cap. 41 - Episodio 41",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20041%20%5B45D3D4EE%5D%20.mp4"
+        },
+        {
+          "num": 42,
+          "title": "Cap. 42 - Episodio 42",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20042%20%5BFE93661C%5D%20.mp4"
+        },
+        {
+          "num": 43,
+          "title": "Cap. 43 - Episodio 43",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20043%20%5BA3960C84%5D%20.mp4"
+        },
+        {
+          "num": 44,
+          "title": "Cap. 44 - Episodio 44",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20044%20%5B42AD17D8%5D%20.mp4"
+        },
+        {
+          "num": 45,
+          "title": "Cap. 45 - Episodio 45",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20045%20%5B1EEAB39B%5D%20.mp4"
+        },
+        {
+          "num": 46,
+          "title": "Cap. 46 - Episodio 46",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20046%20%5B145545C4%5D%20.mp4"
+        },
+        {
+          "num": 47,
+          "title": "Cap. 47 - Episodio 47",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20047%20%5BCDB6E231%5D%20.mp4"
+        },
+        {
+          "num": 48,
+          "title": "Cap. 48 - Episodio 48",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20048%20%5BE9347E18%5D%20.mp4"
+        },
+        {
+          "num": 49,
+          "title": "Cap. 49 - Episodio 49",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20049%20%5B6B78ABE5%5D%20.mp4"
+        },
+        {
+          "num": 50,
+          "title": "Cap. 50 - Episodio 50",
+          "url": "https://archive.org/download/yk-saint-seiya-024-d-01-b-41-c-1/%5BYK%5D%20%20Saint%20Seiya%20-%20050%20%5B05681D76%5D%20.mp4"
+        }
+      ]
+    },
+    {
+      "id": 25,
+      "slug": "supercampeones",
+      "name": "Supercampeones (24/7)",
+      "seriesTitle": "Supercampeones",
+      "category": "SERIES Y ANIME",
+      "urls": [
+        "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20001%20-%20El%20Desafio.mp4"
+      ],
+      "episodes": [
+        {
+          "num": 1,
+          "title": "Cap. 01 - El Desafio",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20001%20-%20El%20Desafio.mp4"
+        },
+        {
+          "num": 2,
+          "title": "Cap. 02 - Las Dos Escuelas Rivales",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20002%20-%20Las%20Dos%20Escuelas%20Rivales.mp4"
+        },
+        {
+          "num": 3,
+          "title": "Cap. 03 - El Nuevo Equipo",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20003%20-%20El%20Nuevo%20Equipo.mp4"
+        },
+        {
+          "num": 4,
+          "title": "Cap. 04 - Mi Mejor Amigo",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20004%20-%20Mi%20Mejor%20Amigo.mp4"
+        },
+        {
+          "num": 5,
+          "title": "Cap. 05 - Empieza el Torneo",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20005%20-%20Empieza%20el%20Torneo.mp4"
+        },
+        {
+          "num": 6,
+          "title": "Cap. 06 - El Regreso de Papá",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20006%20-%20El%20Regreso%20de%20Pap%C3%A1.mp4"
+        },
+        {
+          "num": 7,
+          "title": "Cap. 07 - El Espectáculo Tiene que Seguir",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20007%20-%20El%20Espect%C3%A1culo%20Tiene%20que%20Seguir.mp4"
+        },
+        {
+          "num": 8,
+          "title": "Cap. 08 - Un Dúo Perfecto",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20008%20-%20Un%20D%C3%BAo%20Perfecto.mp4"
+        },
+        {
+          "num": 9,
+          "title": "Cap. 09 - La Última Oportunidad",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20009%20-%20La%20%C3%9Altima%20Oportunidad.mp4"
+        },
+        {
+          "num": 10,
+          "title": "Cap. 10 - Nos llevaremos a Oliver",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20010%20-%20Nos%20llevaremos%20a%20Oliver.mp4"
+        },
+        {
+          "num": 11,
+          "title": "Cap. 11 - El Rival Inesperado",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20011%20-%20El%20Rival%20Inesperado.mp4"
+        },
+        {
+          "num": 12,
+          "title": "Cap. 12 - Hacia el Campeonato",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20012%20-%20Hacia%20el%20Campeonato.mp4"
+        },
+        {
+          "num": 13,
+          "title": "Cap. 13 - Un Juego Veloz",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20013%20-%20Un%20Juego%20Veloz.mp4"
+        },
+        {
+          "num": 14,
+          "title": "Cap. 14 - La Rival de Patty",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20014%20-%20La%20Rival%20de%20Patty.mp4"
+        },
+        {
+          "num": 15,
+          "title": "Cap. 15 - Una Prueba de Carácter",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20015%20-%20Una%20Prueba%20de%20Car%C3%A1cter.mp4"
+        },
+        {
+          "num": 16,
+          "title": "Cap. 16 - El Nuevo Capitán",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20016%20-%20El%20Nuevo%20Capit%C3%A1n.mp4"
+        },
+        {
+          "num": 17,
+          "title": "Cap. 17 - Inicia el Campeonato Nacional",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20017%20-%20Inicia%20el%20Campeonato%20Nacional.mp4"
+        },
+        {
+          "num": 18,
+          "title": "Cap. 18 - Encuentro Entre Capitanes",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20018%20-%20Encuentro%20Entre%20Capitanes.mp4"
+        },
+        {
+          "num": 19,
+          "title": "Cap. 19 - La Mejor Defensa es el Ataque",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20019%20-%20La%20Mejor%20Defensa%20es%20el%20Ataque.mp4"
+        },
+        {
+          "num": 20,
+          "title": "Cap. 20 - Una Dura Batalla",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20020%20-%20Una%20Dura%20Batalla.mp4"
+        },
+        {
+          "num": 21,
+          "title": "Cap. 21 - El Gol de la Victoria",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20021%20-%20El%20Gol%20de%20la%20Victoria.mp4"
+        },
+        {
+          "num": 22,
+          "title": "Cap. 22 - Los Gemelos Maravilla",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20022%20-%20Los%20Gemelos%20Maravilla.mp4"
+        },
+        {
+          "num": 23,
+          "title": "Cap. 23 - AutoGol",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20023%20-%20AutoGol.mp4"
+        },
+        {
+          "num": 24,
+          "title": "Cap. 24 - Amigo y Rival",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20024%20-%20Amigo%20y%20Rival.mp4"
+        },
+        {
+          "num": 25,
+          "title": "Cap. 25 - Soy el Mejor Portero del Campeonato",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20025%20-%20Soy%20el%20Mejor%20Portero%20del%20Campeonato.mp4"
+        },
+        {
+          "num": 26,
+          "title": "Cap. 26 - Un Frágil Campeón",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20026%20-%20Un%20Fr%C3%A1gil%20Campe%C3%B3n.mp4"
+        },
+        {
+          "num": 27,
+          "title": "Cap. 27 - Pugna en las Semifinales",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20027%20-%20Pugna%20en%20las%20Semifinales.mp4"
+        },
+        {
+          "num": 28,
+          "title": "Cap. 28 - Los Bravos Jugadores del Norte",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20028%20-%20Los%20Bravos%20Jugadores%20del%20Norte.mp4"
+        },
+        {
+          "num": 29,
+          "title": "Cap. 29 - Una Fiera Confusión",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20029%20-%20Una%20Fiera%20Confusi%C3%B3n.mp4"
+        },
+        {
+          "num": 30,
+          "title": "Cap. 30 - El Príncipe Herido",
+          "url": "https://archive.org/download/super-campeones-1983-latino/Super%20Campeones%20-%20030%20-%20El%20Pr%C3%ADncipe%20Herido.mp4"
+        }
+      ]
+    },
+    {
+      "id": 26,
+      "slug": "death-note",
+      "name": "Death Note (24/7)",
+      "seriesTitle": "Death Note",
+      "category": "SERIES Y ANIME",
+      "urls": [
+        "https://archive.org/download/Death-Note-Latino/S01E01-Renacimiento.mp4"
+      ],
+      "episodes": [
+        {
+          "num": 1,
+          "title": "Cap. 01 - Renacimiento",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E01-Renacimiento.mp4"
+        },
+        {
+          "num": 2,
+          "title": "Cap. 02 - Duelo",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E02-Duelo.mp4"
+        },
+        {
+          "num": 3,
+          "title": "Cap. 03 - Negociaciones",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E03-Negociaciones.mp4"
+        },
+        {
+          "num": 4,
+          "title": "Cap. 04 - Persecución",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E04-Persecuci%C3%B3n.mp4"
+        },
+        {
+          "num": 5,
+          "title": "Cap. 05 - Estrategia",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E05-Estrategia.mp4"
+        },
+        {
+          "num": 6,
+          "title": "Cap. 06 - Florecer",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E06-Florecer.mp4"
+        },
+        {
+          "num": 7,
+          "title": "Cap. 07 - Nublado",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E07-Nublado.mp4"
+        },
+        {
+          "num": 8,
+          "title": "Cap. 08 - Mirada",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E08-Mirada.mp4"
+        },
+        {
+          "num": 9,
+          "title": "Cap. 09 - Contacto",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E09-Contacto.mp4"
+        },
+        {
+          "num": 10,
+          "title": "Cap. 10 - Sospechas",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E10-Sospechas.mp4"
+        },
+        {
+          "num": 11,
+          "title": "Cap. 11 - Asalto",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E11-Asalto.mp4"
+        },
+        {
+          "num": 12,
+          "title": "Cap. 12 - Enamoramiento",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E12-Enamoramiento.mp4"
+        },
+        {
+          "num": 13,
+          "title": "Cap. 13 - Confesión",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E13-Confesi%C3%B3n.mp4"
+        },
+        {
+          "num": 14,
+          "title": "Cap. 14 - Amigos",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E14-Amigos.mp4"
+        },
+        {
+          "num": 15,
+          "title": "Cap. 15 - Apuestas",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E15-Apuestas.mp4"
+        },
+        {
+          "num": 16,
+          "title": "Cap. 16 - Decisión",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E16-Decisi%C3%B3n.mp4"
+        },
+        {
+          "num": 17,
+          "title": "Cap. 17 - Ejecución",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E17-Ejecuci%C3%B3n.mp4"
+        },
+        {
+          "num": 18,
+          "title": "Cap. 18 - Compañeros",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E18-Compa%C3%B1eros.mp4"
+        },
+        {
+          "num": 19,
+          "title": "Cap. 19 - Matsuda",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E19-Matsuda.mp4"
+        },
+        {
+          "num": 20,
+          "title": "Cap. 20 - Improvisación",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E20-Improvisaci%C3%B3n.mp4"
+        },
+        {
+          "num": 21,
+          "title": "Cap. 21 - Actividad",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E21-Actividad.mp4"
+        },
+        {
+          "num": 22,
+          "title": "Cap. 22 - Inducción",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E22-Inducci%C3%B3n.mp4"
+        },
+        {
+          "num": 23,
+          "title": "Cap. 23 - Frenesí",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E23-Frenes%C3%AD.mp4"
+        },
+        {
+          "num": 24,
+          "title": "Cap. 24 - Resurrección",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E24-Resurrecci%C3%B3n.mp4"
+        },
+        {
+          "num": 25,
+          "title": "Cap. 25 - Silencio",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E25-Silencio.mp4"
+        },
+        {
+          "num": 26,
+          "title": "Cap. 26 - Regeneración",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E26-Regeneraci%C3%B3n.mp4"
+        },
+        {
+          "num": 27,
+          "title": "Cap. 27 - Secuestro",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E27-Secuestro.mp4"
+        },
+        {
+          "num": 28,
+          "title": "Cap. 28 - Impaciencia",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E28-Impaciencia.mp4"
+        },
+        {
+          "num": 29,
+          "title": "Cap. 29 - Padre",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E29-Padre.mp4"
+        },
+        {
+          "num": 30,
+          "title": "Cap. 30 - Justicia",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E30-Justicia.mp4"
+        },
+        {
+          "num": 31,
+          "title": "Cap. 31 - Cesión",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E31-Cesi%C3%B3n.mp4"
+        },
+        {
+          "num": 32,
+          "title": "Cap. 32 - Elección_1",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E32-Elecci%C3%B3n_1.mp4"
+        },
+        {
+          "num": 33,
+          "title": "Cap. 33 - Desprecio",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E33-Desprecio.mp4"
+        },
+        {
+          "num": 34,
+          "title": "Cap. 34 - Acecho",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E34-Acecho.mp4"
+        },
+        {
+          "num": 35,
+          "title": "Cap. 35 - Intento de asesinato",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E35-Intento%20de%20asesinato.mp4"
+        },
+        {
+          "num": 36,
+          "title": "Cap. 36 - 28 de enero",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E36-28%20de%20enero.mp4"
+        },
+        {
+          "num": 37,
+          "title": "Cap. 37 - Un nuevo mundo",
+          "url": "https://archive.org/download/Death-Note-Latino/S01E37-Un%20nuevo%20mundo.mp4"
+        }
+      ]
+    }
+  ]
+}

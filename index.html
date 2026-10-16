@@ -10,18 +10,20 @@
     <script src="hls.min.js"></script>
 </head>
 <body>
-    <!-- 1. Contenedor de Video Pantalla Completa (Exclusivo HLS) -->
+    <!-- 1. Contenedor de Video Pantalla Completa (HLS y MP4 Nativo) -->
     <div id="video-container">
         <video id="tv-player" playsinline autoplay></video>
         <!-- Aviso sutil cuando el navegador bloquea autoplay con audio -->
         <div id="mute-notice" class="mute-notice">🔇 Presiona cualquier tecla o haz clic para activar el audio</div>
+        <!-- Notificación de Adelantar / Retroceder (Seek) -->
+        <div id="seek-notice" class="seek-notice">⏩ +15s</div>
     </div>
 
     <!-- 2. OSD (Cartel Informativo Esquina Superior Izquierda) -->
     <div id="osd">
         <div class="osd-header">
             <div class="osd-header-left">
-                <span class="osd-badge">CANAL</span>
+                <span id="osd-badge" class="osd-badge">CANAL</span>
                 <span id="osd-number" class="osd-channel-number">01</span>
             </div>
             <!-- Reloj Gigante de Perú (12h) -->
@@ -29,8 +31,8 @@
         </div>
         <div id="osd-name" class="osd-channel-name">Cargando canal...</div>
         <div class="osd-footer">
-            <span class="osd-live-tag">SEÑAL EN VIVO</span>
-            <span class="osd-hint">Presiona OK para la lista JANDOS-TV</span>
+            <span id="osd-live-tag" class="osd-live-tag">SEÑAL EN VIVO</span>
+            <span id="osd-hint" class="osd-hint">Presiona OK para la lista JANDOS-TV</span>
         </div>
     </div>
 
@@ -41,17 +43,47 @@
         <div class="dialer-subtext">Cambiando automáticamente...</div>
     </div>
 
-    <!-- 4. Guía Rápida Lateral de Canales (Botón OK / Enter) -->
+    <!-- 4. Guía Rápida Lateral con Pestañas (Botón OK / Enter) -->
     <div id="channel-guide">
         <div class="guide-header">
             <div class="guide-title-container">
                 <img src="icon.png" alt="JANDOS-TV" class="guide-logo">
                 <div class="guide-title">JANDOS-TV</div>
             </div>
-            <div class="guide-instructions">Canales del Perú - Flechas Arriba/Abajo y OK para sintonizar</div>
+            <!-- Pestañas navegables con Flechas Izquierda (◄) / Derecha (►) -->
+            <div class="guide-tabs">
+                <div id="tab-channels" class="guide-tab active">📺 CANALES EN VIVO</div>
+                <div id="tab-series" class="guide-tab">🎬 SERIES EN ORDEN</div>
+            </div>
+            <div id="guide-instructions" class="guide-instructions">Flechas ◄ / ► para cambiar pestaña | ▲ / ▼ y OK para elegir</div>
         </div>
+
+        <!-- Pestaña 1: Canales en Vivo (Por defecto) -->
         <div id="guide-list" class="guide-list">
             <!-- Los canales se renderizan dinámicamente -->
+        </div>
+
+        <!-- Pestaña 2: Selector de Series y Capítulos en Orden -->
+        <div id="series-guide-container" class="series-guide-container" style="display: none;">
+            <!-- Vista 2A: Lista de las 6 series -->
+            <div id="series-list" class="series-list">
+                <!-- Se renderizan las 6 series -->
+            </div>
+
+            <!-- Vista 2B: Selector de Capítulos de la serie seleccionada -->
+            <div id="series-episodes-panel" class="series-episodes-panel" style="display: none;">
+                <div class="episodes-header">
+                    <div id="episodes-series-title" class="episodes-series-title">El Chavo del 8</div>
+                    <div class="episodes-back-hint">◄ Flecha Izquierda para volver a las series</div>
+                </div>
+                <div id="episodes-continue-btn" class="episodes-continue-btn">
+                    <span class="continue-icon">▶</span>
+                    <span id="continue-btn-text">CONTINUAR VIENDO (Cap. 01)</span>
+                </div>
+                <div id="episodes-list" class="episodes-list">
+                    <!-- Lista ordenada de capítulos -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -62,7 +94,7 @@
         <div id="status-subtext" class="status-subtext">Por favor espere un momento</div>
     </div>
 
-    <!-- Lógica de control remoto, reproducción y parser M3U -->
+    <!-- Lógica de control remoto, reproducción y series -->
     <script src="app.js"></script>
 </body>
 </html>

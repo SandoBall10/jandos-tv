@@ -1,0 +1,48 @@
+name: Verificación y Actualización Automática de Canales
+
+on:
+  schedule:
+    # Se ejecuta todos los días a las 10:00 UTC (05:00 AM hora de Perú)
+    - cron: '0 10 * * *'
+  workflow_dispatch: # Permite ejecución manual desde la pestaña Actions
+
+permissions:
+  contents: write
+
+jobs:
+  update-channels:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar repositorio
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+        continue-on-error: true
+
+      - name: Ejecutar verificación y limpieza de canales
+        run: |
+          node clean-channels.js
+
+      - name: Verificar cambios y hacer Push automático
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          
+          # Comprobar si canales-remotos.json o series-catalogo.json cambiaron
+          if git status --porcelain | grep -E "(canales-remotos\.json|series-catalogo\.json)"; then
+            echo "Se detectaron canales actualizados o reparados. Realizando commit y push..."
+            git add canales-remotos.json
+            if [ -f "series-catalogo.json" ]; then
+              git add series-catalogo.json
+            fi
+            git commit -m "Auto: Verificación y reparación de señales HLS [cron] [skip ci]"
+            git push origin main
+          else
+            echo "Todas las señales verificadas continúan operativas. No se requirieron cambios."
+          fi
