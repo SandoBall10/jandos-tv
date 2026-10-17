@@ -1,7 +1,7 @@
 {
   "version": "1.5.0",
-  "updated": "2026-10-16",
-  "totalChannels": 57,
+  "updated": "2026-10-17",
+  "totalChannels": 53,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
     {
@@ -17,8 +17,7 @@
       "name": "América Televisión",
       "category": "NACIONALES",
       "urls": [
-        "https://live-bd1.tv360.bitel.com.pe/manifest/america/master_clean_source.m3u8",
-        "https://live-bd1.tv360.bitel.com.pe/manifest/america/playlist_clean_source_720p.m3u8"
+        "https://live-bd1.tv360.bitel.com.pe/manifest/america/master_clean_source.m3u8"
       ]
     },
     {
@@ -113,8 +112,7 @@
       "name": "L1 MAX (Liga 1 Max)",
       "category": "DEPORTES",
       "urls": [
-        "http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8",
-        "https://cablered.iptvperu.tv:1936/cablered/liga1max.stream/playlist.m3u8"
+        "http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8"
       ]
     },
     {
@@ -1448,22 +1446,13 @@
       "id": 38
     },
     {
-      "name": "Nickelodeon",
-      "category": "DIBUJOS Y ANIMACIÓN",
-      "urls": [
-        "https://x1colegal.com/hls/stream.m3u8",
-        "https://bob.x1colegal.com/hls/stream.m3u8"
-      ],
-      "id": 39
-    },
-    {
       "name": "Discovery Kids",
       "category": "DIBUJOS Y ANIMACIÓN",
       "urls": [
         "http://38.224.231.176:8000/play/a01j/index.m3u8",
         "http://38.134.250.110:8000/play/a003/index.m3u8"
       ],
-      "id": 40
+      "id": 39
     },
     {
       "name": "Disney Channel",
@@ -1471,7 +1460,7 @@
       "urls": [
         "https://s6.hopslan.com/disneyX/index.m3u8"
       ],
-      "id": 41
+      "id": 40
     },
     {
       "name": "Disney Jr.",
@@ -1479,24 +1468,15 @@
       "urls": [
         "http://bantel-cdn1.iptvperu.tv:1935/btnscrtn/disney_jr.stream/playlist.m3u8"
       ],
-      "id": 42
+      "id": 41
     },
     {
       "name": "Tooncast / Cartoonito",
       "category": "DIBUJOS Y ANIMACIÓN",
       "urls": [
-        "http://cdn4.skygo.mn/live/disk1/Boomerang/HLSv3-FTA/Boomerang.m3u8",
-        "http://200.62.239.170:830/play/a07n/index.m3u8"
+        "http://cdn4.skygo.mn/live/disk1/Boomerang/HLSv3-FTA/Boomerang.m3u8"
       ],
-      "id": 43
-    },
-    {
-      "name": "Bob Esponja 24/7",
-      "category": "DIBUJOS Y ANIMACIÓN",
-      "urls": [
-        "https://bob.x1colegal.com/hls/stream.m3u8"
-      ],
-      "id": 44
+      "id": 42
     },
     {
       "name": "Dreiko TV (Dibujos y Anime Clásico)",
@@ -1504,7 +1484,7 @@
       "urls": [
         "https://cloudvideo.servers10.com:8081/8020/index.m3u8"
       ],
-      "id": 45
+      "id": 43
     },
     {
       "name": "MAX Anime 24/7",
@@ -1512,7 +1492,7 @@
       "urls": [
         "https://cdnlive.klicgo.net/maxanime/live/playlist.m3u8"
       ],
-      "id": 46
+      "id": 44
     },
     {
       "name": "36 TV Huacho (720p)",
@@ -1520,7 +1500,7 @@
       "urls": [
         "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8"
       ],
-      "id": 47
+      "id": 45
     },
     {
       "name": "PiuraTV (720p)",
@@ -1528,7 +1508,7 @@
       "urls": [
         "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8"
       ],
-      "id": 48
+      "id": 46
     },
     {
       "name": "Television Tarapoto (720p)",
@@ -1536,15 +1516,7 @@
       "urls": [
         "https://live-evg11.tv360.bitel.com.pe/bitel/tvtarapotoSRT/playlist.m3u8"
       ],
-      "id": 49
-    },
-    {
-      "name": "TV Norte Chiclayo (720p)",
-      "category": "REGIONALES",
-      "urls": [
-        "https://live-evg5.tv360.bitel.com.pe/bitel/tvnorte/playlist.m3u8"
-      ],
-      "id": 50
+      "id": 47
     },
     {
       "name": "Antena SUR (720p)",
@@ -1552,7 +1524,7 @@
       "urls": [
         "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8"
       ],
-      "id": 51
+      "id": 48
     },
     {
       "name": "Sol TV (Guatemala) (720p)",
@@ -1560,15 +1532,7 @@
       "urls": [
         "https://cdn.streamhispanatv.net:3409/live/soltvlive.m3u8"
       ],
-      "id": 52
-    },
-    {
-      "name": "Televisión Tarapoto (720p) [Not 24/7]",
-      "category": "REGIONALES",
-      "urls": [
-        "https://ott1.hdlatam.tv/live_abr/webtvTarapotoPe/playlist.m3u8"
-      ],
-      "id": 53
+      "id": 49
     },
     {
       "name": "Huacho Peru TV",
@@ -1576,7 +1540,7 @@
       "urls": [
         "https://tv.huachotv.com/stream.m3u8"
       ],
-      "id": 54
+      "id": 50
     },
     {
       "name": "TV Cosmos (720p)",
@@ -1584,7 +1548,7 @@
       "urls": [
         "https://videoserver.tmcreativos.com:19360/tvcosmos/tvcosmos.m3u8"
       ],
-      "id": 55
+      "id": 51
     },
     {
       "name": "Radio Tropical Tarapoto (480p) [Not 24/7]",
@@ -1592,7 +1556,7 @@
       "urls": [
         "https://videoserver.tmcreativos.com:19360/raditropical/raditropical.m3u8"
       ],
-      "id": 56
+      "id": 52
     },
     {
       "name": "Girasol TV (1080i)",
@@ -1600,7 +1564,7 @@
       "urls": [
         "https://s.emisoras.tv:8081/girasoltv/index.m3u8"
       ],
-      "id": 57
+      "id": 53
     }
   ]
 }
