@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "updated": "2026-10-19",
+  "updated": "2026-10-20",
   "totalChannels": 51,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
@@ -153,7 +153,6 @@
       "name": "DSports (DirecTV)",
       "category": "DEPORTES",
       "urls": [
-        "http://38.187.7.252:8000/play/a03d/index.m3u8",
         "http://45.170.130.224:8000/play/a03d/index.m3u8"
       ]
     },
