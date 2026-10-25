@@ -1,7 +1,7 @@
 {
   "version": "1.5.0",
-  "updated": "2026-10-24",
-  "totalChannels": 51,
+  "updated": "2026-10-25",
+  "totalChannels": 50,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
     {
@@ -1355,20 +1355,12 @@
       "id": 27
     },
     {
-      "name": "Imagen Universal TV",
-      "category": "CINE Y CULTURA",
-      "urls": [
-        "https://imagenuniversaltv.net:3771/live/iutvlive.m3u8"
-      ],
-      "id": 28
-    },
-    {
       "name": "TV Universal Ecuador (720p)",
       "category": "CINE Y CULTURA",
       "urls": [
         "https://cdn.mycloudstream.io/hls/live/broadcast/uwcedjt2/index.m3u8"
       ],
-      "id": 29
+      "id": 28
     },
     {
       "name": "Radio Universal (720p)",
@@ -1376,7 +1368,7 @@
       "urls": [
         "https://videostream.chileservidores.com:8081/universal/index.m3u8"
       ],
-      "id": 30
+      "id": 29
     },
     {
       "name": "TNT Novelas (1080p)",
@@ -1384,7 +1376,7 @@
       "urls": [
         "http://190.93.224.42/TNT-NOVELAS/index.m3u8"
       ],
-      "id": 31
+      "id": 30
     },
     {
       "name": "History 2 Latin America (1080p)",
@@ -1392,7 +1384,7 @@
       "urls": [
         "http://138.121.15.230:9002/HISTORY-2/index.m3u8"
       ],
-      "id": 32
+      "id": 31
     },
     {
       "name": "Star Channel (Chile) (720p)",
@@ -1400,7 +1392,7 @@
       "urls": [
         "http://138.121.15.230:9002/STAR-CHANNEL/index.m3u8"
       ],
-      "id": 33
+      "id": 32
     },
     {
       "name": "Cinecanal Pacific (1080p)",
@@ -1408,7 +1400,7 @@
       "urls": [
         "http://138.121.15.230:9002/CINECANAL/index.m3u8"
       ],
-      "id": 34
+      "id": 33
     },
     {
       "name": "Star Channel Latin America (1080p)",
@@ -1416,7 +1408,7 @@
       "urls": [
         "http://15.204.246.24:8080/STARCHANNELHD/index.m3u8"
       ],
-      "id": 35
+      "id": 34
     },
     {
       "name": "Studio Universal Latin America (1080p)",
@@ -1424,7 +1416,7 @@
       "urls": [
         "http://15.204.246.24:8080/StudioUniversalHD/index.m3u8"
       ],
-      "id": 36
+      "id": 35
     },
     {
       "name": "TNT Series Latin America (1080p)",
@@ -1432,7 +1424,7 @@
       "urls": [
         "http://168.196.127.137:6001/play/a095/index.m3u8"
       ],
-      "id": 37
+      "id": 36
     },
     {
       "name": "Universal TV Latin America (1080p)",
@@ -1440,7 +1432,7 @@
       "urls": [
         "http://15.204.246.24:8080/UniversalHD/index.m3u8"
       ],
-      "id": 38
+      "id": 37
     },
     {
       "name": "Cartoon Network",
@@ -1448,7 +1440,7 @@
       "urls": [
         "https://cdn4.skygo.mn/live/disk1/Cartoon_Network/HLSv3-FTA/Cartoon_Network.m3u8"
       ],
-      "id": 39
+      "id": 38
     },
     {
       "name": "Discovery Kids",
@@ -1456,7 +1448,7 @@
       "urls": [
         "http://38.224.231.176:8000/play/a01j/index.m3u8"
       ],
-      "id": 40
+      "id": 39
     },
     {
       "name": "Disney Channel",
@@ -1464,7 +1456,7 @@
       "urls": [
         "https://s6.hopslan.com/disneyX/index.m3u8"
       ],
-      "id": 41
+      "id": 40
     },
     {
       "name": "Tooncast / Cartoonito",
@@ -1472,7 +1464,7 @@
       "urls": [
         "http://cdn4.skygo.mn/live/disk1/Boomerang/HLSv3-FTA/Boomerang.m3u8"
       ],
-      "id": 42
+      "id": 41
     },
     {
       "name": "Dreiko TV (Dibujos y Anime Clásico)",
@@ -1480,7 +1472,7 @@
       "urls": [
         "https://cloudvideo.servers10.com:8081/8020/index.m3u8"
       ],
-      "id": 43
+      "id": 42
     },
     {
       "name": "MAX Anime 24/7",
@@ -1488,7 +1480,7 @@
       "urls": [
         "https://cdnlive.klicgo.net/maxanime/live/playlist.m3u8"
       ],
-      "id": 44
+      "id": 43
     },
     {
       "name": "36 TV Huacho (720p)",
@@ -1496,7 +1488,7 @@
       "urls": [
         "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8"
       ],
-      "id": 45
+      "id": 44
     },
     {
       "name": "PiuraTV (720p)",
@@ -1504,7 +1496,7 @@
       "urls": [
         "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8"
       ],
-      "id": 46
+      "id": 45
     },
     {
       "name": "Television Tarapoto (720p)",
@@ -1512,7 +1504,7 @@
       "urls": [
         "https://live-evg11.tv360.bitel.com.pe/bitel/tvtarapotoSRT/playlist.m3u8"
       ],
-      "id": 47
+      "id": 46
     },
     {
       "name": "Antena SUR (720p)",
@@ -1520,7 +1512,7 @@
       "urls": [
         "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8"
       ],
-      "id": 48
+      "id": 47
     },
     {
       "name": "Sol TV (Guatemala) (720p)",
@@ -1528,7 +1520,7 @@
       "urls": [
         "https://cdn.streamhispanatv.net:3409/live/soltvlive.m3u8"
       ],
-      "id": 49
+      "id": 48
     },
     {
       "name": "TV Cosmos (720p)",
@@ -1536,7 +1528,7 @@
       "urls": [
         "https://videoserver.tmcreativos.com:19360/tvcosmos/tvcosmos.m3u8"
       ],
-      "id": 50
+      "id": 49
     },
     {
       "name": "Radio Tropical Tarapoto (480p) [Not 24/7]",
@@ -1544,7 +1536,7 @@
       "urls": [
         "https://videoserver.tmcreativos.com:19360/raditropical/raditropical.m3u8"
       ],
-      "id": 51
+      "id": 50
     }
   ]
 }
