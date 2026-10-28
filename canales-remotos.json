@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "updated": "2026-10-27",
+  "updated": "2026-10-28",
   "totalChannels": 48,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
@@ -134,8 +134,8 @@
       "name": "ESPN",
       "category": "DEPORTES",
       "urls": [
-        "https://barinaslive1.boldmss.com/ESPN/ESPN.isml/ESPN.m3u8",
-        "https://barinaslive1.boldmss.com/ESPN_2/ESPN_2.isml/ESPN_2.m3u8"
+        "https://barinaslive1.boldmss.com/ESPN_5/ESPN_5.isml/ESPN_5.m3u8",
+        "https://barinaslive1.boldmss.com/ESPN_6/ESPN_6.isml/ESPN_6.m3u8"
       ]
     },
     {
@@ -143,7 +143,8 @@
       "name": "ESPN 2",
       "category": "DEPORTES",
       "urls": [
-        "https://barinaslive1.boldmss.com/ESPN_2/ESPN_2.isml/ESPN_2.m3u8"
+        "http://85.237.89.160:9590/usa-s/ESPN-2-HD/index.m3u8",
+        "http://190.61.47.54:8000/play/a005/index.m3u8"
       ]
     },
     {
@@ -151,6 +152,7 @@
       "name": "DSports (DirecTV)",
       "category": "DEPORTES",
       "urls": [
+        "http://38.187.7.252:8000/play/a03d/index.m3u8",
         "http://45.170.130.224:8000/play/a03d/index.m3u8"
       ]
     },
