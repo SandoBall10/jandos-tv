@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "updated": "2026-11-02",
+  "updated": "2026-11-03",
   "totalChannels": 47,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
@@ -83,6 +83,7 @@
       "name": "Nativa TV",
       "category": "NACIONALES",
       "urls": [
+        "https://live-evg7.tv360.bitel.com.pe/bitel/nativachanchamayoSRT/playlist.m3u8",
         "http://187.102.210.46/NATIVATV/index.m3u8"
       ]
     },
