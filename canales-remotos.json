@@ -1,7 +1,7 @@
 {
   "version": "1.5.0",
-  "updated": "2026-11-03",
-  "totalChannels": 47,
+  "updated": "2026-11-04",
+  "totalChannels": 45,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
     {
@@ -33,7 +33,7 @@
       "name": "TV Perú",
       "category": "NACIONALES",
       "urls": [
-        "https://stream.arcast.live/canal7jujuy/ngrp:canal7jujuy_all/playlist.m3u8"
+        "http://190.93.224.42/TV-PERU/index.m3u8"
       ]
     },
     {
@@ -100,7 +100,8 @@
       "name": "Sol TV",
       "category": "NACIONALES",
       "urls": [
-        "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8"
+        "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8",
+        "https://cdn.streamhispanatv.net:3409/live/soltvlive.m3u8"
       ]
     },
     {
@@ -132,8 +133,8 @@
       "name": "ESPN",
       "category": "DEPORTES",
       "urls": [
-        "https://barinaslive1.boldmss.com/ESPN_2/ESPN_2.isml/ESPN_2.m3u8",
-        "https://barinaslive1.boldmss.com/ESPN_4/ESPN_4.isml/ESPN_4.m3u8"
+        "http://tvsen7.aynascope.net/espn/index.m3u8",
+        "http://85.237.89.160:9590/usa-s/ESPN-2-HD/index.m3u8"
       ]
     },
     {
@@ -1401,20 +1402,12 @@
       "id": 33
     },
     {
-      "name": "TNT Novelas Colombia (1080p)",
-      "category": "CINE Y CULTURA",
-      "urls": [
-        "http://190.61.47.54:8000/play/a02f/index.m3u8"
-      ],
-      "id": 34
-    },
-    {
       "name": "Star Channel Latin America (1080p)",
       "category": "CINE Y CULTURA",
       "urls": [
         "http://15.204.246.24:8080/STARCHANNELHD/index.m3u8"
       ],
-      "id": 35
+      "id": 34
     },
     {
       "name": "Studio Universal Latin America (1080p)",
@@ -1422,7 +1415,7 @@
       "urls": [
         "http://15.204.246.24:8080/StudioUniversalHD/index.m3u8"
       ],
-      "id": 36
+      "id": 35
     },
     {
       "name": "Universal TV Latin America (1080p)",
@@ -1430,7 +1423,7 @@
       "urls": [
         "http://15.204.246.24:8080/UniversalHD/index.m3u8"
       ],
-      "id": 37
+      "id": 36
     },
     {
       "name": "Cartoon Network",
@@ -1438,7 +1431,7 @@
       "urls": [
         "https://cdn4.skygo.mn/live/disk1/Cartoon_Network/HLSv3-FTA/Cartoon_Network.m3u8"
       ],
-      "id": 38
+      "id": 37
     },
     {
       "name": "Discovery Kids",
@@ -1446,7 +1439,7 @@
       "urls": [
         "http://38.224.231.176:8000/play/a01j/index.m3u8"
       ],
-      "id": 39
+      "id": 38
     },
     {
       "name": "Disney Channel",
@@ -1454,7 +1447,7 @@
       "urls": [
         "https://s6.hopslan.com/disneyX/index.m3u8"
       ],
-      "id": 40
+      "id": 39
     },
     {
       "name": "Tooncast / Cartoonito",
@@ -1462,7 +1455,7 @@
       "urls": [
         "http://cdn4.skygo.mn/live/disk1/Boomerang/HLSv3-FTA/Boomerang.m3u8"
       ],
-      "id": 41
+      "id": 40
     },
     {
       "name": "Dreiko TV (Dibujos y Anime Clásico)",
@@ -1470,15 +1463,7 @@
       "urls": [
         "https://cloudvideo.servers10.com:8081/8020/index.m3u8"
       ],
-      "id": 42
-    },
-    {
-      "name": "36 TV Huacho (720p)",
-      "category": "REGIONALES",
-      "urls": [
-        "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8"
-      ],
-      "id": 43
+      "id": 41
     },
     {
       "name": "PiuraTV (720p)",
@@ -1486,7 +1471,7 @@
       "urls": [
         "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8"
       ],
-      "id": 44
+      "id": 42
     },
     {
       "name": "Television Tarapoto (720p)",
@@ -1494,7 +1479,7 @@
       "urls": [
         "https://live-evg11.tv360.bitel.com.pe/bitel/tvtarapotoSRT/playlist.m3u8"
       ],
-      "id": 45
+      "id": 43
     },
     {
       "name": "Antena SUR (720p)",
@@ -1502,7 +1487,7 @@
       "urls": [
         "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8"
       ],
-      "id": 46
+      "id": 44
     },
     {
       "name": "Radio Tropical Tarapoto (480p) [Not 24/7]",
@@ -1510,7 +1495,7 @@
       "urls": [
         "https://videoserver.tmcreativos.com:19360/raditropical/raditropical.m3u8"
       ],
-      "id": 47
+      "id": 45
     }
   ]
 }
