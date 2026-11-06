@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "updated": "2026-11-05",
+  "updated": "2026-11-06",
   "totalChannels": 45,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
@@ -133,7 +133,6 @@
       "name": "ESPN",
       "category": "DEPORTES",
       "urls": [
-        "http://tvsen7.aynascope.net/espn/index.m3u8",
         "http://85.237.89.160:9590/usa-s/ESPN-2-HD/index.m3u8"
       ]
     },
