@@ -1,6 +1,6 @@
 {
   "version": "1.5.0",
-  "updated": "2026-11-14",
+  "updated": "2026-11-15",
   "totalChannels": 45,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
@@ -98,8 +98,7 @@
       "name": "Sol TV",
       "category": "NACIONALES",
       "urls": [
-        "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8",
-        "https://cdn.streamhispanatv.net:3409/live/soltvlive.m3u8"
+        "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8"
       ]
     },
     {
@@ -147,6 +146,7 @@
       "name": "DSports (DirecTV)",
       "category": "DEPORTES",
       "urls": [
+        "http://38.187.7.252:8000/play/a03d/index.m3u8",
         "http://45.170.130.224:8000/play/a03d/index.m3u8"
       ]
     },
@@ -155,7 +155,7 @@
       "name": "Claro Sports",
       "category": "DEPORTES",
       "urls": [
-        "http://168.196.127.137:6001/play/a08r/index.m3u8"
+        "http://45.171.64.30:6060/play/a00w/index.m3u8"
       ]
     },
     {
@@ -1398,42 +1398,42 @@
       "id": 33
     },
     {
-      "name": "Cinecanal South",
-      "category": "CINE Y CULTURA",
-      "urls": [
-        "http://45.184.109.10/live/69393EAE6ADBC65A68F942022362A202/17.m3u8"
-      ],
-      "id": 34
-    },
-    {
-      "name": "CineLatino (720p)",
-      "category": "CINE Y CULTURA",
-      "urls": [
-        "http://168.196.127.137:6001/play/a08o/index.m3u8"
-      ],
-      "id": 35
-    },
-    {
       "name": "Imagen Universal TV",
       "category": "CINE Y CULTURA",
       "urls": [
         "https://imagenuniversaltv.net:3771/live/iutvlive.m3u8"
       ],
+      "id": 34
+    },
+    {
+      "name": "TNT Latin America Colombia (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://181.78.211.244:8005/play/a09g/index.m3u8"
+      ],
+      "id": 35
+    },
+    {
+      "name": "TNT Novelas (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://158.172.155.130:8000/play/a0at/index.m3u8"
+      ],
       "id": 36
     },
     {
-      "name": "Star Channel Latin America South",
+      "name": "TNT Novelas Colombia (1080p)",
       "category": "CINE Y CULTURA",
       "urls": [
-        "http://45.184.109.10/live/69393EAE6ADBC65A68F942022362A202/51.m3u8"
+        "http://190.61.47.54:8000/play/a02f/index.m3u8"
       ],
       "id": 37
     },
     {
-      "name": "Studio Universal Latin America South",
+      "name": "TNT Sports (Argentina)",
       "category": "CINE Y CULTURA",
       "urls": [
-        "http://45.184.109.10/live/69393EAE6ADBC65A68F942022362A202/53.m3u8"
+        "http://45.184.109.10/live/69393EAE6ADBC65A68F942022362A202/86.m3u8"
       ],
       "id": 38
     },
