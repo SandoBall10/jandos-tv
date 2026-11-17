@@ -1,7 +1,7 @@
 {
   "version": "1.5.0",
-  "updated": "2026-11-16",
-  "totalChannels": 44,
+  "updated": "2026-11-17",
+  "totalChannels": 42,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
     {
@@ -25,7 +25,7 @@
       "name": "Panamericana TV",
       "category": "NACIONALES",
       "urls": [
-        "http://45.171.108.253:8888/PANAMERICANA/index.m3u8"
+        "http://190.93.224.42/PANAMERICANA/index.m3u8"
       ]
     },
     {
@@ -41,8 +41,7 @@
       "name": "ATV",
       "category": "NACIONALES",
       "urls": [
-        "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8",
-        "https://live-evg11.tv360.bitel.com.pe/bitel/selvaticaSRT/playlist.m3u8"
+        "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8"
       ]
     },
     {
@@ -1406,20 +1405,12 @@
       "id": 34
     },
     {
-      "name": "TNT Latin America Colombia (1080p)",
-      "category": "CINE Y CULTURA",
-      "urls": [
-        "http://181.78.211.244:8005/play/a09g/index.m3u8"
-      ],
-      "id": 35
-    },
-    {
       "name": "TNT Novelas (1080p)",
       "category": "CINE Y CULTURA",
       "urls": [
         "http://158.172.155.130:8000/play/a0at/index.m3u8"
       ],
-      "id": 36
+      "id": 35
     },
     {
       "name": "TNT Sports (Argentina)",
@@ -1427,7 +1418,7 @@
       "urls": [
         "http://45.184.109.10/live/69393EAE6ADBC65A68F942022362A202/86.m3u8"
       ],
-      "id": 37
+      "id": 36
     },
     {
       "name": "Cartoon Network",
@@ -1435,15 +1426,7 @@
       "urls": [
         "https://cdn4.skygo.mn/live/disk1/Cartoon_Network/HLSv3-FTA/Cartoon_Network.m3u8"
       ],
-      "id": 38
-    },
-    {
-      "name": "Discovery Kids",
-      "category": "DIBUJOS Y ANIMACIÓN",
-      "urls": [
-        "http://38.224.231.176:8000/play/a01j/index.m3u8"
-      ],
-      "id": 39
+      "id": 37
     },
     {
       "name": "Disney Channel",
@@ -1451,7 +1434,7 @@
       "urls": [
         "https://s6.hopslan.com/disneyX/index.m3u8"
       ],
-      "id": 40
+      "id": 38
     },
     {
       "name": "Tooncast / Cartoonito",
@@ -1459,7 +1442,7 @@
       "urls": [
         "http://cdn4.skygo.mn/live/disk1/Boomerang/HLSv3-FTA/Boomerang.m3u8"
       ],
-      "id": 41
+      "id": 39
     },
     {
       "name": "Dreiko TV (Dibujos y Anime Clásico)",
@@ -1467,7 +1450,7 @@
       "urls": [
         "https://cloudvideo.servers10.com:8081/8020/index.m3u8"
       ],
-      "id": 42
+      "id": 40
     },
     {
       "name": "PiuraTV (720p)",
@@ -1475,7 +1458,7 @@
       "urls": [
         "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8"
       ],
-      "id": 43
+      "id": 41
     },
     {
       "name": "Antena SUR (720p)",
@@ -1483,7 +1466,7 @@
       "urls": [
         "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8"
       ],
-      "id": 44
+      "id": 42
     }
   ]
 }
