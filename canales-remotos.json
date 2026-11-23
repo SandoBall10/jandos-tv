@@ -1,7 +1,7 @@
 {
   "version": "1.5.0",
-  "updated": "2026-11-22",
-  "totalChannels": 44,
+  "updated": "2026-11-23",
+  "totalChannels": 56,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
     {
@@ -17,7 +17,8 @@
       "name": "América Televisión",
       "category": "NACIONALES",
       "urls": [
-        "https://live-bd1.tv360.bitel.com.pe/manifest/america/master_clean_source.m3u8"
+        "http://190.93.224.42/AMERICA-TV/index.m3u8",
+        "https://api-ott.americatv.com.pe/loggingmediaurlpassthrough/a.m3u8?ads.gdpr=0&ap=1&app_name=Whale+TV%2B&app_store=Browser&brand_name=&cb=&content_categories=IAB19-29%2CIAB12&content_custom_1_param=OTTera&content_custom_2_param=F%2CM&content_custom_3_param=18-20%2C21-24%2C25-29%2C30-34%2C35-39%2C40-44%2C45-49%2C50-54%2C55-59&content_episode=&content_genre=News&content_id=&content_livestream=1&content_producer_name=OTTera_AmericaTV_AmericaTelevision&content_season=&content_series=&content_title=&coppa=0&device_make=&device_model=&did=&dnt=&dur=&gdpr=1&gdpr_consent=&h=&ic=IAB1&id=10&ip=&language=&lmt=&max_dur=30&min_dur=5&mute=0&partner=whaletv&placement=1&rating=12%2B&skip=0&tag_id=139913&tv_language=&tv_model=&tv_vendor=&ua=&url=&us_privacy=1YNN&version=12&w=&wtv_channel_id=0470"
       ]
     },
     {
@@ -41,7 +42,8 @@
       "name": "ATV",
       "category": "NACIONALES",
       "urls": [
-        "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8"
+        "http://190.93.224.42/ATV/index.m3u8",
+        "http://45.171.108.253:8888/ATV/index.m3u8"
       ]
     },
     {
@@ -49,7 +51,8 @@
       "name": "ATV+",
       "category": "NACIONALES",
       "urls": [
-        "http://190.93.224.42/ATV-SUR/index.m3u8"
+        "http://45.171.108.253:8888/ATV/index.m3u8",
+        "http://190.93.224.42/ATV-PLUS/index.m3u8"
       ]
     },
     {
@@ -73,7 +76,8 @@
       "name": "Exitosa TV",
       "category": "NACIONALES",
       "urls": [
-        "https://luna-4-video.mediaserver.digital/exitosatv_233b-4b49-a726-5a451262/index.m3u8"
+        "http://190.93.224.42/EXITOSA/index.m3u8",
+        "http://187.102.210.46/EXITOSA/index.m3u8"
       ]
     },
     {
@@ -81,7 +85,8 @@
       "name": "Nativa TV",
       "category": "NACIONALES",
       "urls": [
-        "https://live-evg7.tv360.bitel.com.pe/bitel/nativachanchamayoSRT/playlist.m3u8"
+        "http://187.102.210.46/NATIVATV/index.m3u8",
+        "https://oneplay.iptvperu.tv:1936/static/nativa1.stream/chunks.m3u8"
       ]
     },
     {
@@ -129,7 +134,8 @@
       "name": "ESPN",
       "category": "DEPORTES",
       "urls": [
-        "http://85.237.89.160:9590/usa-s/ESPN-2-HD/index.m3u8"
+        "http://85.237.89.160:9590/usa-s/ESPN-HD/index.m3u8",
+        "http://190.61.47.54:8000/play/a004/index.m3u8"
       ]
     },
     {
@@ -1373,20 +1379,12 @@
       "id": 30
     },
     {
-      "name": "TNT (United States) West (720p) [Geo-blocked]",
-      "category": "CINE Y CULTURA",
-      "urls": [
-        "https://turnerlive.warnermediacdn.com/hls/live/2023170/tntwest/slate/VIDEO_0_3564000.m3u8"
-      ],
-      "id": 31
-    },
-    {
       "name": "TNT Latin America (1080p)",
       "category": "CINE Y CULTURA",
       "urls": [
         "http://45.171.64.30:6060/play/a03i/index.m3u8"
       ],
-      "id": 32
+      "id": 31
     },
     {
       "name": "Imagen Universal TV",
@@ -1394,7 +1392,7 @@
       "urls": [
         "https://imagenuniversaltv.net:3771/live/iutvlive.m3u8"
       ],
-      "id": 33
+      "id": 32
     },
     {
       "name": "TNT Novelas (1080p)",
@@ -1402,7 +1400,7 @@
       "urls": [
         "http://158.172.155.130:8000/play/a0at/index.m3u8"
       ],
-      "id": 34
+      "id": 33
     },
     {
       "name": "TNT Sports (Argentina)",
@@ -1410,29 +1408,37 @@
       "urls": [
         "http://45.184.109.10/live/69393EAE6ADBC65A68F942022362A202/86.m3u8"
       ],
+      "id": 34
+    },
+    {
+      "name": "AXN Latin America Andes (1080p)",
+      "category": "CINE Y CULTURA",
+      "urls": [
+        "http://181.78.8.199:8000/play/a0cu/index.m3u8"
+      ],
       "id": 35
     },
     {
-      "name": "Star Channel Latin America (1080p)",
+      "name": "Space (1080p)",
       "category": "CINE Y CULTURA",
       "urls": [
-        "http://15.204.246.24:8080/STARCHANNELHD/index.m3u8"
+        "http://45.171.64.30:6060/play/a04n/index.m3u8"
       ],
       "id": 36
     },
     {
-      "name": "Studio Universal Latin America (1080p)",
+      "name": "AMC en Espanol (1080p)",
       "category": "CINE Y CULTURA",
       "urls": [
-        "http://15.204.246.24:8080/StudioUniversalHD/index.m3u8"
+        "https://amc-amcespanol-1-us.vizio.wurl.tv/playlist.m3u8"
       ],
       "id": 37
     },
     {
-      "name": "Universal TV Latin America (1080p)",
+      "name": "AMC Series Latin America (1080p)",
       "category": "CINE Y CULTURA",
       "urls": [
-        "http://15.204.246.24:8080/UniversalHD/index.m3u8"
+        "http://45.171.64.30:6060/play/a005/index.m3u8"
       ],
       "id": 38
     },
@@ -1469,12 +1475,44 @@
       "id": 42
     },
     {
+      "name": "Disney Jr. Latin America South (1080p)",
+      "category": "DIBUJOS Y ANIMACIÓN",
+      "urls": [
+        "http://45.185.163.75:8000/play/a016/index.m3u8"
+      ],
+      "id": 43
+    },
+    {
+      "name": "Nick Jr. Latin America (1080p)",
+      "category": "DIBUJOS Y ANIMACIÓN",
+      "urls": [
+        "https://streaming.onnethn.com/NICK_JR/playlist.m3u8"
+      ],
+      "id": 44
+    },
+    {
+      "name": "Tooncast (1080p)",
+      "category": "DIBUJOS Y ANIMACIÓN",
+      "urls": [
+        "http://45.184.109.10/live/69393EAE6ADBC65A68F942022362A202/69.m3u8"
+      ],
+      "id": 45
+    },
+    {
+      "name": "Tooncast SouthAmerica (480p)",
+      "category": "DIBUJOS Y ANIMACIÓN",
+      "urls": [
+        "http://190.61.42.218:9000/play/a06i/index.m3u8"
+      ],
+      "id": 46
+    },
+    {
       "name": "PiuraTV (720p)",
       "category": "REGIONALES",
       "urls": [
         "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8"
       ],
-      "id": 43
+      "id": 47
     },
     {
       "name": "Antena SUR (720p)",
@@ -1482,7 +1520,71 @@
       "urls": [
         "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8"
       ],
-      "id": 44
+      "id": 48
+    },
+    {
+      "name": "36 TV Huacho (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8"
+      ],
+      "id": 49
+    },
+    {
+      "name": "ABC Teleshow (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg10.tv360.bitel.com.pe/bitel/abctv/playlist.m3u8"
+      ],
+      "id": 50
+    },
+    {
+      "name": "ABTelevision (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg8.tv360.bitel.com.pe/bitel/abctelevisionSRT/playlist.m3u8"
+      ],
+      "id": 51
+    },
+    {
+      "name": "Agro TV (Peru) (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg8.tv360.bitel.com.pe/bitel/agroSRT/playlist.m3u8"
+      ],
+      "id": 52
+    },
+    {
+      "name": "Amazonica TV (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg8.tv360.bitel.com.pe/bitel/amazonicatvSRT/playlist.m3u8"
+      ],
+      "id": 53
+    },
+    {
+      "name": "Andes Television (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg7.tv360.bitel.com.pe/bitel/andestvSRT/playlist.m3u8"
+      ],
+      "id": 54
+    },
+    {
+      "name": "Atlantis Radio TV (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg8.tv360.bitel.com.pe/bitel/atlantisSRT/playlist.m3u8"
+      ],
+      "id": 55
+    },
+    {
+      "name": "ATV Sur (1080p)",
+      "category": "REGIONALES",
+      "urls": [
+        "http://190.93.224.42/ATV-SUR/index.m3u8"
+      ],
+      "id": 56
     }
   ]
 }

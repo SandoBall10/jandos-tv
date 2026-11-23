@@ -14,6 +14,7 @@
     // 1. Constantes y Configuración Remota
     // --------------------------------------------------------------------------
     const CUSTOM_REMOTE_JSON_URL = 'https://raw.githubusercontent.com/SandoBall10/jandos-tv/main/canales-remotos.json';
+    const CUSTOM_REMOTE_SERIES_URL = 'https://raw.githubusercontent.com/SandoBall10/jandos-tv/main/series-catalogo.json';
     const LOCAL_FALLBACK_JSON_URL = './canales-remotos.json';
     const LOCAL_SERIES_CATALOGO_URL = './series-catalogo.json';
     const REMOTE_CONFIG_INTERVAL_MS = 30 * 60 * 1000; // 30 minutos
@@ -31,8 +32,8 @@
     // --------------------------------------------------------------------------
     let channels = [
         { id: 1, name: 'Latina Televisión', category: 'NACIONALES', urls: ['http://190.93.224.42/LATINA/index.m3u8'] },
-        { id: 2, name: 'América Televisión', category: 'NACIONALES', urls: ['https://live-bd1.tv360.bitel.com.pe/manifest/america/master_clean_source.m3u8'] },
-        { id: 3, name: 'Panamericana TV', category: 'NACIONALES', urls: ['http://45.171.108.253:8888/PANAMERICANA/index.m3u8', 'http://190.93.224.42/PANAMERICANA/index.m3u8'] },
+        { id: 2, name: 'América Televisión', category: 'NACIONALES', urls: ['http://190.93.224.42/AMERICA-TV/index.m3u8'] },
+        { id: 3, name: 'Panamericana TV', category: 'NACIONALES', urls: ['http://190.93.224.42/PANAMERICANA/index.m3u8', 'http://45.171.108.253:8888/PANAMERICANA/index.m3u8'] },
         { id: 4, name: 'TV Perú', category: 'NACIONALES', urls: ['http://190.93.224.42/TV-PERU/index.m3u8'] },
         { id: 5, name: 'ATV', category: 'NACIONALES', urls: ['http://190.93.224.42/ATV/index.m3u8'] },
         { id: 6, name: 'ATV+', category: 'NACIONALES', urls: ['http://45.171.108.253:8888/ATV/index.m3u8', 'http://190.93.224.42/ATV-SUR/index.m3u8'] },
@@ -94,6 +95,8 @@
 
     // Reproductor HLS
     let hlsInstance = null;
+    let hlsNetworkRetryCount = 0;
+    let currentStreamFailed = false;
 
     // Elementos del DOM
     const videoEl = document.getElementById('tv-player') || document.getElementById('player');
@@ -364,6 +367,7 @@
         if (channelWatchdogTimer) clearTimeout(channelWatchdogTimer);
         channelWatchdogTimer = setTimeout(function () {
             console.warn('Jandos-TV Watchdog: 15s sin señal activa en el canal.');
+            currentStreamFailed = true;
             clearStreamTimers();
             resetPlayerState();
             showStatus('Señal no disponible temporalmente en este canal', 'Presione Arriba/Abajo para cambiar');
@@ -443,6 +447,8 @@
     // Eventos nativos del reproductor de video
     if (videoEl) {
         videoEl.addEventListener('playing', function () {
+            currentStreamFailed = false;
+            hlsNetworkRetryCount = 0;
             hideStatus();
             clearStreamTimers();
         });
@@ -540,6 +546,8 @@
 
     function loadActiveStream() {
         resetPlayerState();
+        hlsNetworkRetryCount = 0;
+        currentStreamFailed = false;
         const channel = channels[currentChannelIndex];
         if (!channel || !channel.urls || channel.urls.length === 0) {
             tryNextStreamUrl('Sin URLs HLS disponibles');
@@ -642,8 +650,14 @@
                 if (data.fatal) {
                     switch (data.type) {
                         case window.Hls.ErrorTypes.NETWORK_ERROR:
-                            console.warn('Jandos-TV: Error de red fatal. Intentando recuperar...');
-                            hlsInstance.startLoad();
+                            hlsNetworkRetryCount++;
+                            if (hlsNetworkRetryCount <= 1) {
+                                console.warn('Jandos-TV: Error de red fatal. Reintentando una vez...');
+                                hlsInstance.startLoad();
+                            } else {
+                                console.warn('Jandos-TV: Error de red persistente. Saltando a señal de respaldo...');
+                                tryNextStreamUrl('Error de red en la señal');
+                            }
                             break;
                         case window.Hls.ErrorTypes.MEDIA_ERROR:
                             console.warn('Jandos-TV: Error de medios fatal. Intentando recuperar...');
@@ -677,6 +691,7 @@
             loadActiveStream();
         } else {
             console.warn('Jandos-TV: Todas las señales probadas fallaron en el canal actual.');
+            currentStreamFailed = true;
             resetPlayerState();
             showStatus('Señal no disponible temporalmente en este canal', 'Presione Arriba/Abajo para cambiar');
             showOSD();
@@ -1075,6 +1090,9 @@
     function applyRemoteChannelsConfig(remoteChannels) {
         if (!Array.isArray(remoteChannels) || remoteChannels.length === 0) return;
 
+        const prevChannel = channels[currentChannelIndex];
+        const prevUrlsJson = prevChannel && prevChannel.urls ? JSON.stringify(prevChannel.urls) : '';
+
         console.log('Jandos-TV: Aplicando ' + remoteChannels.length + ' canales curados desde JSON');
         channels = remoteChannels.map(function (rCh, idx) {
             return {
@@ -1097,9 +1115,22 @@
             if (guideCurrentTab === 'channels') renderGuide();
             else if (seriesViewState === 'series-list') renderSeriesList();
         }
+
+        // Si el canal en vivo actual recibió URLs actualizadas y no está reproduciendo, re-sintonizar automáticamente
+        if (!isSeriesMode && currentChannelIndex < channels.length) {
+            const updatedChannel = channels[currentChannelIndex];
+            const newUrlsJson = updatedChannel && updatedChannel.urls ? JSON.stringify(updatedChannel.urls) : '';
+            const isVideoStopped = !videoEl || videoEl.paused || videoEl.readyState < 2;
+            if (newUrlsJson && newUrlsJson !== prevUrlsJson && (currentStreamFailed || isVideoStopped)) {
+                console.log('Jandos-TV: Señales actualizadas para ' + updatedChannel.name + '. Re-sintonizando automáticamente...');
+                playChannel(currentChannelIndex);
+            }
+        }
     }
 
     function fetchRemoteJsonConfig() {
+        const cacheBust = '?t=' + Date.now();
+
         function tryFetch(url) {
             return fetch(url, { cache: 'no-store' })
                 .then(function (res) {
@@ -1108,8 +1139,11 @@
                 });
         }
 
-        // Cargar series-catalogo.json
-        tryFetch(LOCAL_SERIES_CATALOGO_URL)
+        // Cargar series-catalogo.json (GitHub primero, fallback local)
+        tryFetch(CUSTOM_REMOTE_SERIES_URL + cacheBust)
+            .catch(function () {
+                return tryFetch(LOCAL_SERIES_CATALOGO_URL);
+            })
             .then(function (catData) {
                 if (catData && catData.series && catData.series.length > 0) {
                     seriesCatalog = catData.series;
@@ -1118,8 +1152,8 @@
             })
             .catch(function () {});
 
-        // Cargar canales-remotos.json (GitHub primero, fallback local)
-        tryFetch(CUSTOM_REMOTE_JSON_URL)
+        // Cargar canales-remotos.json (GitHub primero con cache-busting, fallback local)
+        tryFetch(CUSTOM_REMOTE_JSON_URL + cacheBust)
             .then(function (data) {
                 if (data && data.channels && data.channels.length > 0) {
                     console.log('Jandos-TV: Configuración remota GitHub actualizada (' + data.channels.length + ' canales)');

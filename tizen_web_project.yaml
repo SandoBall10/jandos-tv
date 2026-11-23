@@ -34,12 +34,15 @@ files:
   - hls.min.js
   - icon.png
   - index.html
+  - series-catalogo.json
   - styles.css
 
 # list of files to exclude based on the matched patterns
 excludes:
   - ".git/*"
   - ".git/**/*"
+  - ".github/*"
+  - ".github/**/*"
   - ".tizen-rds/*"
   - ".tizen-rds/**/*"
   - "Build/*"
@@ -47,6 +50,7 @@ excludes:
   - "Release/*"
   - "Test/*"
   - "clean-channels.js"
+  - "fetch-series-archive.js"
   - "*.wgt"
   - "*.p12"
   - "*.md"

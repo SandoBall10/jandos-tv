@@ -2,8 +2,8 @@ name: Verificación y Actualización Automática de Canales
 
 on:
   schedule:
-    # Se ejecuta todos los días a las 10:00 UTC (05:00 AM hora de Perú)
-    - cron: '0 10 * * *'
+    # Se ejecuta cada 6 horas en el minuto 17 (evita saturación de colas en horas en punto)
+    - cron: '17 */6 * * *'
   workflow_dispatch: # Permite ejecución manual desde la pestaña Actions
 
 permissions:
@@ -21,9 +21,7 @@ jobs:
       - name: Configurar Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
-          cache: 'npm'
-        continue-on-error: true
+          node-version: 22
 
       - name: Ejecutar verificación y limpieza de canales
         run: |
@@ -33,7 +31,7 @@ jobs:
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          
+
           # Comprobar si canales-remotos.json o series-catalogo.json cambiaron
           if git status --porcelain | grep -E "(canales-remotos\.json|series-catalogo\.json)"; then
             echo "Se detectaron canales actualizados o reparados. Realizando commit y push..."
@@ -41,7 +39,7 @@ jobs:
             if [ -f "series-catalogo.json" ]; then
               git add series-catalogo.json
             fi
-            git commit -m "Auto: Verificación y reparación de señales HLS [cron] [skip ci]"
+            git commit -m "Auto: Verificacion y reparacion de senales HLS [cron] [skip ci]"
             git push origin main
           else
             echo "Todas las señales verificadas continúan operativas. No se requirieron cambios."
