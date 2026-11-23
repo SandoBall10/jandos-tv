@@ -1,7 +1,7 @@
 {
   "version": "1.5.0",
   "updated": "2026-11-23",
-  "totalChannels": 56,
+  "totalChannels": 55,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
     {
@@ -1475,20 +1475,12 @@
       "id": 42
     },
     {
-      "name": "Disney Jr. Latin America South (1080p)",
-      "category": "DIBUJOS Y ANIMACIÓN",
-      "urls": [
-        "http://45.185.163.75:8000/play/a016/index.m3u8"
-      ],
-      "id": 43
-    },
-    {
       "name": "Nick Jr. Latin America (1080p)",
       "category": "DIBUJOS Y ANIMACIÓN",
       "urls": [
         "https://streaming.onnethn.com/NICK_JR/playlist.m3u8"
       ],
-      "id": 44
+      "id": 43
     },
     {
       "name": "Tooncast (1080p)",
@@ -1496,7 +1488,7 @@
       "urls": [
         "http://45.184.109.10/live/69393EAE6ADBC65A68F942022362A202/69.m3u8"
       ],
-      "id": 45
+      "id": 44
     },
     {
       "name": "Tooncast SouthAmerica (480p)",
@@ -1504,7 +1496,7 @@
       "urls": [
         "http://190.61.42.218:9000/play/a06i/index.m3u8"
       ],
-      "id": 46
+      "id": 45
     },
     {
       "name": "PiuraTV (720p)",
@@ -1512,7 +1504,7 @@
       "urls": [
         "https://live-evg7.tv360.bitel.com.pe/bitel/piuratvSRT/playlist.m3u8"
       ],
-      "id": 47
+      "id": 46
     },
     {
       "name": "Antena SUR (720p)",
@@ -1520,7 +1512,7 @@
       "urls": [
         "https://cloudpro.servidoresdestream.com:8081/8010/index.m3u8"
       ],
-      "id": 48
+      "id": 47
     },
     {
       "name": "36 TV Huacho (720p)",
@@ -1528,7 +1520,7 @@
       "urls": [
         "https://live-evg10.tv360.bitel.com.pe/bitel/36tvSRT/playlist.m3u8"
       ],
-      "id": 49
+      "id": 48
     },
     {
       "name": "ABC Teleshow (720p)",
@@ -1536,7 +1528,7 @@
       "urls": [
         "https://live-evg10.tv360.bitel.com.pe/bitel/abctv/playlist.m3u8"
       ],
-      "id": 50
+      "id": 49
     },
     {
       "name": "ABTelevision (720p)",
@@ -1544,7 +1536,7 @@
       "urls": [
         "https://live-evg8.tv360.bitel.com.pe/bitel/abctelevisionSRT/playlist.m3u8"
       ],
-      "id": 51
+      "id": 50
     },
     {
       "name": "Agro TV (Peru) (720p)",
@@ -1552,7 +1544,7 @@
       "urls": [
         "https://live-evg8.tv360.bitel.com.pe/bitel/agroSRT/playlist.m3u8"
       ],
-      "id": 52
+      "id": 51
     },
     {
       "name": "Amazonica TV (720p)",
@@ -1560,7 +1552,7 @@
       "urls": [
         "https://live-evg8.tv360.bitel.com.pe/bitel/amazonicatvSRT/playlist.m3u8"
       ],
-      "id": 53
+      "id": 52
     },
     {
       "name": "Andes Television (720p)",
@@ -1568,7 +1560,7 @@
       "urls": [
         "https://live-evg7.tv360.bitel.com.pe/bitel/andestvSRT/playlist.m3u8"
       ],
-      "id": 54
+      "id": 53
     },
     {
       "name": "Atlantis Radio TV (720p)",
@@ -1576,7 +1568,7 @@
       "urls": [
         "https://live-evg8.tv360.bitel.com.pe/bitel/atlantisSRT/playlist.m3u8"
       ],
-      "id": 55
+      "id": 54
     },
     {
       "name": "ATV Sur (1080p)",
@@ -1584,7 +1576,7 @@
       "urls": [
         "http://190.93.224.42/ATV-SUR/index.m3u8"
       ],
-      "id": 56
+      "id": 55
     }
   ]
 }
