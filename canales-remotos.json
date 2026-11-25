@@ -135,8 +135,7 @@
       "name": "ESPN",
       "category": "DEPORTES",
       "urls": [
-        "http://85.237.89.160:9590/usa-s/ESPN-HD/index.m3u8",
-        "http://190.61.47.54:8000/play/a004/index.m3u8"
+        "http://85.237.89.160:9590/usa-s/ESPN-HD/index.m3u8"
       ]
     },
     {
