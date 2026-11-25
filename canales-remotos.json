@@ -1,7 +1,7 @@
 {
   "version": "1.5.0",
-  "updated": "2026-11-24",
-  "totalChannels": 52,
+  "updated": "2026-11-25",
+  "totalChannels": 54,
   "description": "Parrilla curada con verificación profunda HLS + CORS para Jandos-TV con Bloque Series 24/7.",
   "channels": [
     {
@@ -26,7 +26,8 @@
       "name": "Panamericana TV",
       "category": "NACIONALES",
       "urls": [
-        "http://190.93.224.42/PANAMERICANA/index.m3u8"
+        "http://45.171.108.253:8888/PANAMERICANA/index.m3u8",
+        "http://181.224.200.5:2277/play/kkio/index.m3u8"
       ]
     },
     {
@@ -51,7 +52,6 @@
       "name": "ATV+",
       "category": "NACIONALES",
       "urls": [
-        "http://45.171.108.253:8888/ATV/index.m3u8",
         "http://190.93.224.42/ATV-PLUS/index.m3u8"
       ]
     },
@@ -1515,20 +1515,12 @@
       "id": 47
     },
     {
-      "name": "ABTelevision (720p)",
-      "category": "REGIONALES",
-      "urls": [
-        "https://live-evg8.tv360.bitel.com.pe/bitel/abctelevisionSRT/playlist.m3u8"
-      ],
-      "id": 48
-    },
-    {
       "name": "Agro TV (Peru) (720p)",
       "category": "REGIONALES",
       "urls": [
         "https://live-evg8.tv360.bitel.com.pe/bitel/agroSRT/playlist.m3u8"
       ],
-      "id": 49
+      "id": 48
     },
     {
       "name": "Amazonica TV (720p)",
@@ -1536,7 +1528,7 @@
       "urls": [
         "https://live-evg8.tv360.bitel.com.pe/bitel/amazonicatvSRT/playlist.m3u8"
       ],
-      "id": 50
+      "id": 49
     },
     {
       "name": "Andes Television (720p)",
@@ -1544,7 +1536,7 @@
       "urls": [
         "https://live-evg7.tv360.bitel.com.pe/bitel/andestvSRT/playlist.m3u8"
       ],
-      "id": 51
+      "id": 50
     },
     {
       "name": "ATV Sur (1080p)",
@@ -1552,7 +1544,31 @@
       "urls": [
         "http://190.93.224.42/ATV-SUR/index.m3u8"
       ],
+      "id": 51
+    },
+    {
+      "name": "Bella Abanquina TV (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg8.tv360.bitel.com.pe/bitel/bellaabanquinaSRT/playlist.m3u8"
+      ],
       "id": 52
+    },
+    {
+      "name": "Bethel TV (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://alfa.betheltv.tv/srt/3_abr/playlist.m3u8"
+      ],
+      "id": 53
+    },
+    {
+      "name": "Bicolor+ (720p)",
+      "category": "REGIONALES",
+      "urls": [
+        "https://live-evg10.tv360.bitel.com.pe/bitel/bicolorfree_abr/playlist.m3u8"
+      ],
+      "id": 54
     }
   ]
 }
