@@ -111,7 +111,7 @@
       "name": "L1 MAX (Liga 1 Max)",
       "category": "DEPORTES",
       "urls": [
-        "http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8"
+        "http://190.93.224.42/LIGA-1-MAX/index.m3u8"
       ]
     },
     {
@@ -119,6 +119,7 @@
       "name": "GOLPERU",
       "category": "DEPORTES",
       "urls": [
+        "http://190.93.224.42/GOLPERU/index.m3u8",
         "http://cdn2.ujjina.com:1935/iptvovacion1/liveovacion1tv/playlist.m3u8"
       ]
     },
